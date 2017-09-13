@@ -1,0 +1,218 @@
+﻿<Window x:Class="PCEFTPOS.EFTClient.IPInterface.TestPOS.PadEditor"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PCEFTPOS.EFTClient.IPInterface.TestPOS"
+        xmlns:Views="clr-namespace:PCEFTPOS.EFTClient.IPInterface.TestPOS.Views"
+        mc:Ignorable="d"
+        MinHeight="405" Height="505" MinWidth="515" Width="505" 
+        WindowStartupLocation="CenterScreen" 
+        WindowStyle="ToolWindow" SizeToContent="Width" MaxWidth="500">
+    <Window.Resources>
+        <Views:ListSelectedIndexToBoolConverter x:Key="lstConverter"/>
+        <!--<local:TitleChangeConverter x:Key="titleConverter"/>-->
+        <Style x:Key="BaseButtonStyle" TargetType="Button">
+            <Setter Property="HorizontalAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="Margin" Value="5,10,5,10" />
+            <Setter Property="Height" Value="25" />
+            <Setter Property="Width" Value="150" />
+        </Style>
+        <Style x:Key="ButtonVisibility" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Setter Property="Visibility" Value="Hidden"/>
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=IsSelected}" Value="True"/>
+                        <Condition Binding="{Binding RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}, Path=IsNewItem}" Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Visibility" Value="Visible"/>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CellValidationStyle" TargetType="TextBlock">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding RelativeSource={RelativeSource Self}, 
+                                            Path=(Validation.Errors)[0].ErrorContent}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="EditModeButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=lstPadContent, Path=SelectedIndex, 
+                                        Converter={StaticResource lstConverter}}" Value="True">
+                    <Setter Property="IsEnabled" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="IsEnabled" Value="False"/>
+        </Style>
+        <Style x:Key="EditValueButtonStyle" TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=lstPadEditor, Path=SelectedIndex, 
+                                        Converter={StaticResource lstConverter}}" Value="True">
+                    <Setter Property="IsEnabled" Value="True"/>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="IsEnabled" Value="False"/>
+        </Style>
+        <Style TargetType="TextBox">
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style TargetType="Label">
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+    </Window.Resources>
+    <Grid>
+        <!--<Grid x:Name="gridMain" Margin="5,5,5,20">
+            <Grid.Resources>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EditMode}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <DataGrid Grid.Row="0"  x:Name="dgPadItems" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
+                      HorizontalScrollBarVisibility="Auto"
+                      CanUserAddRows="True" 
+                      ItemsSource="{Binding PadContentList, UpdateSourceTrigger=PropertyChanged}"
+                      AutoGenerateColumns="False" DockPanel.Dock="Top" SelectionMode="Single" 
+                      RowEditEnding="dgPadItems_RowEditEnding" AddingNewItem="dgPadItems_AddingNewItem">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Name" Binding="{Binding Name, ValidatesOnDataErrors=True}" 
+                                        Width="220" ElementStyle="{StaticResource CellValidationStyle}"/>
+                    <DataGridTextColumn Header="PAD Content" Binding="{Binding Value}" Width="220"/>
+                    <DataGridTemplateColumn MinWidth="50" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="btnEditor" Margin="0,0,0,0" Width="50" HorizontalAlignment="Left" 
+                                    Style="{StaticResource ButtonVisibility}" Click="btnEditor_Click"
+                                   >Edit
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn MinWidth="50" Width="*">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button x:Name="btnDelete" Click="btnDelete_Click" Margin="0,0,0,0" Width="50" HorizontalAlignment="Left" 
+                                    Style="{StaticResource ButtonVisibility}">Delete
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button Grid.Row="1" x:Name="btnDone" Content="Save" Click="btnDone_Click" HorizontalAlignment="Right" Margin="0,0,10,0" DockPanel.Dock="Bottom"/>
+        </Grid>-->
+        <Grid x:Name="gridMainEditor" Margin="5,5,5,20" >
+            <Grid.Resources>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EditMode}" Value="True">
+                            <Setter Property="Visibility" Value="Collapsed"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Visible"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="130"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0">
+                <WrapPanel Margin="0,5,0,5">
+                    <Label Content="Name:" Width="50"/>
+                    <TextBox x:Name="txtMName" Width="370" VerticalContentAlignment="Center" Text="{Binding PadName}"/>
+                </WrapPanel>
+                <WrapPanel Margin="0,5,0,5">
+                    <Label Content="Value:" Width="50"/>
+                    <TextBox x:Name="txtMValue" Width="370" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" Text="{Binding PadValue}"/>
+                    <Button x:Name="btnMEditValue" Content="..." Width="30" VerticalAlignment="Center" Margin="5,0,0,0" 
+                            Style="{StaticResource EditModeButtonStyle}"
+                            Command="{Binding LoadEditor}" CommandParameter="{Binding ElementName=lstPadContent, Path=SelectedIndex}"/>
+                </WrapPanel>
+                <WrapPanel HorizontalAlignment="Left" Margin="50,0,27,5">
+                    <Button x:Name="btnMDel" Content="Delete" Width="50" Height="27" Margin="0,0,5,0" 
+                            Style="{StaticResource EditModeButtonStyle}"
+                            Command="{Binding DeletePadContent}" CommandParameter="{Binding ElementName=lstPadContent, Path=SelectedIndex}">
+                    </Button>
+                    <Button x:Name="btnMUpdate" Content="Update" Width="50" Height="27" Margin="0,0,0,0" 
+                            Style="{StaticResource EditModeButtonStyle}"
+                            Click="btnMUpdate_Click"/>
+                    <!--Command="{Binding UpdatePadContent}" CommandParameter="{Binding ElementName=lstPadContent, Path=SelectedIndex}"-->
+                    <Button x:Name="btnMAdd" Content="Add" Width="50" Height="27" IsEnabled="True"
+                            Style="{StaticResource BaseButtonStyle}"
+                            Click="btnMAdd_Click" />
+                </WrapPanel>
+            </StackPanel>
+            <ListBox Grid.Row="1" x:Name="lstPadContent" ItemsSource="{Binding PadContentList}" FontSize="13"
+                     SelectionChanged="lstPadContent_SelectionChanged"/>
+            <WrapPanel Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" DockPanel.Dock="Bottom" >
+                <Button x:Name="btnMDone" Content="Save" Width="100" Click="btnDone_Click" Style="{StaticResource BaseButtonStyle}"/>
+            </WrapPanel>
+        </Grid>
+        <Grid x:Name="gridPadEditor" Margin="5,5,5,20" >
+            <Grid.Resources>
+                <Style TargetType="Grid">
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding EditMode}" Value="True">
+                            <Setter Property="Visibility" Value="Visible"/>
+                        </DataTrigger>
+                    </Style.Triggers>
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </Style>
+            </Grid.Resources>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition  Width="250"/>
+                <ColumnDefinition  Width="*"/>
+            </Grid.ColumnDefinitions>
+            <ListBox Grid.Column="0" x:Name="lstPadEditor" ItemsSource="{Binding PadFieldList}" FontSize="13"
+                     SelectionChanged="lstPadEditor_SelectionChanged"/>
+            <StackPanel Grid.Column="1">
+                <WrapPanel Margin="0,5,0,5">
+                    <Label Content="Name:" Width="50"/>
+                    <TextBox x:Name="txtName" Width="170" VerticalContentAlignment="Center" Text="{Binding PadTagName, Mode=TwoWay}"/>
+                </WrapPanel>
+                <WrapPanel Margin="0,5,0,5">
+                    <Label Content="Value:" Width="50"/>
+                    <TextBox x:Name="txtValue" Width="170" VerticalAlignment="Top" Height="27" VerticalContentAlignment="Center" 
+                             Text="{Binding PadTagValue, Mode=TwoWay}"/>
+                </WrapPanel>
+                <WrapPanel HorizontalAlignment="Right" Margin="0,0,22,5">
+                    <Button x:Name="btnDel" Content="Delete" Width="50" Height="27" Margin="0,0,5,0" 
+                            Style="{StaticResource EditValueButtonStyle}"
+                            Command="{Binding DeletePadTag}" CommandParameter="{Binding ElementName=lstPadEditor, Path=SelectedIndex}"/>
+                    <Button x:Name="btnUpdate" Content="Update" Width="50" Height="27" Margin="0,0,0,0" 
+                            Style="{StaticResource EditValueButtonStyle}"
+                            Click="btnUpdate_Click"/>
+                    <Button x:Name="btnAdd" Content="Add" Width="50" Height="27" IsEnabled="True" 
+                            Style="{StaticResource BaseButtonStyle}"
+                            Click="btnAdd_Click"/>
+                </WrapPanel>
+            </StackPanel>
+            <WrapPanel Grid.Row="1" Grid.Column="1" HorizontalAlignment="Right" Margin="0,0,0,0" DockPanel.Dock="Bottom" >
+                <Button x:Name="btnBack" Content="Back" HorizontalAlignment="Right" Width="100" 
+                        Style="{StaticResource BaseButtonStyle}"
+                        Click="btnBack_Click" />
+                <Button x:Name="btnSave" Content="Save" HorizontalAlignment="Right" Width="100" 
+                        Style="{StaticResource BaseButtonStyle}"
+                        Click="btnSave_Click"/>
+            </WrapPanel>
+        </Grid>
+    </Grid>
+</Window>
