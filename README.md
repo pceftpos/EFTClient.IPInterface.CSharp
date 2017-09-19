@@ -203,6 +203,9 @@ class EFTClientIPDemoAsync
 
 ## Release notes
 
+### 1.3.2.0 (2017-09-19)
+* Signed assembly.
+
 ### 1.3.1.0 (2017-09-13)
 * Changed namespace from `PCEFTPOS.API.IPInterface` to `PCEFTPOS.EFTClient.IPInterface` for new package
 * Created signed NuGet package
