@@ -10,6 +10,9 @@
 | IPInterface.TestPOS         | A full featured sample app using the `EFTClientIPAsync` component
 
 ## Getting started
+
+> If you are updating from the older `PCEFTIPInterface`, please refer to [Upgrading from PCEFTIPInterface](UPDATE.md)
+
 * Clone this repository or grab the [PCEFTPOS.EFTClient.IPInterface](https://www.nuget.org/packages/PCEFTPOS.EFTClient.IPInterface/) package from NuGet
 * Decide which component to use. `EFTClientIP` is event based pattern and `EFTClientIPAsync` uses the async/await pattern
 * Look at the `SimpleDemo` and `SimpleDemoAsync` samples. There are also some simple examples listed below.
