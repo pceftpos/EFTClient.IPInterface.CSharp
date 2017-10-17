@@ -1,8 +1,14 @@
 # Upgrading from PCEFTIPInterface
 
-The older `PCEFTIPInterface` and the newer `PCEFTPOS.EFTClient.IPInterface` are virtually identical. In most cases updating from the older interface to the new one should only take a few minutes.
+The POS interface to older `PCEFTIPInterface` and the newer `PCEFTPOS.EFTClient.IPInterface` is virtually identical. In most cases updating from the older interface to the new one should only take a few minutes.
 
-The POS must support at least .NET Framework 4.5.2 to use `PCEFTPOS.EFTClient.IPInterface`.
+`PCEFTPOS.EFTClient.IPInterface` currently targets .NET Framework 4.5.2, and will support .NET Standard 2.0. (.NET Framework 4.5.2 will be maintained in a separate branch)
+
+### Why upgrade
+* Support for PC-EFTPOS Cloud PIN pads
+* NuGet integration
+* Targets a more recent .NET Framework
+* Bug fixes and performance improvements
 
 ### Update namespace references
 The namespace has changed. 
