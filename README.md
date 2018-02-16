@@ -204,7 +204,7 @@ class EFTClientIPDemoAsync
 ## Release notes
 
 
-### 1.3.4.0 (2018-02-11)
+### 1.3.5.0 (2018-02-16)
 * Added support for .NET Standard 2.0
 * Added support for basket data API
 * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.

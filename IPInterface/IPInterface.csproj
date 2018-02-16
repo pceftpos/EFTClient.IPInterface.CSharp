@@ -5,8 +5,8 @@
     <AssemblyName>PCEFTPOS.EFTClient.IPInterface</AssemblyName>
     <Title>PCEFTPOS.EFTClient.IPInterface</Title>
     <PackageId>PCEFTPOS.EFTClient.IPInterface</PackageId>
-    <PackageVersion>1.3.4.0</PackageVersion>
-    <Version>1.3.4.0</Version>
+    <PackageVersion>1.3.5.0</PackageVersion>
+    <Version>1.3.5.0</Version>
     <Description>TCP/IP library used for connecting to PC-EFTPOS Client</Description>
     <Authors>PC-EFTPOS Pty Ltd</Authors>
     <Company>PC-EFTPOS Pty Ltd</Company>
@@ -17,21 +17,56 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>pceftpos.pfx</AssemblyOriginatorKeyFile>
     <ReleaseNotes>
-      1.3.4.0 (2018-02-11)
+      1.3.5.0 (2018-02-11)
 
       * Added support for .NET Standard 2.0
       * Added support for basket data API
       * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
     </ReleaseNotes>
-    <PackageReleaseNotes>
-      1.3.4.0 (2018-02-11)
+    <PackageReleaseNotes>1.3.5.0 (2018-02-16)
 * Added support for .NET Standard 2.0
 * Added support for basket data API
 * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
-    </PackageReleaseNotes>
-    <AssemblyVersion>1.3.4.0</AssemblyVersion>
-    <FileVersion>1.3.4.0</FileVersion>
+</PackageReleaseNotes>
+    <AssemblyVersion>1.3.5.0</AssemblyVersion>
+    <FileVersion>1.3.5.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
+    <DocumentationFile>bin\Release\netstandard2.0\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
+    <DocumentationFile>bin\Release\net45\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net451|AnyCPU'">
+    <DocumentationFile>bin\Release\net451\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net452|AnyCPU'">
+    <DocumentationFile>bin\Release\net452\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net46|AnyCPU'">
+    <DocumentationFile>bin\Release\net46\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+    <DocumentationFile>bin\Release\net461\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
+    <DocumentationFile>bin\Release\net462\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net47|AnyCPU'">
+    <DocumentationFile>bin\Release\net47\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net471|AnyCPU'">
+    <DocumentationFile>bin\Release\net471\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
