@@ -104,7 +104,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 
         public ObservableCollection<string> TransactionList { get { return GetFilteredEnum<TransactionType>(); } }
 
-        public ObservableCollection<string> CardSourceList { get { return GetEnum<PANSource>(); } }
+        public ObservableCollection<string> CardSourceList { get { return GetEnum<PanSource>(); } }
         string _selectedCardSource = string.Empty;
         public string SelectedCardSource
         {

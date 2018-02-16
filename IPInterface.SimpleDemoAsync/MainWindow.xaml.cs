@@ -6,9 +6,18 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using System.Runtime.Serialization;
+using System.Collections.Generic;
 
 namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
 {
+    [DataContract]
+    public class EFTBasketItemCustom: EFTBasketItem
+    {
+        [DataMember(Name = "customValue")]
+        public string CustomItemTest { get; set; } = "This is a test";
+    }
+
     public partial class MainWindow : Window
     {
         IEFTClientIPAsync _eft = null;
@@ -53,8 +62,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
         {
             var enableCloud = _settings.EnableCloud;
             var addr = _settings.EFTClientAddress.Split(new char[] { ':' });
-            var tmpPort = 0;
-            if (addr.Length < 2 || int.TryParse(addr[1], out tmpPort) == false)
+            if (addr.Length < 2 || int.TryParse(addr[1], out int tmpPort) == false)
             {
                 ShowNotification("INVALID ADDRESS", "", "", NotificationType.Error, true);
                 return false;
@@ -103,8 +111,8 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
                 UpdateSettingsPageUI();
 
                 // This is only required if we aren't using the PC-EFTPOS dialog
-                await _eft.WriteRequestAsync(new SetDialogRequest() {Type = DialogType.Hidden });
-                await _eft.ReadResponseAsync(new CancellationTokenSource(new TimeSpan(0, 5, 0)).Token); // 
+                await _eft.WriteRequestAsync(new SetDialogRequest() {DialogType = DialogType.Hidden });
+                await _eft.ReadResponseAsync<SetDialogResponse>(new CancellationTokenSource(new TimeSpan(0, 5, 0)).Token); // 
             }
             else
             {
@@ -167,27 +175,27 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
         #endregion
 
         #region EFT DIALOG
-        async void btnEFTYes_Click(object sender, RoutedEventArgs e)
+        async void BtnEFTYes_Click(object sender, RoutedEventArgs e)
         {
             await _eft.WriteRequestAsync(new EFTSendKeyRequest() { Key = EFTPOSKey.YesAccept });
         }
 
-        async void btnEFTNo_Click(object sender, RoutedEventArgs e)
+        async void BtnEFTNo_Click(object sender, RoutedEventArgs e)
         {
             await _eft.WriteRequestAsync(new EFTSendKeyRequest() { Key = EFTPOSKey.NoDecline });
         }
 
-        async void btnEFTOk_Click(object sender, RoutedEventArgs e)
+        async void BtnEFTOk_Click(object sender, RoutedEventArgs e)
         {
             await _eft.WriteRequestAsync(new EFTSendKeyRequest() { Key = EFTPOSKey.OkCancel });
         }
 
-        async void btnEFTCancel_Click(object sender, RoutedEventArgs e)
+        async void BtnEFTCancel_Click(object sender, RoutedEventArgs e)
         {
             await _eft.WriteRequestAsync(new EFTSendKeyRequest() { Key = EFTPOSKey.OkCancel });
         }
 
-        async void btnEFTAuth_Click(object sender, RoutedEventArgs e)
+        async void BtnEFTAuth_Click(object sender, RoutedEventArgs e)
         {
             await _eft.WriteRequestAsync(new EFTSendKeyRequest() { Key = EFTPOSKey.Authorise, Data = txtEFTDisplayData.Text });
         }
@@ -198,11 +206,11 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
             lblEFTDisplayLine2.Text = line2;
             txtEFTDisplayData.Text = "";
 
-            btnEFTOk.Visibility = enableOkKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTCancel.Visibility = enableCancelKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTYes.Visibility = enableYesKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTNo.Visibility = enableNoKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTAuth.Visibility = enableAuthKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTOk.Visibility = enableOkKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTCancel.Visibility = enableCancelKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTYes.Visibility = enableYesKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTNo.Visibility = enableNoKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTAuth.Visibility = enableAuthKey ? Visibility.Visible : Visibility.Collapsed;
             txtEFTDisplayData.Visibility = enableAuthKey ? Visibility.Visible : Visibility.Collapsed;
 
             EFTDialogGrid.Visibility = Visibility.Visible;
@@ -217,20 +225,79 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
         #endregion
 
         #region UI EVENT HANDLERS
-        async void btnTender_Click(object sender, RoutedEventArgs e)
+        async void BtnTender_Click(object sender, RoutedEventArgs e)
         {
+            // Basket data
+            var basketId = System.Guid.NewGuid().ToString("N");
+            var basket = new EFTBasket()
+            {
+                Id = basketId,
+                Amount = 100,
+                Items = new System.Collections.Generic.List<EFTBasketItem>()
+                {
+                    new EFTBasketItem()
+                    {
+                        Id = System.Guid.NewGuid().ToString("N"),
+                        Amount = 10,
+                        Quantity = 5,
+                        Name = "Cat food",
+                        TagList = new List<string>() { "food", "pet" }
+                    },
+                    new EFTBasketItem()
+                    {
+                        Id = System.Guid.NewGuid().ToString("N"),
+                        Amount = 25,
+                        Name = "Dog food",
+                        Quantity = 2
+                    },
+                    new EFTBasketItemCustom()
+                    {
+                        Id = System.Guid.NewGuid().ToString("N"),
+                        Amount = 1,
+                        Name = "Custom",
+                        Description = "This is the description of a custom item",
+                        Quantity = 1
+                    }
+                }
+            };
+
+            if(!await _eft.WriteRequestAsync(new EFTBasketDataRequest() { Command = new EFTBasketDataCommandCreate() { Basket = basket } }))
+            {
+                ShowNotification("FAILED TO SEND TXN", "", "", NotificationType.Error, true);
+            }
+            else
+            {
+                try
+                {
+                    await _eft.ReadResponseAsync<EFTBasketDataResponse>(new CancellationTokenSource(new TimeSpan(0, 0, 10)).Token);
+                }
+                catch (TaskCanceledException)
+                {
+                    // EFT-Client timeout waiting for response
+                    ShowNotification("EFT-CLIENT TIMEOUT", null, null, NotificationType.Error, true);
+                }
+                catch (Exception)
+                {
+                    // TODO: Handle failed EFTBasketDataRequest. Should still continue and attempt the transaction.
+                }
+            }
+
+
+            // Transaction request
             var r = new EFTTransactionRequest();
             // TxnType is required
             r.TxnType = GetTxnType();
             // Set ReferenceNumber to something unique
-            r.ReferenceNumber = DateTime.Now.ToString("YYMMddHHmmssfff");
+            r.TxnRef = DateTime.Now.ToString("YYMMddHHmmssfff");
             // Set AmountCash for cash out, and AmountPurchase for purchase/refund
-            r.AmountPurchase = (r.TxnType == TransactionType.CashOut) ? 0 : decimal.Parse(txtAmount.Text);
-            r.AmountCash = (r.TxnType == TransactionType.CashOut) ? decimal.Parse(txtAmount.Text) : 0;
+            r.AmtPurchase = (r.TxnType == TransactionType.CashOut) ? 0 : decimal.Parse(txtAmount.Text);
+            r.AmtCash = (r.TxnType == TransactionType.CashOut) ? decimal.Parse(txtAmount.Text) : 0;
             // Set POS or pinpad printer
             r.ReceiptPrintMode = ReceiptPrintModeType.POSPrinter;
             // Set application. Used for gift card & 3rd party payment
             r.Application = TerminalApplication.EFTPOS;
+            // Set basket PAD tag
+            r.PurchaseAnalysisData.SetTag("SKU", basketId);
 
             if (!await _eft.WriteRequestAsync(r))
             {
@@ -311,7 +378,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
             }
         }
 
-        void btnSettingsBack_Click(object sender, RoutedEventArgs e)
+        void BtnSettingsBack_Click(object sender, RoutedEventArgs e)
         {
             NavigateToMainPage();
         }
@@ -335,12 +402,12 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
             UpdateSettingsPageUI();
         }
 
-        void btnNotificationOk_Click(object sender, RoutedEventArgs e)
+        void BtnNotificationOk_Click(object sender, RoutedEventArgs e)
         {
             NotificationGrid.Visibility = Visibility.Collapsed;
         }
 
-        async void btnVerifyServerUri_Click(object sender, RoutedEventArgs e)
+        async void BtnVerifyServerUri_Click(object sender, RoutedEventArgs e)
         {
             _settings.EFTClientAddress = txtEFTClientAddress.Text;
             _settings.EnableCloud = cboEnableCloud.IsChecked.HasValue && cboEnableCloud.IsChecked.Value;
@@ -360,7 +427,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
             }
         }
 
-        void btnSettings_Click(object sender, RoutedEventArgs e)
+        void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
             NavigateToSettingsPage();
         }
@@ -421,7 +488,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
             lblNotificationLine2.Foreground = b;
             lblNotificationLine3.Foreground = b;
 
-            btnNotificationOk.Visibility = enableOkButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnNotificationOk.Visibility = enableOkButton ? Visibility.Visible : Visibility.Collapsed;
 
             NotificationGrid.Visibility = Visibility.Visible;
         }

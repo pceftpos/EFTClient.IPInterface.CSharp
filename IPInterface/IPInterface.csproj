@@ -1,119 +1,40 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{E0142C69-2E91-4C62-8887-07631902145A}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>PCEFTPOS.EFTClient.IPInterface</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net45;net451;net452;net46;net461;net462;net47;net471</TargetFrameworks>
     <AssemblyName>PCEFTPOS.EFTClient.IPInterface</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
+    <Title>PCEFTPOS.EFTClient.IPInterface</Title>
+    <PackageId>PCEFTPOS.EFTClient.IPInterface</PackageId>
+    <PackageVersion>1.3.4.0</PackageVersion>
+    <Version>1.3.4.0</Version>
+    <Description>TCP/IP library used for connecting to PC-EFTPOS Client</Description>
+    <Authors>PC-EFTPOS Pty Ltd</Authors>
+    <Company>PC-EFTPOS Pty Ltd</Company>
+    <Copyright>Copyright 2018</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <PackageTags>PCEFTPOS PC-EFTPOS</PackageTags>
+    <PackageProjectUrl>https://github.com/pceftpos/EFTClient.IPInterface.CSharp</PackageProjectUrl>
+    <SignAssembly>false</SignAssembly>
+    <AssemblyOriginatorKeyFile>pceftpos.pfx</AssemblyOriginatorKeyFile>
+    <ReleaseNotes>
+      1.3.4.0 (2018-02-11)
+
+      * Added support for .NET Standard 2.0
+      * Added support for basket data API
+      * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
+    </ReleaseNotes>
+    <PackageReleaseNotes>
+      1.3.4.0 (2018-02-11)
+* Added support for .NET Standard 2.0
+* Added support for basket data API
+* Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
+    </PackageReleaseNotes>
+    <AssemblyVersion>1.3.4.0</AssemblyVersion>
+    <FileVersion>1.3.4.0</FileVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <Prefer32Bit>false</Prefer32Bit>
-  </PropertyGroup>
+
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Net" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="NuGet.CommandLine" Version="4.5.1" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="EFTClientIP.cs" />
-    <Compile Include="IEFTClientIP.cs" />
-    <Compile Include="PCEFTPOS\Net\ConnectionException.cs" />
-    <Compile Include="PCEFTPOS\Messaging\Logging.cs" />
-    <Compile Include="PCEFTPOS\Messaging\PadField.cs" />
-    <Compile Include="PCEFTPOS\Net\SocketExtension.cs" />
-    <Compile Include="PCEFTPOS\Net\TcpSocket.cs" />
-    <Compile Include="PCEFTPOS\Util\DecimalExtension.cs" />
-    <Compile Include="PCEFTPOS\Util\DirectEncoding.cs" />
-    <Compile Include="PCEFTPOS\Util\Encoding.cs" />
-    <Compile Include="PCEFTPOS\Util\IntegerExtension.cs" />
-    <Compile Include="PCEFTPOS\Util\StringBuilderExtension.cs" />
-    <Compile Include="PCEFTPOS\Util\StringExtension.cs" />
-    <Compile Include="Util\ConnectionException.cs" />
-    <Compile Include="EFTClientIPAsync.cs" />
-    <Compile Include="PCEFTPOS\Net\TcpSocketSslAsync.cs" />
-    <Compile Include="PCEFTPOS\Net\TcpSocketAsync.cs" />
-    <Compile Include="IEFTClientIPAsync.cs" />
-    <Compile Include="PCEFTPOS\Net\ITcpSocketAsync.cs" />
-    <Compile Include="PCEFTPOS\Net\ITcpSocket.cs" />
-    <Compile Include="Util\Extensions.cs" />
-    <Compile Include="Util\Logging.cs" />
-    <Compile Include="Util\MessageParser.cs" />
-    <Compile Include="Model\ChequeAuthRequest.cs" />
-    <Compile Include="Model\ControlPanel.cs" />
-    <Compile Include="Model\Display.cs" />
-    <Compile Include="Model\EFTClientList.cs" />
-    <Compile Include="Model\EFTCloudLogon.cs" />
-    <Compile Include="Model\EFTConfigMerchant.cs" />
-    <Compile Include="Model\EFTDuplicate.cs" />
-    <Compile Include="Model\EFTGetLast.cs" />
-    <Compile Include="Model\EFTLogon.cs" />
-    <Compile Include="Model\EFTRequest.cs" />
-    <Compile Include="Model\EFTSendKey.cs" />
-    <Compile Include="Model\EFTSettlement.cs" />
-    <Compile Include="Model\EFTTransaction.cs" />
-    <Compile Include="Model\GenericCommand.cs" />
-    <Compile Include="Model\QueryCard.cs" />
-    <Compile Include="Model\Receipt.cs" />
-    <Compile Include="Model\SetDialog.cs" />
-    <Compile Include="Model\SlaveHelper.cs" />
-    <Compile Include="Model\Status.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
-    <PropertyGroup>
-      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
-    </PropertyGroup>
-  </Target>
-  <PropertyGroup>
-    <PostBuildEvent>
-    </PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

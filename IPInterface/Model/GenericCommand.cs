@@ -8,7 +8,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		Print = '1',
 		GetPassword = '2',
 		Slave = 'Z',
-        PayAtTable = '@'
+        PayAtTable = '@',
+        BasketData = '%'
     }
 
 	public enum DisplayLocation

@@ -119,6 +119,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>Type of status to perform.</summary>
         /// <value>Type: <see cref="StatusType"/><para>The default is <see cref="StatusType.Standard" />.</para></value>
         public StatusType StatusType { get; set; } = StatusType.Standard;
@@ -131,332 +135,163 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	/// <summary>A PC-EFTPOS terminal status response object.</summary>
 	public class EFTStatusResponse : EFTResponse
 	{
-		string aiic;
-		int nii;
-		string terminalID;
-		string merchantID;
-		int timeout;
-		bool loggedOn;
-		string pinPadSerialNumber;
-		string pinPadVersion;
-		char bankCode;
-		string bankDescription;
-		string kvc;
-		int safCount;
-		NetworkType networkType;
-		string hardwareSerial;
-		string retailerName;
-		PINPadOptionFlags optionsFlags;
-		decimal safCreditLimit;
-		decimal safDebitLimit;
-		int maxSaf;
-		KeyHandlingType keyScheme;
-		decimal cashoutLimit;
-		decimal refundLimit;
-		string cpatVersion;
-		string nameTableVersion;
-		TerminalCommsType commsType;
-		int cardMisreadCount;
-		int totalMemory;
-		int freeMemory;
-		EFTTerminalType eftTerminalType;
-		int numApps;
-		int numLines;
-		DateTime hardwareInceptDate;
-
 		/// <summary>Constructs a default terminal status response object.</summary>
 		public EFTStatusResponse()
 			: base()
 		{
-			aiic = "";
-			nii = 0;
-			terminalID = "";
-			merchantID = "";
-			timeout = 0;
-			loggedOn = false;
-			pinPadSerialNumber = "";
-			pinPadVersion = "";
-			bankCode = ' ';
-			bankDescription = "";
-			kvc = "";
-			safCount = 0;
-			networkType = NetworkType.Unknown;
-			hardwareSerial = "";
-			retailerName = "";
-			optionsFlags = 0;
-			safCreditLimit = 0;
-			safDebitLimit = 0;
-			maxSaf = 0;
-			keyScheme = KeyHandlingType.Unknown;
-			cashoutLimit = 0;
-			refundLimit = 0;
-			cpatVersion = "";
-			nameTableVersion = "";
-			commsType = TerminalCommsType.Unknown;
-			cardMisreadCount = 0;
-			totalMemory = 0;
-			freeMemory = 0;
-			eftTerminalType = EFTTerminalType.Unknown;
-			numApps = 0;
-			numLines = 0;
-			hardwareInceptDate = DateTime.MinValue;
 		}
 
-		/// <summary>The AIIC that is configured in the terminal.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string AIIC
-		{
-			get { return aiic; }
-			set { aiic = value; }
-		}
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
+        /// <summary>The AIIC that is configured in the terminal.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string AIIC { get; set; }
 
 		/// <summary>The NII that is configured in the terminal.</summary>
 		/// <value>Type: <see cref="System.Int32" /></value>
-		public int NII
-		{
-			get { return nii; }
-			set { nii = value; }
-		}
+		public int NII { get; set; }
 
-		/// <summary>The terminal ID (CatID) that is configured in the terminal.</summary>
-		/// <value>Type: <see cref="System.String" /><para>A string of length 8 characters.</para></value>
-		public string TerminalID
-		{
-			get { return terminalID; }
-			set { terminalID = value; }
-		}
+        /// <summary>Terminal ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Catid { get; set; } = "";
 
-		/// <summary>The merchant ID (CaID) that is configured in the terminal.</summary>
-		/// <value>Type: <see cref="System.String" /><para>A string of length 15 characters.</para></value>
-		public string MerchantID
-		{
-			get { return merchantID; }
-			set { merchantID = value; }
-		}
+        /// <summary>Terminal ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Catid instead of TerminalID")]
+        public string TerminalID { get { return Catid; } set { Catid = value; } }
 
-		/// <summary>The bank response timeout that is configured in the terminal.</summary>
-		/// <value>Type: <see cref="System.Int32" /></value>
-		public int Timeout
-		{
-			get { return timeout; }
-			set { timeout = value; }
-		}
+        /// <summary>Merchant ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Caid { get; set; } = "";
 
-		/// <summary>Indicates if the PIN pad is currently logged on.</summary>
-		/// <value>Type: <see cref="System.Boolean" /></value>
-		public bool LoggedOn
-		{
-			get { return loggedOn; }
-			set { loggedOn = value; }
-		}
+        /// <summary>Merchant ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Caid instead of MerchantID")]
+        public string MerchantID { get { return Caid; } set { Caid = value; } }
 
-		/// <summary>The serial number of the terminal.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string PINPadSerialNumber
-		{
-			get { return pinPadSerialNumber; }
-			set { pinPadSerialNumber = value; }
-		}
+        /// <summary>The bank response timeout that is configured in the terminal.</summary>
+        /// <value>Type: <see cref="System.Int32" /></value>
+        public int Timeout { get; set; } = 0;
 
-		/// <summary>The software version currently loaded into the terminal.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string PINPadVersion
-		{
-			get { return pinPadVersion; }
-			set { pinPadVersion = value; }
-		}
+        /// <summary>Indicates if the PIN pad is currently logged on.</summary>
+        /// <value>Type: <see cref="System.Boolean" /></value>
+        public bool LoggedOn { get; set; } = false;
 
-		/// <summary>The bank acquirer code.</summary>
-		/// <value>Type: <see cref="System.Char" /></value>
-		public char BankCode
-		{
-			get { return bankCode; }
-			set { bankCode = value; }
-		}
+        /// <summary>The serial number of the terminal.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string PinPadSerialNumber { get; set; } = "";
 
-		/// <summary>The bank description.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string BankDescription
-		{
-			get { return bankDescription; }
-			set { bankDescription = value; }
-		}
+        /// <summary>The serial number of the terminal.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use PinPadSerialNumber instead of PINPadSerialNumber")]
+        public string PINPadSerialNumber { get { return PinPadSerialNumber; } set { PinPadSerialNumber = value; } }
 
-		/// <summary>Key verification code.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string KVC
-		{
-			get { return kvc; }
-			set { kvc = value; }
-		}
+        /// <summary>PIN pad software version.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string PinPadVersion { get; set; } = "";
 
-		/// <summary>Current number of stored transactions.</summary>
-		/// <value>Type: <see cref="System.Int32" /></value>
-		public int SAFCount
-		{
-			get { return safCount; }
-			set { safCount = value; }
-		}
+        /// <summary>PIN pad software version.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use PinPadVersion instead of PINPadVersion")]
+        public string PINPadVersion { get { return PinPadVersion; } set { PinPadVersion = value; } }
 
-		/// <summary>The acquirer communications type.</summary>
-		/// <value>Type: <see cref="NetworkType" /></value>
-		public NetworkType NetworkType
-		{
-			get { return networkType; }
-			set { networkType = value; }
-		}
+        /// <summary>The bank acquirer code.</summary>
+        /// <value>Type: <see cref="System.Char" /></value>
+        public char BankCode { get; set; } = ' ';
 
-		/// <summary>The hardware serial number.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string HardwareSerial
-		{
-			get { return hardwareSerial; }
-			set { hardwareSerial = value; }
-		}
+        /// <summary>The bank description.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string BankDescription { get; set; } = "";
 
-		/// <summary>The merchant retailer name.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string RetailerName
-		{
-			get { return retailerName; }
-			set { retailerName = value; }
-		}
+        /// <summary>Key verification code.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string KVC { get; set; } = "";
 
-		/// <summary>PIN pad terminal supported options flags.</summary>
-		/// <value>Type: <see cref="PINPadOptionFlags" /></value>
-		public PINPadOptionFlags OptionsFlags
-		{
-			get { return optionsFlags; }
-			set { optionsFlags = value; }
-		}
+        /// <summary>Current number of stored transactions.</summary>
+        /// <value>Type: <see cref="System.Int32" /></value>
+        public int SAFCount { get; set; } = 0;
 
-		/// <summary>Store-and forward credit limit.</summary>
-		/// <value>Type: <see cref="System.Decimal" /></value>
-		public decimal SAFCreditLimit
-		{
-			get { return safCreditLimit; }
-			set { safCreditLimit = value; }
-		}
+        /// <summary>The acquirer communications type.</summary>
+        /// <value>Type: <see cref="NetworkType" /></value>
+        public NetworkType NetworkType { get; set; } = NetworkType.Unknown;
 
-		/// <summary>Store-and-forward debit limit.</summary>
-		/// <value>Type: <see cref="System.Decimal" /></value>
-		public decimal SAFDebitLimit
-		{
-			get { return safDebitLimit; }
-			set { safDebitLimit = value; }
-		}
+        /// <summary>The hardware serial number.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string HardwareSerial { get; set; } = "";
 
-		/// <summary>The maximum number of store transactions.</summary>
-		/// <value>Type: <see cref="System.Int32" /></value>
-		public int MaxSAF
-		{
-			get { return maxSaf; }
-			set { maxSaf = value; }
-		}
+        /// <summary>The merchant retailer name.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string RetailerName { get; set; } = "";
 
-		/// <summary>The terminal key handling scheme.</summary>
-		/// <value>Type: <see cref="KeyHandlingType" /></value>
-		public KeyHandlingType KeyHandlingScheme
-		{
-			get { return keyScheme; }
-			set { keyScheme = value; }
-		}
+        /// <summary>PIN pad terminal supported options flags.</summary>
+        /// <value>Type: <see cref="PINPadOptionFlags" /></value>
+        public PINPadOptionFlags OptionsFlags { get; set; } = 0;
 
-		/// <summary>The maximum cash out limit.</summary>
-		/// <value>Type: <see cref="System.Decimal" /></value>
-		public decimal CashoutLimit
-		{
-			get { return cashoutLimit; }
-			set { cashoutLimit = value; }
-		}
+        /// <summary>Store-and forward credit limit.</summary>
+        /// <value>Type: <see cref="System.Decimal" /></value>
+        public decimal SAFCreditLimit { get; set; } = 0;
 
-		/// <summary>The maximum refund limit.</summary>
-		/// <value>Type: <see cref="System.Decimal" /></value>
-		public decimal RefundLimit
-		{
-			get { return refundLimit; }
-			set { refundLimit = value; }
-		}
+        /// <summary>Store-and-forward debit limit.</summary>
+        /// <value>Type: <see cref="System.Decimal" /></value>
+        public decimal SAFDebitLimit { get; set; } = 0;
 
-		/// <summary>Card prefix table version.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string CPATVersion
-		{
-			get { return cpatVersion; }
-			set { cpatVersion = value; }
-		}
+        /// <summary>The maximum number of store transactions.</summary>
+        /// <value>Type: <see cref="System.Int32" /></value>
+        public int MaxSAF { get; set; } = 0;
+
+        /// <summary>The terminal key handling scheme.</summary>
+        /// <value>Type: <see cref="KeyHandlingType" /></value>
+        public KeyHandlingType KeyHandlingScheme { get; set; } = KeyHandlingType.Unknown;
+
+        /// <summary>The maximum cash out limit.</summary>
+        /// <value>Type: <see cref="System.Decimal" /></value>
+        public decimal CashoutLimit { get; set; } = 0;
+
+        /// <summary>The maximum refund limit.</summary>
+        /// <value>Type: <see cref="System.Decimal" /></value>
+        public decimal RefundLimit { get; set; } = 0;
+
+        /// <summary>Card prefix table version.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string CPATVersion { get; set; } = "";
 
 		/// <summary>Card name table version.</summary>
 		/// <value>Type: <see cref="System.String" /></value>
-		public string NameTableVersion
-		{
-			get { return nameTableVersion; }
-			set { nameTableVersion = value; }
-		}
+		public string NameTableVersion { get; set; } = "";
 
-		/// <summary>The terminal to PC communication type.</summary>
-		/// <value>Type: <see cref="TerminalCommsType" /></value>
-		public TerminalCommsType TerminalCommsType
-		{
-			get { return commsType; }
-			set { commsType = value; }
-		}
+        /// <summary>The terminal to PC communication type.</summary>
+        /// <value>Type: <see cref="TerminalCommsType" /></value>
+        public TerminalCommsType TerminalCommsType { get; set; } = TerminalCommsType.Unknown;
 
 		/// <summary>Number of card mis-reads.</summary>
 		/// <value>Type: <see cref="System.Int32" /></value>
-		public int CardMisreadCount
-		{
-			get { return cardMisreadCount; }
-			set { cardMisreadCount = value; }
-		}
-
+		public int CardMisreadCount { get; set; } = 0;
+		
 		/// <summary>Number of memory pages in the PIN pad terminal.</summary>
 		/// <value>Type: <see cref="System.Int32" /></value>
-		public int TotalMemoryInTerminal
-		{
-			get { return totalMemory; }
-			set { totalMemory = value; }
-		}
+		public int TotalMemoryInTerminal { get; set; } = 0;
 
 		/// <summary>Number of free memory pages in the PIN pad terminal.</summary>
 		/// <value>Type: <see cref="System.Int32" /></value>
-		public int FreeMemoryInTerminal
-		{
-			get { return freeMemory; }
-			set { freeMemory = value; }
-		}
+		public int FreeMemoryInTerminal { get; set; } = 0;
 
 		/// <summary>The type of PIN pad terminal.</summary>
 		/// <value>Type: <see cref="EFTTerminalType" /></value>
-		public EFTTerminalType EFTTerminalType
-		{
-			get { return eftTerminalType; }
-			set { eftTerminalType = value; }
-		}
+		public EFTTerminalType EFTTerminalType { get; set; } = EFTTerminalType.Unknown;
 
 		/// <summary>Number of applications in the terminal.</summary>
 		/// <value>Type: <see cref="System.Int32" /></value>
-		public int NumAppsInTerminal
-		{
-			get { return numApps; }
-			set { numApps = value; }
-		}
+		public int NumAppsInTerminal { get; set; } = 0;
 
 		/// <summary>Number of available display line on the terminal.</summary>
 		/// <value>Type: <see cref="System.Int32" /></value>
-		public int NumLinesOnDisplay
-		{
-			get { return numLines; }
-			set { numLines = value; }
-		}
+		public int NumLinesOnDisplay { get; set; } = 0;
 
 		/// <summary>The date the hardware was incepted.</summary>
 		/// <value>Type: <see cref="System.DateTime" /></value>
-		public DateTime HardwareInceptionDate
-		{
-			get { return hardwareInceptDate; }
-			set { hardwareInceptDate = value; }
-		}
+		public DateTime HardwareInceptionDate { get; set; } = DateTime.MinValue;
 
         /// <summary>Indicates if the request was successful.</summary>
         /// <value>Type: <see cref="System.Boolean"/></value>

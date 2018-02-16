@@ -20,6 +20,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>Indicates where the request is to be sent to. Should normally be EFTPOS.</summary>
         /// <value>Type: <see cref="TerminalApplication"/><para>The default is <see cref="TerminalApplication.EFTPOS"/>.</para></value>
         public TerminalApplication Application { get; set; } = TerminalApplication.EFTPOS;
@@ -45,9 +49,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
-		/// <summary>Duplicate receipt text.</summary>
-		/// <value>Type: <see cref="System.String">String array</see></value>
-		public string[] ReceiptText { get; set; } = new string[] { "" };
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
+        /// <summary>Duplicate receipt text.</summary>
+        /// <value>Type: <see cref="System.String">String array</see></value>
+        public string[] ReceiptText { get; set; } = new string[] { "" };
 
         /// <summary>Indicates if the request was successful.</summary>
         /// <value>Type: <see cref="System.Boolean"/></value>

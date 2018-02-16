@@ -27,7 +27,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
         {
         }
 
+        /// <summary> The type of key to send </summary>
         public EFTPOSKey Key { get; set; } = EFTPOSKey.OkCancel;
+
+        /// <summary> Data entered by the POS (e.g. for an 'input entry' dialog type) </summary>
         public string Data { get; set; } = "";
     }
 }

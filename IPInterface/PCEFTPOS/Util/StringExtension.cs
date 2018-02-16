@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PCEFTPOS.Util
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     public static class StringExtension
     {

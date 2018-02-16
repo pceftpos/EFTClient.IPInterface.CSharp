@@ -1,5 +1,4 @@
-﻿using PCEFTPOS.Util;
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Net.Security;
@@ -8,7 +7,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PCEFTPOS.Net
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     /// <exclude/>
     class TcpSocket : ITcpSocket

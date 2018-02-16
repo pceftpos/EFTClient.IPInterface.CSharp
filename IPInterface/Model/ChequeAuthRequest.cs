@@ -21,6 +21,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>The branch code of the cheque.</summary>
         /// <value>Type: <see cref="System.String"/><para>A 6-digit branch code (BSB). This is a required property for a cheque authorization request.</para></value>
         public string BranchCode { get; set; } = "";
@@ -66,9 +70,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			txnRefNum = "";
 		}
 
-		/// <summary>The authorization amount for the cheque.</summary>
-		/// <value>Type: <see cref="System.Decimal"/><para>Echoed from the request.</para></value>
-		public decimal Amount
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
+        /// <summary>The authorization amount for the cheque.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>Echoed from the request.</para></value>
+        public decimal Amount
 		{
 			get { return amount; }
 			set { amount = value; }

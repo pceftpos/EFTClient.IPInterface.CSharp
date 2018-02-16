@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PCEFTPOS.Net
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     public static class SocketExtension
     {

@@ -2,11 +2,8 @@
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Threading.Tasks;
-using PCEFTPOS.Messaging;
-using PCEFTPOS.Util;
-using PCEFTPOS.Net;
 
-namespace PCEFTPOS.Net
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     class TcpSocketAsync : ITcpSocketAsync
     {

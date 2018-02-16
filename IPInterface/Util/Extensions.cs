@@ -34,29 +34,29 @@ namespace PCEFTPOS.EFTClient.IPInterface
             return "00";    // Default to EFTPOS.
         }
 
-        public static string ToMerchantString(this TerminalApplication v)
-        {
-            switch (v)
-            {
-                case TerminalApplication.EFTPOS:
-                case TerminalApplication.Agency:
-                    return "00";
-                case TerminalApplication.GiftCard:
-                    return "01";
-                case TerminalApplication.Loyalty:
-                    return "02";
-                case TerminalApplication.ChequeAuth:
-                    return "03";
-                case TerminalApplication.PrePaidCard:
-                    return "04";
-                case TerminalApplication.Medicare:
-                    return "05";
-                case TerminalApplication.Amex:
-                    return "08";
-            }
+        //public static string ToMerchantString(this TerminalApplication v)
+        //{
+        //    switch (v)
+        //    {
+        //        case TerminalApplication.EFTPOS:
+        //        case TerminalApplication.Agency:
+        //            return "00";
+        //        case TerminalApplication.GiftCard:
+        //            return "01";
+        //        case TerminalApplication.Loyalty:
+        //            return "02";
+        //        case TerminalApplication.ChequeAuth:
+        //            return "03";
+        //        case TerminalApplication.PrePaidCard:
+        //            return "04";
+        //        case TerminalApplication.Medicare:
+        //            return "05";
+        //        case TerminalApplication.Amex:
+        //            return "08";
+        //    }
 
-            return "00";    // Default to EFTPOS.
-        }
+        //    return "00";    // Default to EFTPOS.
+        //}
     }
 
     public static class AccountTypeExtension

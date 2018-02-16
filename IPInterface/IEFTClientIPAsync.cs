@@ -18,7 +18,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <summary>
         /// Disconnect from the EFT-Client (async).
         /// </summary>
-        [Obsolete("Please use Disconnect() instead.")]
+        [System.Obsolete("Please use Disconnect() instead.")]
         bool DisconnectAsync();
 
         /// <summary>

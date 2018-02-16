@@ -7,7 +7,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     {
         #region Properties
 
-        /// <summary>The IP host name of the PC-EFTPOS IP Client.</summary>
+        /// <summary>The IP host name of the PC-EFTPOS IP Client</summary>
         /// <value>Type: <see cref="System.String" /><para>The IP address or host name of the EFT Client IP interface.</para></value>
         /// <remarks>The setting of this property is required.<para>See <see cref="EFTClientIP.Connect"></see> example.</para></remarks>
         string HostName { get; set; }

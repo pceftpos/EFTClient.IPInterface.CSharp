@@ -573,9 +573,17 @@
                             <ComboBox x:Name="cboSettlementType" Height="25" Width="178" Margin="0,0,5,0"
                                               ItemsSource="{Binding Data.SettlementList}" SelectedItem="{Binding Data.SelectedSettlement}" SelectedIndex="0"/>
                         </DockPanel>
-                        <CheckBox x:Name="chkSResetTotals" Content="Reset Totals" Margin="5,0,0,5"
+
+
+                    <WrapPanel Margin="0,0,0,5">
+                        <Label x:Name="lblSPad" Content="PAD" Width="120" Margin="0,0,5,0"/>
+                        <ComboBox x:Name="cboSPad" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="27" FontSize="12" 
+                                                      ItemsSource="{Binding Data.PadList}" SelectedItem="{Binding Data.SelectedPad}"/>
+                        <Button x:Name="btnSPad" Content="..." Width="25" Margin="5,0,0,0" Command="{Binding LaunchPad}"></Button>
+                    </WrapPanel>
+                                                <CheckBox x:Name="chkSResetTotals" Content="Reset Totals" Margin="5,0,0,5"
                                           IsChecked="{Binding Data.ResetTotals}"/>
-                        <Button x:Name="btnSettlement" Content="Do Settlement" Height="25" Width="150" Margin="5,0,0,5"
+                    <Button x:Name="btnSettlement" Content="Do Settlement" Height="25" Width="150" Margin="5,0,0,5"
                                         Command="{Binding Settlement}"></Button>
                     </StackPanel>
                 </TabItem>

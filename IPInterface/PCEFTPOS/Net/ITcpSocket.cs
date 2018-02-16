@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace PCEFTPOS.Net
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     /// <exclude/>
     class TcpSocketException : Exception

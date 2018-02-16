@@ -1,5 +1,4 @@
 using System;
-using PCEFTPOS.Messaging;
 
 namespace PCEFTPOS.EFTClient.IPInterface
 {
@@ -41,6 +40,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
             this.LogonType = LogonType;
         }
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>type of logon to perform.</summary>
         /// <value>Type: <see cref="LogonType" /><para>The default is <see cref="LogonType.Standard" />.</para></value>
         public LogonType LogonType { get; set; } = LogonType.Standard;
@@ -72,7 +75,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>PIN pad software version.</summary>
         /// <value>Type: <see cref="System.String" /></value>
-        public string PinpadVersion { get; set; } = "";
+        public string PinPadVersion { get; set; } = "";
+
+        /// <summary>PIN pad software version.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use PinPadVersion instead of PinpadVersion")]
+        public string PinpadVersion { get { return PinPadVersion; } set { PinPadVersion = value; } }
 
         /// <summary>Indicates if the request was successful.</summary>
         /// <value>Type: <see cref="System.Boolean"/></value>
@@ -88,19 +96,39 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>Date and time of the response returned by the bank.</summary>
         /// <value>Type: <see cref="System.DateTime"/></value>
-        public DateTime BankDateTime { get; set; } = DateTime.MinValue;
+        public DateTime Date { get; set; } = DateTime.MinValue;
+
+        /// <summary>Date and time of the response returned by the bank.</summary>
+        /// <value>Type: <see cref="System.DateTime"/></value>
+        [System.Obsolete("Please use Date instead of BankDateTime")]
+        public DateTime BankDateTime { get { return Date; } set { Date = value; } }
 
         /// <summary>Terminal ID configured in the PIN pad.</summary>
-        /// <value>Type: <see cref="System.String"/><para>An 8 character terminal ID.</para></value>
-        public string TerminalID { get; set; } = "";
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Catid { get; set; } = "";
+
+        /// <summary>Terminal ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Catid instead of TerminalID")]
+        public string TerminalID { get { return Catid; } set { Catid = value; } }
 
         /// <summary>Merchant ID configured in the PIN pad.</summary>
-        /// <value>Type: <see cref="System.String"/><para>A 15 character terminal ID.</para></value>
-        public string MerchantID { get; set; } = "";
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Caid { get; set; } = "";
+
+        /// <summary>Merchant ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Caid instead of MerchantID")]
+        public string MerchantID { get { return Caid; } set { Caid = value; } }
 
         /// <summary>System Trace Audit Number</summary>
         /// <value>Type: <see cref="System.Int32"/></value>
-        public int STAN { get; set; } = 0;
+        public int Stan { get; set; } = 0;
+
+        /// <summary>System Trace Audit Number</summary>
+        /// <value>Type: <see cref="System.Int32"/></value>
+        [System.Obsolete("Please use Stan instead of STAN")]
+        public int STAN { get { return Stan; } set { Stan = value; } }
 
         /// <summary>Additional information sent with the response.</summary>
         /// <value>Type: <see cref="PadField"/></value>

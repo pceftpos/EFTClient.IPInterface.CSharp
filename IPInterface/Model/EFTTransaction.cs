@@ -1,4 +1,3 @@
-using PCEFTPOS.Messaging;
 using System;
 
 namespace PCEFTPOS.EFTClient.IPInterface
@@ -155,29 +154,6 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		Credit = '3'
 	}
 
-	/// <summary>The source of the card number.</summary>
-	public enum PANSource
-	{
-		/// <summary>Indicates the customer will be prompted to swipe,insert or present their card.</summary>
-		Default = ' ',
-		/// <summary>Indicates the POS has captured the Track2 from the customer card and it is stored in the PAN property.</summary>
-		POSSwiped = 'S',
-		/// <summary>Indicates the POS operator has keyed in the card number and it is stored in the PAN property.</summary>
-		POSKeyed = 'K',
-		/// <summary>Indicates the card number was captured from the Internet and is stored in the PAN property.</summary>
-		Internet = '0',
-		/// <summary>Indicates the card number was captured from a telephone order and it is stored in the PAN property.</summary>
-		TeleOrder = '1',
-		/// <summary>Indicates the card number was captured from a mail order and it is stored in the PAN property.</summary>
-		MailOrder = '2',
-		/// <summary>Indicates the POS operator has keyed in the card number and it is stored in the PAN property.</summary>
-		CustomerPresent = '3',
-        /// <summary>Indicates the card number was captured for a recurring transaction and it is stored in the PAN property.</summary>
-        RecurringTransaction = '4',
-        /// <summary>Indicates the card number was captured for an installment payment and it is stored in the PAN property.</summary>
-        Installment = '5'
-    }
-
 	/// <summary>The card entry type of the transaction.</summary>
 	public enum CardEntryType
 	{
@@ -307,8 +283,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>The type of transaction to perform.</summary>
         /// <value>Type: <see cref="TransactionType"/><para>The default is <see cref="TransactionType.PurchaseCash"></see></para></value>
-        [System.Obsolete("Please use TxnType instead")]
+        [System.Obsolete("Please use TxnType instead of Type")]
         public TransactionType Type { get { return TxnType; } set { TxnType = value; } }
+
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
 
         /// <summary>The currency code for this transaction.</summary>
         /// <value>Type: <see cref="System.String"/><para>A 3 digit ISO currency code. The default is "   ".</para></value>
@@ -332,51 +312,102 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>Indicates if the transaction should be tipable.</summary>
         /// <value>Type: <see cref="System.Boolean"/><para>Set to TRUE if tipping is to be enabled for this transaction. The default is FALSE.</para></value>
-        public bool EnableTipping { get; set; } = false;
+        public bool EnableTip { get; set; } = false;
+
+        /// <summary>Indicates if the transaction should be tipable.</summary>
+        /// <value>Type: <see cref="System.Boolean"/><para>Set to TRUE if tipping is to be enabled for this transaction. The default is FALSE.</para></value>
+        [System.Obsolete("Please use EnableTip instead of EnableTipping")]
+        public bool EnableTipping { get { return EnableTip; } set { EnableTip = value; } }
 
         /// <summary>The cash amount for the transaction.</summary>
         /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
         /// <remarks>This property is mandatory for a <see cref="TransactionType.CashOut"></see> transaction type.</remarks>
-        public decimal AmountCash { get; set; } = 0;
+        public decimal AmtCash { get; set; } = 0;
+
+        /// <summary>The cash amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for a <see cref="TransactionType.CashOut"></see> transaction type.</remarks>
+        [System.Obsolete("Please use AmtCash instead of AmountCash")]
+        public decimal AmountCash { get { return AmtCash; } set { AmtCash = value; } }
 
         /// <summary>The purchase amount for the transaction.</summary>
         /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
         /// <remarks>This property is mandatory for all but <see cref="TransactionType.CashOut"></see> transaction types.</remarks>
-        public decimal AmountPurchase { get; set; } = 0;
+        public decimal AmtPurchase { get; set; } = 0;
+
+        /// <summary>The purchase amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for all but <see cref="TransactionType.CashOut"></see> transaction types.</remarks>
+        [System.Obsolete("Please use AmtPurchase instead of AmountPurchase")]
+        public decimal AmountPurchase { get { return AmtPurchase; } set { AmtPurchase = value; } }
 
         /// <summary>The authorisation number for the transaction.</summary>
         /// <value>Type: <see cref="System.Int32"/></value>
         /// <remarks>This property is required for a <see cref="TransactionType.Completion"></see> transaction type.</remarks>
-        public int AuthNumber { get; set; } = 0;
+        public int AuthCode { get; set; } = 0;
+
+        /// <summary>The authorisation number for the transaction.</summary>
+        /// <value>Type: <see cref="System.Int32"/></value>
+        /// <remarks>This property is required for a <see cref="TransactionType.Completion"></see> transaction type.</remarks>
+        [System.Obsolete("Please use AuthCode instead of AuthNumber")]
+        public int AuthNumber { get { return AuthCode; } set { AuthCode = value; } }
+
 
         /// <summary>The reference number to attach to the transaction. This will appear on the receipt.</summary>
         /// <value>Type: <see cref="System.String"/></value>
         /// <remarks>This property is optional but it usually populated by a unique transaction identifier that can be used for retrieval.</remarks>
-        public string ReferenceNumber { get; set; } = "";
+        public string TxnRef { get; set; } = "";
+
+        /// <summary>The reference number to attach to the transaction. This will appear on the receipt.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>This property is optional but it usually populated by a unique transaction identifier that can be used for retrieval.</remarks>
+        [System.Obsolete("Please use TxnRef instead of ReferenceNumber")]
+        public string ReferenceNumber { get { return TxnRef; } set { TxnRef = value; } }
+
+
 
         /// <summary>Indicates the source of the card number.</summary>
-        /// <value>Type: <see cref="PANSource"/><para>The default is <see cref="PANSource.Default"></see>.</para></value>
+        /// <value>Type: <see cref="PanSource"/><para>The default is <see cref="PanSource.Default"></see>.</para></value>
         /// <remarks>Use this property for card not present transactions.</remarks>
-        public PANSource CardPANSource { get; set; } = PANSource.Default;
+        public PanSource PanSource { get; set; } = PanSource.Default;
+
+
+        /// <summary>Indicates the source of the card number.</summary>
+        /// <value>Type: <see cref="PanSource"/><para>The default is <see cref="PanSource.Default"></see>.</para></value>
+        /// <remarks>Use this property for card not present transactions.</remarks>
+        [System.Obsolete("Please use PanSource instead of CardPANSource")]
+        public PanSource CardPANSource { get { return PanSource; } set { PanSource = value; } }
 
         /// <summary>The card number to use when pan source of POS keyed is used.</summary>
         /// <value>Type: <see cref="System.String"/></value>
-        /// <remarks>Use this property in conjunction with <see cref="PANSource"></see>.</remarks>
-        public string CardPAN { get; set; } = "";
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see>.</remarks>
+        public string Pan { get; set; } = "";
+
+        /// <summary>The card number to use when pan source of POS keyed is used.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see>.</remarks>
+        [System.Obsolete("Please use Pan instead of CardPAN")]
+        public string CardPAN { get { return Pan; } set { Pan = value; } }
 
         /// <summary>The expiry date of the card when of POS keyed is used.</summary>
         /// <value>Type: <see cref="System.String"/><para>In MMYY format.</para></value>
-        /// <remarks>Use this property in conjunction with <see cref="PANSource"></see> when passing the card expiry date to PC-EFTPOS.</remarks>
-        public string ExpiryDate { get; set; } = "";
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the card expiry date to PC-EFTPOS.</remarks>
+        public string DateExpiry { get; set; } = "";
+
+        /// <summary>The expiry date of the card when of POS keyed is used.</summary>
+        /// <value>Type: <see cref="System.String"/><para>In MMYY format.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the card expiry date to PC-EFTPOS.</remarks>
+        [System.Obsolete("Please use DateExpiry instead of ExpiryDate")]
+        public string ExpiryDate { get { return DateExpiry; } set { DateExpiry = value; } }
 
         /// <summary>The track 2 to use when of POS swiped is used.</summary>
         /// <value>Type: <see cref="System.String"/></value>
-        /// <remarks>Use this property when <see cref="PANSource"></see> is set to <see cref="PANSource.POSSwiped"></see> and passing the full Track2 from the card magnetic stripe to PC-EFTPOS.</remarks>
+        /// <remarks>Use this property when <see cref="PanSource"></see> is set to <see cref="PanSource.POSSwiped"></see> and passing the full Track2 from the card magnetic stripe to PC-EFTPOS.</remarks>
         public string Track2 { get; set; } = "";
 
         /// <summary>The account to use for this transaction.</summary>
         /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
-        /// <remarks>Use this property in conjunction with <see cref="PANSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
         public AccountType CardAccountType { get; set; } = AccountType.Default;
 
         /// <summary>The retrieval reference number for the transaction.</summary>
@@ -423,6 +454,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
         [System.Obsolete("Please use TxnType instead")]
         public TransactionType Type { get { return TxnType; } set { TxnType = value; } }
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>Indicates the card type that was used in the transaction.</summary>
         /// <value>Type: <see cref="System.String" /></value>
         /// <remarks><seealso cref="EFTTransactionResponse.CardBIN"/></remarks>
@@ -445,12 +480,32 @@ namespace PCEFTPOS.EFTClient.IPInterface
         ///	<item><term>11</term><description>JCB</description></item>
         ///	<item><term>12</term><description>Other</description></item></list>
         ///	</remarks>
-        public int CardBIN { get; set; } = 0;
+        public int CardName { get; set; } = 0;
 
-		/// <summary>Used to retrieve the transaction from the batch.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		/// <remarks>The retrieval reference number is used when performing a tip adjustment transaction.</remarks>
-		public string RRN { get; set; } = "";
+        /// <summary>Indicates the card type that was used in the transaction.</summary>
+        /// <value>Type: <see cref="System.Int32" /></value>
+        /// <remarks><list type="table">
+        /// <listheader><term>Card BIN</term><description>Card Type</description></listheader>
+        ///	<item><term>0</term><description>Unknown</description></item>
+        ///	<item><term>1</term><description>Debit</description></item>
+        ///	<item><term>2</term><description>Bankcard</description></item>
+        ///	<item><term>3</term><description>Mastercard</description></item>
+        ///	<item><term>4</term><description>Visa</description></item>
+        ///	<item><term>5</term><description>American Express</description></item>
+        ///	<item><term>6</term><description>Diner Club</description></item>
+        ///	<item><term>7</term><description>JCB</description></item>
+        ///	<item><term>8</term><description>Label Card</description></item>
+        ///	<item><term>9</term><description>JCB</description></item>
+        ///	<item><term>11</term><description>JCB</description></item>
+        ///	<item><term>12</term><description>Other</description></item></list>
+        ///	</remarks>
+        [System.Obsolete("Please use CardName instead of CardBIN")]
+        public int CardBIN { get { return CardName; } set { CardName = value; } }
+
+        /// <summary>Used to retrieve the transaction from the batch.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        /// <remarks>The retrieval reference number is used when performing a tip adjustment transaction.</remarks>
+        public string RRN { get; set; } = "";
 
         /// <summary>Indicates which settlement batch this transaction will be included in.</summary>
         /// <value>Type: <see cref="System.DateTime" /><para>Settlement date is returned from the bank.</para></value>
@@ -458,32 +513,79 @@ namespace PCEFTPOS.EFTClient.IPInterface
         public DateTime SettlementDate { get; set; } = DateTime.MinValue;
 
         /// <summary>The cash amount for the transaction.</summary>
-        /// <value>Type: <see cref="System.Decimal" /><para>Echoed from the request.</para></value>
-        public decimal AmountCash { get; set; } = 0;
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for a <see cref="TransactionType.CashOut"></see> transaction type.</remarks>
+        public decimal AmtCash { get; set; } = 0;
 
-		/// <summary>The purchase amount for the transaction.</summary>
-		/// <value>Type: <see cref="System.Decimal" /><para>Echoed from the request.</para></value>
-		public decimal AmountPurchase { get; set; } = 0;
+        /// <summary>The cash amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for a <see cref="TransactionType.CashOut"></see> transaction type.</remarks>
+        [System.Obsolete("Please use AmtCash instead of AmountCash")]
+        public decimal AmountCash { get { return AmtCash; } set { AmtCash = value; } }
+
+        /// <summary>The purchase amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for all but <see cref="TransactionType.CashOut"></see> transaction types.</remarks>
+        public decimal AmtPurchase { get; set; } = 0;
+
+        /// <summary>The purchase amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for all but <see cref="TransactionType.CashOut"></see> transaction types.</remarks>
+        [System.Obsolete("Please use AmtPurchase instead of AmountPurchase")]
+        public decimal AmountPurchase { get { return AmtPurchase; } set { AmtPurchase = value; } }
 
         /// <summary>The tip amount for the transaction.</summary>
         /// <value>Type: <see cref="System.Decimal" /><para>Echoed from the request.</para></value>
-        public decimal AmountTip { get; set; } = 0;
+        public decimal AmtTip { get; set; } = 0;
+
+        /// <summary>The tip amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal" /><para>Echoed from the request.</para></value>
+        [System.Obsolete("Please use AmtTip instead of AmountTip")]
+        public decimal AmountTip { get { return AmtTip; } set { AmtTip = value; } }
 
         /// <summary>The authorisation number for the transaction.</summary>
-        /// <value>Type: <see cref="System.Int32" /><para>Authorization number returned by the bank.</para></value>
-        public int AuthNumber { get; set; } = 0;
+        /// <value>Type: <see cref="System.Int32"/></value>
+        /// <remarks>This property is required for a <see cref="TransactionType.Completion"></see> transaction type.</remarks>
+        public int AuthCode { get; set; } = 0;
 
-        /// <summary>The reference number sent in the request to uniquely identify this transaction.</summary>
-        /// <value>Type: <see cref="System.String" /><para>Echoed from the request.</para></value>
-        public string ReferenceNumber { get; set; } = "";
+        /// <summary>The authorisation number for the transaction.</summary>
+        /// <value>Type: <see cref="System.Int32"/></value>
+        /// <remarks>This property is required for a <see cref="TransactionType.Completion"></see> transaction type.</remarks>
+        [System.Obsolete("Please use AuthCode instead of AuthNumber")]
+        public int AuthNumber { get { return AuthCode; } set { AuthCode = value; } }
 
-        /// <summary>The PAN of the card.</summary>
-        /// <value>Type: <see cref="System.String" /><para>This property contains the the partial card number used in this transaction.</para></value>
-        public string CardPAN { get; set; } = "";
+        /// <summary>The reference number to attach to the transaction. This will appear on the receipt.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>This property is optional but it usually populated by a unique transaction identifier that can be used for retrieval.</remarks>
+        public string TxnRef { get; set; } = "";
 
-        /// <summary>The expiry date on the card.</summary>
-        /// <value>Type: <see cref="System.String" /><para>This property contains the expiry date (MMYY) of the card used int this transaction.</para></value>
-        public string ExpiryDate { get; set; } = "";
+        /// <summary>The reference number to attach to the transaction. This will appear on the receipt.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>This property is optional but it usually populated by a unique transaction identifier that can be used for retrieval.</remarks>
+        [System.Obsolete("Please use TxnRef instead of ReferenceNumber")]
+        public string ReferenceNumber { get { return TxnRef; } set { TxnRef = value; } }
+
+        /// <summary>The card number to use when pan source of POS keyed is used.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see>.</remarks>
+        public string Pan { get; set; } = "";
+
+        /// <summary>The card number to use when pan source of POS keyed is used.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see>.</remarks>
+        [System.Obsolete("Please use PAN instead of CardPAN")]
+        public string CardPAN { get { return Pan; } set { Pan = value; } }
+
+        /// <summary>The expiry date of the card when of POS keyed is used.</summary>
+        /// <value>Type: <see cref="System.String"/><para>In MMYY format.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the card expiry date to PC-EFTPOS.</remarks>
+        public string DateExpiry { get; set; } = "";
+
+        /// <summary>The expiry date of the card when of POS keyed is used.</summary>
+        /// <value>Type: <see cref="System.String"/><para>In MMYY format.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the card expiry date to PC-EFTPOS.</remarks>
+        [System.Obsolete("Please use DateExpiry instead of ExpiryDate")]
+        public string ExpiryDate { get { return DateExpiry; } set { DateExpiry = value; } }
 
         /// <summary>The track 2 data on the magnetic stripe of the card.</summary>
         /// <value>Type: <see cref="System.String" /><para>This property contains the partial track 2 data from the card used in this transaction.</para></value>
@@ -523,19 +625,39 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>Date and time of the response returned by the bank.</summary>
         /// <value>Type: <see cref="System.DateTime"/></value>
-        public DateTime BankDateTime { get; set; } = DateTime.MinValue;
+        public DateTime Date { get; set; } = DateTime.MinValue;
+
+        /// <summary>Date and time of the response returned by the bank.</summary>
+        /// <value>Type: <see cref="System.DateTime"/></value>
+        [System.Obsolete("Please use Date instead of BankDateTime")]
+        public DateTime BankDateTime { get { return Date; } set { Date = value; } }
 
         /// <summary>Terminal ID configured in the PIN pad.</summary>
-        /// <value>Type: <see cref="System.String"/><para>An 8 character terminal ID.</para></value>
-        public string TerminalID { get; set; } = "";
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Catid { get; set; } = "";
+
+        /// <summary>Terminal ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Catid instead of TerminalID")]
+        public string TerminalID { get { return Catid; } set { Catid = value; } }
 
         /// <summary>Merchant ID configured in the PIN pad.</summary>
-        /// <value>Type: <see cref="System.String"/><para>A 15 character terminal ID.</para></value>
-        public string MerchantID { get; set; } = "";
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Caid { get; set; } = "";
+
+        /// <summary>Merchant ID configured in the PIN pad.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Caid instead of MerchantID")]
+        public string MerchantID { get { return Caid; } set { Caid = value; } }
 
         /// <summary>System Trace Audit Number</summary>
         /// <value>Type: <see cref="System.Int32"/></value>
-        public int STAN { get; set; } = 0;
+        public int Stan { get; set; } = 0;
+
+        /// <summary>System Trace Audit Number</summary>
+        /// <value>Type: <see cref="System.Int32"/></value>
+        [System.Obsolete("Please use Stan instead of STAN")]
+        public int STAN { get { return Stan; } set { Stan = value; } }
 
         /// <summary>Additional information sent with the response.</summary>
         /// <value>Type: <see cref="PadField"/></value>

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PCEFTPOS.Net
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     public class ConnectionException : Exception
     {

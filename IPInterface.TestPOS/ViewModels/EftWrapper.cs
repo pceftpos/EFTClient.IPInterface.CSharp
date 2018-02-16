@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using PCEFTPOS.Messaging;
 
 namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 {
@@ -122,10 +120,12 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
         private void ShowError(string hr, string message)
         {
             _data.LastTxnResult.Clear();
-            var x = new Dictionary<string, string>();
-            x.Add("Result", "Failed");
-            x.Add("ResponseCode", hr);
-            x.Add("ResponseText", message);
+            var x = new Dictionary<string, string>
+            {
+                { "Result", "Failed" },
+                { "ResponseCode", hr },
+                { "ResponseText", message }
+            };
             _data.LastTxnResult = x;
         }
 
@@ -438,10 +438,10 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                 DialogX = x,
                 DialogY = y,
                 DisableDisplayEvents = displayEvents,
-                Position = pos,
-                Title = title,
-                TopMost = topMost,
-                Type = dialogType
+                DialogPosition = pos,
+                DialogTitle = title,
+                EnableTopmost = topMost,
+                DialogType = dialogType
             });
         }
 
@@ -479,9 +479,9 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
             await SendRequest<EFTConfigureMerchantResponse>(new EFTConfigureMerchantRequest
             {
                 AIIC = aiic,
-                MerchantID = merchantId,
+                Caid = merchantId,
                 NII = nii,
-                TerminalID = terminalId,
+                Catid = terminalId,
                 Timeout = timeout
             });
         }

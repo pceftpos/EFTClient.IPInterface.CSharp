@@ -10,9 +10,6 @@
 | IPInterface.TestPOS         | A full featured sample app using the `EFTClientIPAsync` component
 
 ## Getting started
-
-> If you are updating from the older `PCEFTIPInterface`, please refer to [Upgrading from PCEFTIPInterface](UPDATE.md)
-
 * Clone this repository or grab the [PCEFTPOS.EFTClient.IPInterface](https://www.nuget.org/packages/PCEFTPOS.EFTClient.IPInterface/) package from NuGet
 * Decide which component to use. `EFTClientIP` is event based pattern and `EFTClientIPAsync` uses the async/await pattern
 * Look at the `SimpleDemo` and `SimpleDemoAsync` samples. There are also some simple examples listed below.
@@ -49,11 +46,11 @@ class EFTClientIPDemo
             {
                 // TxnType is required
                 TxnType = TransactionType.PurchaseCash,
-                // Set ReferenceNumber to something unique
-                ReferenceNumber = DateTime.Now.ToString("YYMMddHHmmsszzz"),
-                // Set AmountCash for cash out, and AmountPurchase for purchase/refund
-                AmountPurchase = 1.00M,
-                AmountCash = 0.00M,
+                // Set TxnRef to something unique
+                TxnRef = DateTime.Now.ToString("YYMMddHHmmsszzz"),
+                // Set AmtCash for cash out, and AmtPurchase for purchase/refund
+                AmtPurchase = 1.00M,
+                AmtCash = 0.00M,
                 // Set POS or pinpad printer
                 ReceiptPrintMode = ReceiptPrintModeType.POSPrinter,
                 // Set application. Used for gift card & 3rd party payment
@@ -126,11 +123,11 @@ class EFTClientIPDemoAsync
             {
                 // TxnType is required
                 TxnType = TransactionType.PurchaseCash,
-                // Set ReferenceNumber to something unique
-                ReferenceNumber = DateTime.Now.ToString("YYMMddHHmmsszzz"),
-                // Set AmountCash for cash out, and AmountPurchase for purchase/refund
-                AmountPurchase = 1.00M,
-                AmountCash = 0.00M,
+                // Set TxnRef to something unique
+                TxnRef = DateTime.Now.ToString("YYMMddHHmmsszzz"),
+                // Set AmtCash for cash out, and AmtPurchase for purchase/refund
+                AmtPurchase = 1.00M,
+                AmtCash = 0.00M,
                 // Set POS or pinpad printer
                 ReceiptPrintMode = ReceiptPrintModeType.POSPrinter,
                 // Set application. Used for gift card & 3rd party payment
@@ -206,8 +203,17 @@ class EFTClientIPDemoAsync
 
 ## Release notes
 
-### 1.3.2.0 (2017-09-19)
-* Signed assembly.
+
+### 1.3.4.0 (2018-02-11)
+* Added support for .NET Standard 2.0
+* Added support for basket data API
+* Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
+
+### 1.3.3.0 (2017-10-26)
+* Changed internal namespaces from `PCEFTPOS.*` (`PCEFTPOS.Net`, `PCEFTPOS.Messaging` etc) to `PCEFTPOS.EFTClient.IPInterface`. This was causing issues when combining the EFTClientIP Nuget package with the actual PCEFTPOS lib. EFTClientIP needs to remain totally self-contained. 
+
+### 1.3.2.0 (2017-19-09)
+* Updated nuspec for v1.3.2.0 release.
 
 ### 1.3.1.0 (2017-09-13)
 * Changed namespace from `PCEFTPOS.API.IPInterface` to `PCEFTPOS.EFTClient.IPInterface` for new package

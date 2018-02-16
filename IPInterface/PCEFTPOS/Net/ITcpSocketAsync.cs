@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using PCEFTPOS.Messaging;
-using PCEFTPOS.Util;
 
-namespace PCEFTPOS.Net
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     public interface ITcpSocketAsync: IDisposable
     {

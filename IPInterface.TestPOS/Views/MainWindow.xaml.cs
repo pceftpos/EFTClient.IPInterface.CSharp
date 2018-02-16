@@ -23,7 +23,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 
             // Set up some defaults
             _vm.Data.TransactionRequest.TxnType = TransactionType.PurchaseCash;
-            _vm.Data.TransactionRequest.AmountPurchase = 1.00M;
+            _vm.Data.TransactionRequest.AmtPurchase = 1.00M;
 
             DataContext = _vm;
             InitializeComponent();

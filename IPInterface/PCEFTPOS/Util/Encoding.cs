@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace PCEFTPOS.Util
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     class Encoding
     {

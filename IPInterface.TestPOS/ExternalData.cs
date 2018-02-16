@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel;
-using PCEFTPOS.Messaging;
-using PCEFTPOS.Util;
 
 namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 {

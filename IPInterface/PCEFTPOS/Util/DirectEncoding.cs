@@ -1,7 +1,7 @@
 using System;
 using System.Text;
 
-namespace PCEFTPOS.Util
+namespace PCEFTPOS.EFTClient.IPInterface
 {
 	/// <summary>
 	/// Summary description for DirectEncoding.

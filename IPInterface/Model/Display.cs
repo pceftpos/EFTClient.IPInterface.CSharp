@@ -1,7 +1,3 @@
-using System;
-using PCEFTPOS.Util;
-using PCEFTPOS.Messaging;
-
 namespace PCEFTPOS.EFTClient.IPInterface
 {
     public enum InputType { None = '0', Normal = '1', Amount = '2', Decimal = '3', Password = '4' }

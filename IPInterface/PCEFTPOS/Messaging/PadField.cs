@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PCEFTPOS.Messaging
+namespace PCEFTPOS.EFTClient.IPInterface
 {
     public class PadTag
     {

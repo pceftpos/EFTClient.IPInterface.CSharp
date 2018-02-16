@@ -104,7 +104,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IPInterface\IPInterface.csproj">
-      <Project>{e0142c69-2e91-4c62-8887-07631902145a}</Project>
+      <Project>{3de3ff35-5303-41f0-9f66-5b5ab2b6b7df}</Project>
       <Name>IPInterface</Name>
     </ProjectReference>
   </ItemGroup>

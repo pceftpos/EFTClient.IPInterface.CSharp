@@ -79,7 +79,7 @@
             <Border Background="#EEEEEE" Height="40" VerticalAlignment="Top" Margin="-5,-5,-5,0" Padding="5">
                 <Grid>
                     <StackPanel Orientation="Horizontal">
-                        <Button x:Name="btnSettingsBack" Content="&#57618;" Style="{StaticResource HeaderButton}" Click="btnSettingsBack_Click"/>
+                        <Button x:Name="BtnSettingsBack" Content="&#57618;" Style="{StaticResource HeaderButton}" Click="BtnSettingsBack_Click"/>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="SETTINGS" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="5,0,0,0"/>
                     </StackPanel>
                 </Grid>
@@ -117,7 +117,7 @@
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <TextBox x:Name="txtEFTClientAddress" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="txtServerAddress_TextChanged"/>
-                        <Button x:Name="btnVerifyServerUri" Grid.Column="1" Content="&#xe117;" Margin="0,5" Style="{StaticResource SpeedButton}" Click="btnVerifyServerUri_Click"/>
+                        <Button x:Name="BtnVerifyServerUri" Grid.Column="1" Content="&#xe117;" Margin="0,5" Style="{StaticResource SpeedButton}" Click="BtnVerifyServerUri_Click"/>
                     </Grid>
 
                     <TextBlock Text="Use PC-EFTPOS Cloud" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
@@ -138,7 +138,7 @@
 
             <!--SettingsGrid-Footer-->
             <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                <!--<Button x:Name="btnStatus" Grid.Row="2" Grid.Column="1" Content="Pinpad status" HorizontalAlignment="Right"  VerticalAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnStatus_Click" />-->
+                <!--<Button x:Name="BtnStatus" Grid.Row="2" Grid.Column="1" Content="Pinpad status" HorizontalAlignment="Right"  VerticalAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnStatus_Click" />-->
             </StackPanel>
 
         </Grid>
@@ -159,7 +159,7 @@
                 <Border Background="#EEEEEE" Height="40" VerticalAlignment="Top" Margin="-5,-5,-5,0" Padding="5">
                     <Grid>
                         <TextBlock Grid.Row="0" Grid.Column="0" Text="PC-EFTPOS SIMPLE ASYNC DEMO" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Center"/>
-                        <Button x:Name="btnSettings" Grid.Row="0" Grid.Column="1" Content="&#57621;" FontFamily="Segoe UI Symbol" FontSize="26" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" Padding="0" BorderThickness="0" Click="btnSettings_Click"/>
+                        <Button x:Name="BtnSettings" Grid.Row="0" Grid.Column="1" Content="&#57621;" FontFamily="Segoe UI Symbol" FontSize="26" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" Padding="0" BorderThickness="0" Click="BtnSettings_Click"/>
                     </Grid>
                 </Border>
 
@@ -192,7 +192,7 @@
 
                 <!--MainGrid-Footer-->
                 <StackPanel Grid.Row="2" VerticalAlignment="Bottom" Orientation="Horizontal" HorizontalAlignment="Right">
-                    <Button x:Name="btnTender" Content="Tender" HorizontalAlignment="Right"  VerticalAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnTender_Click" />
+                    <Button x:Name="BtnTender" Content="Tender" HorizontalAlignment="Right"  VerticalAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnTender_Click" />
                 </StackPanel>
             </Grid>
         </Grid>
@@ -231,11 +231,11 @@
                     <TextBlock x:Name="lblEFTDisplayLine2" Text="WWWWWWWWWWWWWWWWW123" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold"/>
                     <TextBox x:Name="txtEFTDisplayData" Text="" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="3" VerticalAlignment="Center" HorizontalAlignment="Stretch" FontSize="24" FontWeight="Bold"/>
 
-                    <Button x:Name="btnEFTYes" Content="Yes" Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnEFTYes_Click"/>
-                    <Button x:Name="btnEFTAuth" Content="Auth" Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnEFTAuth_Click"/>
-                    <Button x:Name="btnEFTNo" Content="No" Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnEFTNo_Click"/>
-                    <Button x:Name="btnEFTOk" Content="Ok" Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnEFTOk_Click"/>
-                    <Button x:Name="btnEFTCancel" Content="Cancel" Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="btnEFTCancel_Click"/>
+                    <Button x:Name="BtnEFTYes" Content="Yes" Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnEFTYes_Click"/>
+                    <Button x:Name="BtnEFTAuth" Content="Auth" Grid.Row="4" Grid.Column="0" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnEFTAuth_Click"/>
+                    <Button x:Name="BtnEFTNo" Content="No" Grid.Row="4" Grid.Column="1" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnEFTNo_Click"/>
+                    <Button x:Name="BtnEFTOk" Content="Ok" Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnEFTOk_Click"/>
+                    <Button x:Name="BtnEFTCancel" Content="Cancel" Grid.Row="4" Grid.Column="2" HorizontalContentAlignment="Center" Style="{StaticResource DefaultButton}" Click="BtnEFTCancel_Click"/>
                 </Grid>
             </Border>
         </Grid>
@@ -272,7 +272,7 @@
                     <TextBlock x:Name="lblNotificationLine1" Grid.Row="0" Grid.ColumnSpan="3" Text="" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="Green"/>
                     <TextBlock x:Name="lblNotificationLine2" Grid.Row="1" Grid.ColumnSpan="3" Text="" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="Green"/>
                     <TextBlock x:Name="lblNotificationLine3" Grid.Row="2" Grid.ColumnSpan="3" Text="" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="Green"/>
-                    <Button x:Name="btnNotificationOk" Grid.Row="3" Grid.Column="2" Content="Ok" Style="{StaticResource DefaultButton}" Click="btnNotificationOk_Click"/>
+                    <Button x:Name="BtnNotificationOk" Grid.Row="3" Grid.Column="2" Content="Ok" Style="{StaticResource DefaultButton}" Click="BtnNotificationOk_Click"/>
                 </Grid>
             </Border>
         </Grid>

@@ -1,15 +1,10 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 using System.Text;
 using System.Threading.Tasks;
-using System.Linq;
-using System.Collections.Generic;
-using PCEFTPOS.Net;
-using PCEFTPOS.Util;
-using PCEFTPOS.Messaging;
-using System.Threading;
 
 namespace PCEFTPOS.EFTClient.IPInterface
 {
@@ -67,19 +62,28 @@ namespace PCEFTPOS.EFTClient.IPInterface
                 if (useSSL)
                 {
                     // Check if there are any custom root certificates to load
-                    var extns = new string[] { ".der", ".pem" };
-                    var certs = from f in Directory.EnumerateFiles(Directory.GetCurrentDirectory())
-                                where extns.Contains((new FileInfo(f)).Extension)
-                                select f;
+                    var tcp = new TcpSocketSslAsync();
+                    try
+                    {
+                        var extns = new string[] { ".der", ".pem" };
+                        var certs = from f in Directory.EnumerateFiles(Directory.GetCurrentDirectory())
+                                    where extns.Contains((new FileInfo(f)).Extension)
+                                    select f;
+                        tcp.CustomeRootCerts = certs?.ToList();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log(LogLevel.Error, tr => tr.Set($"Failed to get certs: {ex.Message}"));
+                    }
 
-                    _clientStream = new TcpSocketSslAsync() { CustomeRootCerts = certs.ToList() };
+                    _clientStream = tcp;
                 }
                 else
                 {
                     _clientStream = new TcpSocketAsync();
                 }
 
-                _clientStream.LogLevel = (PCEFTPOS.Messaging.LogLevel)LogLevel;
+                _clientStream.LogLevel = (LogLevel)LogLevel;
                 _clientStream.OnLog += _clientStream_OnLog;
 
                 var connected = await _clientStream.ConnectAsync(hostName, hostPort, useSSL);
@@ -104,9 +108,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
             }
         }
 
-        private void _clientStream_OnLog(object sender, PCEFTPOS.Messaging.LogEventArgs e)
+        private void _clientStream_OnLog(object sender, LogEventArgs e)
         {
-            Log((PCEFTPOS.EFTClient.IPInterface.LogLevel)e.LogLevel, tr => tr.Set(e.Message, e.Exception));
+            Log((LogLevel)e.LogLevel, tr => tr.Set(e.Message, e.Exception));
         }
 
 
@@ -158,7 +162,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             string msgString = "";
             try
             {
-                msgString = _parser.EFTRequestToString(request);
+                msgString = (request is EFTPosAsPinpadRequest) ? _parser.EFTRequestToXMLString(request) : _parser.EFTRequestToString(request);
             }
             catch (Exception e)
             {
@@ -276,11 +280,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
             // Keep parsing until no more characters
             try
             {
+                bool isXMLFormatted = false;
                 int index = 0;
                 while (index < _recvBuf.Length)
                 {
-                    // If the current char isn't # then keep cycling through the message until we find one
-                    if (_recvBuf[index] != (byte)'#')
+                    // If the current char isn't #/& then keep cycling through the message until we find one
+                    if (_recvBuf[index] != (byte)'#' && !(isXMLFormatted = _recvBuf[index] == (byte)'&'))
                     {
                         index++;
                         continue;
@@ -289,10 +294,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
                     // We have a valid start char, check for length. 
                     index++;
 
+                    int lengthSize = isXMLFormatted ? 6 : 4;
+
                     // Check that we have enough bytes to validate length, if not wait for more
-                    if (_recvBuf.Length < index + 4)
+                    if (_recvBuf.Length < index + lengthSize)
                     {
-                        Log(LogLevel.Debug, tr => tr.Set($"Unable to validate message header. Waiting for more data. Length:{_recvBuf.Length} Required:{index + 5}"));
+                        Log(LogLevel.Debug, tr => tr.Set($"Unable to validate message header. Waiting for more data. Length:{_recvBuf.Length} Required:{index + lengthSize + 1}"));
                         _recvBufWaiting = true;
                         break;
                     }
@@ -300,36 +307,36 @@ namespace PCEFTPOS.EFTClient.IPInterface
                     // Try to get the length of the new message. If it's not a valid length 
                     // we might have some corrupt data, keep checking for a valid message
                     int length = 0;
-                    var lengthStr = _recvBuf.Substring(index, 4);
-                    if (!int.TryParse(lengthStr, out length) || length <= 5)
+                    var lengthStr = _recvBuf.Substring(index, lengthSize);
+                    if (!int.TryParse(lengthStr, out length) || length <= (lengthSize + 1))
                     {
                         Log(LogLevel.Error, tr => tr.Set($"Invalid length. Content:{lengthStr}"));
                         continue;
                     }
 
                     // We have a valid length
-                    index += 4;
+                    index += lengthSize;
 
                     // If the defined message length is > our current buffer size, wait for more data
-                    if (_recvBuf.Length < index + length - 5)
+                    if (_recvBuf.Length < index + length - (lengthSize + 1))
                     {
-                        Log(LogLevel.Debug, tr => tr.Set($"Buffer is less than the indicate length. Waiting for more data. Length:{_recvBuf.Length < index} Required:{length - 5}"));
-                        _recvBuf = _recvBuf.Remove(0, index - 5);
+                        Log(LogLevel.Debug, tr => tr.Set($"Buffer is less than the indicate length. Waiting for more data. Length:{_recvBuf.Length < index} Required:{length - (lengthSize + 1)}"));
+                        _recvBuf = _recvBuf.Remove(0, index - (lengthSize + 1));
                         _recvBufWaiting = true;
                         break;
                     }
 
                     // We have a valid response
                     _recvBufWaiting = false;
-                    var response = _recvBuf.Substring(index, length - 5);
-                    index += (length - 5);
+                    var response = _recvBuf.Substring(index, length - (lengthSize + 1));
+                    index += (length - (lengthSize + 1));
                     _recvBuf.Remove(0, index);
 
                     // Process the response
                     EFTResponse eftResponse = null;
                     try
                     {
-                        eftResponse = _parser.StringToEFTResponse(response);
+                        eftResponse = (isXMLFormatted) ? _parser.XMLStringToEFTResponse(response) : _parser.StringToEFTResponse(response);
 
                         // If we have an EFTResponse we need to return it. 
                         if (eftResponse != null)
@@ -372,12 +379,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
                 return;
             }
 
-            TraceRecord tr = new TraceRecord() { Level = (PCEFTPOS.Messaging.LogLevel)level };
+            TraceRecord tr = new TraceRecord() { Level = level };
             traceAction(tr);
 
 
             // StringBuild is faster than $"{member}() line {line}: {tr.Message}"
-            var sb = new StringBuilder(member.Length + tr.Message + 100);
+            var sb = new StringBuilder(member.Length + tr.Message.Length + 100);
             sb.Append(member);
             sb.Append("() line ");
             sb.Append(line);

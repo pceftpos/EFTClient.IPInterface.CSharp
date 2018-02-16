@@ -1,6 +1,3 @@
-using PCEFTPOS.Messaging;
-using System;
-
 namespace PCEFTPOS.EFTClient.IPInterface
 {
     /// <summary>EFTPOS settlement types.</summary>
@@ -138,6 +135,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>EFT settlement type.</summary>
         /// <value>Type: <see cref="SettlementType" /><para>The default is <see cref="SettlementType.Settlement" />.</para></value>
         public SettlementType SettlementType { get; set; } = SettlementType.Settlement;
@@ -175,6 +176,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			//settleCardData = new List<SettlementCardTotals>();
 			//totalsData = new SettlementTotals();
 		}
+
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
 
         ///// <summary>Number of cards present in the settlement totals.</summary>
         ///// <value>Type: <see cref="System.Int32" /></value>

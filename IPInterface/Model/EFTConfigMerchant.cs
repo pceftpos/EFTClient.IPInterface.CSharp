@@ -10,13 +10,27 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>The terminal ID (CatID) to configure the terminal with.</summary>
         /// <value>Type: <see cref="System.String" /></value>
-        public string TerminalID { get; set; } = "";
+        public string Catid { get; set; } = "";
+
+        /// <summary>The terminal ID (CatID) to configure the terminal with.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Catid instead of TerminalID")]
+        public string TerminalID { get { return Catid; } set { Catid = value; } }
 
         /// <summary>The merchant ID (CaID) to configure the terminal with.</summary>
         /// <value>Type: <see cref="System.String" /></value>
-        public string MerchantID { get; set; } = "";
+        public string Caid { get; set; } = "";
+
+        /// <summary>The merchant ID (Caid) to configure the terminal with.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        [System.Obsolete("Please use Caid instead of MerchantID")]
+        public string MerchantID { get { return Caid; } set { Caid = value; } }
 
         /// <summary>The AIIC to configure the terminal with.</summary>
         /// <value>Type: <see cref="System.Int32" /></value>
@@ -45,6 +59,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		public EFTConfigureMerchantResponse() : base()
 		{
 		}
+
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
 
         /// <summary>Indicates if the request was successful.</summary>
         /// <value>Type: <see cref="System.Boolean"/></value>

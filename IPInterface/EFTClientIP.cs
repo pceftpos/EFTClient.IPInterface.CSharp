@@ -1,8 +1,6 @@
-﻿using PCEFTPOS.Net;
-using System;
+﻿using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
-using PCEFTPOS.Messaging;
 
 namespace PCEFTPOS.EFTClient.IPInterface
 {
@@ -168,7 +166,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         {
             hideDialogEvent.Reset();
 
-            if (!DoRequest(new SetDialogRequest() { Type = DialogType.Hidden }))
+            if (!DoRequest(new SetDialogRequest() { DialogType = DialogType.Hidden }))
                 return false;
 
             var r = hideDialogEvent.WaitOne(2000);
@@ -327,7 +325,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
                 return;
             }
 
-            TraceRecord tr = new TraceRecord() { Level = (PCEFTPOS.Messaging.LogLevel)level };
+            TraceRecord tr = new TraceRecord() { Level = level };
             traceAction(tr);
             string message = $"{member}() line {line}: {tr.Message}";
 

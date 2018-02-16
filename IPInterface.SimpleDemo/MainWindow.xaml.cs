@@ -138,27 +138,27 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
         #endregion
 
         #region EFT DIALOG
-        void btnEFTYes_Click(object sender, RoutedEventArgs e)
+        void BtnEFTYes_Click(object sender, RoutedEventArgs e)
         {
             _eft.DoSendKey(new EFTSendKeyRequest() { Key = EFTPOSKey.YesAccept });
         }
 
-        void btnEFTNo_Click(object sender, RoutedEventArgs e)
+        void BtnEFTNo_Click(object sender, RoutedEventArgs e)
         {
             _eft.DoSendKey(new EFTSendKeyRequest() { Key = EFTPOSKey.NoDecline });
         }
 
-        void btnEFTOk_Click(object sender, RoutedEventArgs e)
+        void BtnEFTOk_Click(object sender, RoutedEventArgs e)
         {
             _eft.DoSendKey(new EFTSendKeyRequest() { Key = EFTPOSKey.OkCancel });
         }
 
-        void btnEFTAuth_Click(object sender, RoutedEventArgs e)
+        void BtnEFTAuth_Click(object sender, RoutedEventArgs e)
         {
             _eft.DoSendKey(new EFTSendKeyRequest() { Key = EFTPOSKey.Authorise, Data = txtEFTDisplayData.Text });
         }
 
-        void btnEFTCancel_Click(object sender, RoutedEventArgs e)
+        void BtnEFTCancel_Click(object sender, RoutedEventArgs e)
         {
             _eft.DoSendKey(new EFTSendKeyRequest() { Key = EFTPOSKey.OkCancel });
         }
@@ -169,11 +169,11 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
             lblEFTDisplayLine2.Text = line2;
             txtEFTDisplayData.Text = "";
 
-            btnEFTOk.Visibility = enableOkKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTCancel.Visibility = enableCancelKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTYes.Visibility = enableYesKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTNo.Visibility = enableNoKey ? Visibility.Visible : Visibility.Collapsed;
-            btnEFTAuth.Visibility = enableAuthKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTOk.Visibility = enableOkKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTCancel.Visibility = enableCancelKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTYes.Visibility = enableYesKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTNo.Visibility = enableNoKey ? Visibility.Visible : Visibility.Collapsed;
+            BtnEFTAuth.Visibility = enableAuthKey ? Visibility.Visible : Visibility.Collapsed;
             txtEFTDisplayData.Visibility = enableAuthKey ? Visibility.Visible : Visibility.Collapsed;
 
             EFTDialogGrid.Visibility = Visibility.Visible;
@@ -188,16 +188,16 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
         #endregion
 
         #region UI EVENT HANDLERS
-        void btnTender_Click(object sender, RoutedEventArgs e)
+        void BtnTender_Click(object sender, RoutedEventArgs e)
         {
             var r = new EFTTransactionRequest();
             // TxnType is required
             r.TxnType = GetTxnType();
             // Set ReferenceNumber to something unique
-            r.ReferenceNumber = DateTime.Now.ToString("YYMMddHHmmssfff");
+            r.TxnRef = DateTime.Now.ToString("YYMMddHHmmssfff");
             // Set AmountCash for cash out, and AmountPurchase for purchase/refund
-            r.AmountPurchase = (r.TxnType == TransactionType.CashOut) ? 0 : decimal.Parse(txtAmount.Text);
-            r.AmountCash = (r.TxnType == TransactionType.CashOut) ? decimal.Parse(txtAmount.Text) : 0;
+            r.AmtPurchase = (r.TxnType == TransactionType.CashOut) ? 0 : decimal.Parse(txtAmount.Text);
+            r.AmtCash = (r.TxnType == TransactionType.CashOut) ? decimal.Parse(txtAmount.Text) : 0;
             // Set POS or pinpad printer
             r.ReceiptPrintMode = ReceiptPrintModeType.POSPrinter;
             // Set application. Used for gift card & 3rd party payment
@@ -209,7 +209,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
             }
         }
 
-        void btnSettingsBack_Click(object sender, RoutedEventArgs e)
+        void BtnSettingsBack_Click(object sender, RoutedEventArgs e)
         {
             NavigateToMainPage();
         }
@@ -233,12 +233,12 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
             UpdateSettingsPageUI();
         }
 
-        void btnNotificationOk_Click(object sender, RoutedEventArgs e)
+        void BtnNotificationOk_Click(object sender, RoutedEventArgs e)
         {
             NotificationGrid.Visibility = Visibility.Collapsed;
         }
 
-        void btnVerifyServerUri_Click(object sender, RoutedEventArgs e)
+        void BtnVerifyServerUri_Click(object sender, RoutedEventArgs e)
         {
             _settings.EFTClientAddress = txtEFTClientAddress.Text;
             _eft.Disconnect();
@@ -253,7 +253,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
             }
         }
 
-        void btnSettings_Click(object sender, RoutedEventArgs e)
+        void BtnSettings_Click(object sender, RoutedEventArgs e)
         {
             NavigateToSettingsPage();
         }
@@ -303,7 +303,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
             lblNotificationLine2.Foreground = b;
             lblNotificationLine3.Foreground = b;
 
-            btnNotificationOk.Visibility = enableOkButton ? Visibility.Visible : Visibility.Collapsed;
+            BtnNotificationOk.Visibility = enableOkButton ? Visibility.Visible : Visibility.Collapsed;
 
             NotificationGrid.Visibility = Visibility.Visible;
         }
@@ -315,7 +315,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo
 
         #endregion
 
-        private void btnEFTAuth_Click_1(object sender, RoutedEventArgs e)
+        private void BtnEFTAuth_Click_1(object sender, RoutedEventArgs e)
         {
 
         }

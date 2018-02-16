@@ -1,5 +1,4 @@
 using System;
-using PCEFTPOS.Messaging;
 
 namespace PCEFTPOS.EFTClient.IPInterface
 {
@@ -47,6 +46,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 		}
 
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
+
         /// <summary>Query card type.</summary>
         /// <value>Type: <see cref="QueryCardType" /><para>The default is <see cref="QueryCardType.ReadCard" />.</para></value>
         public QueryCardType QueryCardType { get; set; } = QueryCardType.ReadCard;
@@ -63,81 +66,74 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	/// <summary>A PC-EFTPOS terminal query card response object.</summary>
 	public class EFTQueryCardResponse : EFTResponse
 	{
-		TrackFlags trackFlags;
-		string track1;
-		string track2;
-		string track3;
-		int cardBin;
-		AccountType accountType;
-
 		/// <summary>Constructs a default terminal logon response object.</summary>
 		public EFTQueryCardResponse()
 			: base()
 		{
 		}
 
-		/// <summary>Flags indicating tracks present in the response.</summary>
-		/// <value>Type: <see cref="TrackFlags" /></value>
-		public TrackFlags TrackFlags
-		{
-			get { return trackFlags; }
-			set { trackFlags = value; }
-		}
+        /// <summary>Two digit merchant code</summary>
+        /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
+        public string Merchant { get; set; } = "00";
 
-		/// <summary>Data encoded on Track1 of the card.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string Track1
-		{
-			get { return track1; }
-			set { track1 = value; }
-		}
+        /// <summary>Flags indicating tracks present in the response.</summary>
+        /// <value>Type: <see cref="TrackFlags" /></value>
+        public TrackFlags TrackFlags { get; set; }
 
-		/// <summary>Data encoded on Track2 of the card.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string Track2
-		{
-			get { return track2; }
-			set { track2 = value; }
-		}
+        /// <summary>Data encoded on Track1 of the card.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Track1 { get; set; } = "";
 
-		/// <summary>Data encoded on Track3 of the card.</summary>
-		/// <value>Type: <see cref="System.String" /></value>
-		public string Track3
-		{
-			get { return track3; }
-			set { track3 = value; }
-		}
+        /// <summary>Data encoded on Track2 of the card.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Track2 { get; set; } = "";
 
-		/// <summary>Bin number of the card swiped.</summary>
-		/// <value>Type: <see cref="System.Int32" /></value>
-		/// <remarks><list type="table">
-		/// <listheader><term>Card BIN</term><description>Card Type</description></listheader>
-		///	<item><term>0</term><description>Unknown</description></item>
-		///	<item><term>1</term><description>Debit</description></item>
-		///	<item><term>2</term><description>Bankcard</description></item>
-		///	<item><term>3</term><description>Mastercard</description></item>
-		///	<item><term>4</term><description>Visa</description></item>
-		///	<item><term>5</term><description>American Express</description></item>
-		///	<item><term>6</term><description>Diner Club</description></item>
-		///	<item><term>7</term><description>JCB</description></item>
-		///	<item><term>8</term><description>Label Card</description></item>
-		///	<item><term>9</term><description>JCB</description></item>
-		///	<item><term>11</term><description>JCB</description></item>
-		///	<item><term>12</term><description>Other</description></item></list>
-		///	</remarks>
-		public int CardBin
-		{
-			get { return cardBin; }
-			set { cardBin = value; }
-		}
+        /// <summary>Data encoded on Track3 of the card.</summary>
+        /// <value>Type: <see cref="System.String" /></value>
+        public string Track3 { get; set; } = "";
 
-		/// <summary>Account type selected.</summary>
-		/// <value>Type: <see cref="AccountType" /></value>
-		public AccountType AccountType
-		{
-			get { return accountType; }
-			set { accountType = value; }
-		}
+        /// <summary>BIN number of the card swiped.</summary>
+        /// <value>Type: <see cref="System.Int32" /></value>
+        /// <remarks><list type="table">
+        /// <listheader><term>Card BIN</term><description>Card Type</description></listheader>
+        ///	<item><term>0</term><description>Unknown</description></item>
+        ///	<item><term>1</term><description>Debit</description></item>
+        ///	<item><term>2</term><description>Bankcard</description></item>
+        ///	<item><term>3</term><description>Mastercard</description></item>
+        ///	<item><term>4</term><description>Visa</description></item>
+        ///	<item><term>5</term><description>American Express</description></item>
+        ///	<item><term>6</term><description>Diner Club</description></item>
+        ///	<item><term>7</term><description>JCB</description></item>
+        ///	<item><term>8</term><description>Label Card</description></item>
+        ///	<item><term>9</term><description>JCB</description></item>
+        ///	<item><term>11</term><description>JCB</description></item>
+        ///	<item><term>12</term><description>Other</description></item></list>
+        ///	</remarks>
+        public int CardName { get; set; } = 0;
+
+        /// <summary>BIN number of the card swiped.</summary>
+        /// <value>Type: <see cref="System.Int32" /></value>
+        /// <remarks><list type="table">
+        /// <listheader><term>Card BIN</term><description>Card Type</description></listheader>
+        ///	<item><term>0</term><description>Unknown</description></item>
+        ///	<item><term>1</term><description>Debit</description></item>
+        ///	<item><term>2</term><description>Bankcard</description></item>
+        ///	<item><term>3</term><description>Mastercard</description></item>
+        ///	<item><term>4</term><description>Visa</description></item>
+        ///	<item><term>5</term><description>American Express</description></item>
+        ///	<item><term>6</term><description>Diner Club</description></item>
+        ///	<item><term>7</term><description>JCB</description></item>
+        ///	<item><term>8</term><description>Label Card</description></item>
+        ///	<item><term>9</term><description>JCB</description></item>
+        ///	<item><term>11</term><description>JCB</description></item>
+        ///	<item><term>12</term><description>Other</description></item></list>
+        ///	</remarks>
+        [System.Obsolete("Please use CardName instead of CardBIN")]
+        public int CardBin { get { return CardName; } set { CardName = value; } }
+
+        /// <summary>Account type selected.</summary>
+        /// <value>Type: <see cref="AccountType" /></value>
+        public AccountType AccountType { get; set; }
 
         /// <summary>Indicates if the request was successful.</summary>
         /// <value>Type: <see cref="System.Boolean"/></value>

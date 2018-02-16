@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using PCEFTPOS.Messaging;
 
 namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 {
@@ -297,7 +296,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                             Data.TransactionRequest.PurchaseAnalysisData = new PadField(pad);
                         }
 
-                        if (!string.IsNullOrEmpty(Data.SelectedTrack2) && Data.TransactionRequest.CardPANSource == PANSource.POSSwiped)
+                        if (!string.IsNullOrEmpty(Data.SelectedTrack2) && Data.TransactionRequest.PanSource == PanSource.POSSwiped)
                         {
                             var selectedTrack = Data.Track2Items.Find(x => x.ToString().Equals(Data.SelectedTrack2));
                             Data.TransactionRequest.Track2 = (selectedTrack != null) ? selectedTrack.Value : Data.SelectedTrack2;
@@ -312,7 +311,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                             Data.TransactionRequest.Application = TerminalApplication.EFTPOS;
                         }
 
-                        Data.TransactionRequest.ReferenceNumber = Data.TransactionReference;
+                        Data.TransactionRequest.TxnRef = Data.TransactionReference;
                         Data.TransactionRequest.ReceiptPrintMode = Data.PrintMode;
                         Data.TransactionRequest.ReceiptCutMode = Data.CutReceiptMode;
 
@@ -346,7 +345,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                             Data.TransactionRequest.Application = TerminalApplication.EFTPOS;
                         }
 
-                        Data.TransactionRequest.ReferenceNumber = Data.TransactionReference;
+                        Data.TransactionRequest.TxnRef = Data.TransactionReference;
 
                         await _eftw.QueryCard(p, QueryCardType.ReadCard);
 
@@ -356,8 +355,8 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                         {
                             if (!string.IsNullOrEmpty(Data.SelectedTrack2))
                             {
-                                Data.SelectedCardSource = PANSource.POSSwiped.ToString();
-                                Data.TransactionRequest.CardPANSource = PANSource.POSSwiped;
+                                Data.SelectedCardSource = PanSource.POSSwiped.ToString();
+                                Data.TransactionRequest.PanSource = PanSource.POSSwiped;
                                 Data.TransactionRequest.Track2 = Data.SelectedTrack2;
                                 await _eftw.DoTransaction(Data.TransactionRequest);
                             }
@@ -437,7 +436,13 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
             {
                 return new RelayCommand(async (o) =>
                 {
-                    await _eftw.DoSettlement(Data.SelectedSettlement, Data.CutReceiptMode, new PadField(), Data.PrintMode, Data.ResetTotals);
+                    var pad = "";
+                    if (!string.IsNullOrEmpty(Data.SelectedPad))
+                    {
+                        pad = Data.PadItems.Find(x => x.ToString().Equals(Data.SelectedPad)).Value;
+                    }
+
+                    await _eftw.DoSettlement(Data.SelectedSettlement, Data.CutReceiptMode, new PadField(pad), Data.PrintMode, Data.ResetTotals);
                 });
             }
         }
@@ -551,13 +556,15 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                 return new RelayCommand(async (o) =>
                 {
                     DialogType t = ((bool)o ? DialogType.Hidden : DialogType.Standard);
-                    SetDialogRequest r = new SetDialogRequest();
-                    r.DialogX = Data.DialogRequest.DialogX;
-                    r.DialogY = Data.DialogRequest.DialogY;
-                    r.Position = Data.DialogRequest.Position;
-                    r.Title = Data.DialogRequest.Title;
-                    r.TopMost = Data.DialogRequest.TopMost;
-                    r.Type = t;
+                    SetDialogRequest r = new SetDialogRequest
+                    {
+                        DialogX = Data.DialogRequest.DialogX,
+                        DialogY = Data.DialogRequest.DialogY,
+                        DialogPosition = Data.DialogRequest.DialogPosition,
+                        DialogTitle = Data.DialogRequest.DialogTitle,
+                        EnableTopmost = Data.DialogRequest.EnableTopmost,
+                        DialogType = t
+                    };
 
                     await _eftw.SetDialog(r);
                 });
@@ -721,8 +728,10 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                 {
                     ProxyVM.ProxyWindowClosing = true;
                     _proxy.Close();
-                    _proxy = new ProxyDialog();
-                    _proxy.DataContext = ProxyVM; // this;
+                    _proxy = new ProxyDialog
+                    {
+                        DataContext = ProxyVM // this;
+                    };
                     _proxy.Show();
                     ProxyVM.ProxyWindowClosing = false;
                 }

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.Serialization.Json;
 using System.Text;
-using System.Threading.Tasks;
-using PCEFTPOS.Util;
-using PCEFTPOS.Messaging;
+using System.Linq;
 
 namespace PCEFTPOS.EFTClient.IPInterface
 {
     interface IMessageParser
     {
         EFTResponse StringToEFTResponse(string msg);
-        string EFTRequestToString(EFTRequest eftRequest);        
+        EFTResponse XMLStringToEFTResponse(string msg);
+        string EFTRequestToString(EFTRequest eftRequest);
+        string EFTRequestToXMLString(EFTRequest eftRequest);
     }
 
     public class MessageParser: IMessageParser
@@ -85,6 +85,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
                 case IPClientResponseType.CloudLogon:
                     eftResponse = ParseCloudLogonResponse(msg);
                     break;
+
                 default:
                     throw new ArgumentException($"Unknown message type: {msg}", nameof(msg));
             }
@@ -145,25 +146,25 @@ namespace PCEFTPOS.EFTClient.IPInterface
             r.Success = TryParse<bool>(msg, 1, ref index);
             r.ResponseCode = TryParse<string>(msg, 2, ref index);
             r.ResponseText = TryParse<string>(msg, 20, ref index);
-            index += 2; // Skip merchant number.
+            r.Merchant = TryParse<string>(msg, 2, ref index);
             r.TxnType = TryParse<TransactionType>(msg, 1, ref index);
             r.CardAccountType = r.CardAccountType.FromString(TryParse<string>(msg, 7, ref index));
-            r.AmountCash = TryParse<decimal>(msg, 9, ref index) / 100;
-            r.AmountPurchase = TryParse<decimal>(msg, 9, ref index) / 100;
-            r.AmountTip = TryParse<decimal>(msg, 9, ref index) / 100;
-            r.AuthNumber = TryParse<int>(msg, 6, ref index);
-            r.ReferenceNumber = TryParse<string>(msg, 16, ref index);
-            r.STAN = TryParse<int>(msg, 6, ref index);
-            r.MerchantID = TryParse<string>(msg, 15, ref index);
-            r.TerminalID = TryParse<string>(msg, 8, ref index);
-            r.ExpiryDate = TryParse<string>(msg, 4, ref index);
+            r.AmtCash = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.AmtPurchase = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.AmtTip = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.AuthCode = TryParse<int>(msg, 6, ref index);
+            r.TxnRef = TryParse<string>(msg, 16, ref index);
+            r.Stan= TryParse<int>(msg, 6, ref index);
+            r.Caid = TryParse<string>(msg, 15, ref index);
+            r.Catid = TryParse<string>(msg, 8, ref index);
+            r.DateExpiry = TryParse<string>(msg, 4, ref index);
             r.SettlementDate = TryParse<DateTime>(msg, 4, ref index, "ddMM");
-            r.BankDateTime = TryParse<DateTime>(msg, 12, ref index, "ddMMyyHHmmss");
+            r.Date = TryParse<DateTime>(msg, 12, ref index, "ddMMyyHHmmss");
             r.CardType = TryParse<string>(msg, 20, ref index);
-            r.CardPAN = TryParse<string>(msg, 20, ref index);
+            r.Pan = TryParse<string>(msg, 20, ref index);
             r.Track2 = TryParse<string>(msg, 40, ref index);
             r.RRN = TryParse<string>(msg, 12, ref index);
-            r.CardBIN = TryParse<int>(msg, 2, ref index);
+            r.CardName = TryParse<int>(msg, 2, ref index);
             r.TxnFlags = new TxnFlags(TryParse<string>(msg, 8, ref index).ToCharArray());
             r.BalanceReceived = TryParse<bool>(msg, 1, ref index);
             r.AvailableBalance = TryParse<decimal>(msg, 9, ref index) / 100;
@@ -182,7 +183,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             r.LastTransactionSuccess = TryParse<bool>(msg, 1, ref index);
             r.ResponseCode = TryParse<string>(msg, 2, ref index);
             r.ResponseText = TryParse<string>(msg, 20, ref index);
-            index += 2; // Skip merchant number.
+            r.Merchant = TryParse<string>(msg, 2, ref index);
 
             if (char.IsLower(msg[index]))
             {
@@ -195,22 +196,22 @@ namespace PCEFTPOS.EFTClient.IPInterface
             else if (accountType == "Savings") r.CardAccountType = AccountType.Savings;
             else if (accountType == "Cheque ") r.CardAccountType = AccountType.Cheque;
             else r.CardAccountType = AccountType.Default;
-            r.AmountCash = TryParse<decimal>(msg, 9, ref index) / 100;
-            r.AmountPurchase = TryParse<decimal>(msg, 9, ref index) / 100;
-            r.AmountTip = TryParse<decimal>(msg, 9, ref index) / 100;
-            r.AuthNumber = TryParse<int>(msg, 6, ref index);
-            r.ReferenceNumber = TryParse<string>(msg, 16, ref index);
-            r.STAN = TryParse<int>(msg, 6, ref index);
-            r.MerchantID = TryParse<string>(msg, 15, ref index);
-            r.TerminalID = TryParse<string>(msg, 8, ref index);
-            r.ExpiryDate = TryParse<string>(msg, 4, ref index);
+            r.AmtCash = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.AmtPurchase = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.AmtTip = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.AuthCode = TryParse<int>(msg, 6, ref index);
+            r.TxnRef = TryParse<string>(msg, 16, ref index);
+            r.Stan = TryParse<int>(msg, 6, ref index);
+            r.Caid = TryParse<string>(msg, 15, ref index);
+            r.Catid = TryParse<string>(msg, 8, ref index);
+            r.DateExpiry = TryParse<string>(msg, 4, ref index);
             r.SettlementDate = TryParse<DateTime>(msg, 4, ref index, "ddMM");
             r.BankDateTime = TryParse<DateTime>(msg, 12, ref index, "ddMMyyHHmmss");
             r.CardType = TryParse<string>(msg, 20, ref index);
-            r.CardPAN = TryParse<string>(msg, 20, ref index);
+            r.Pan = TryParse<string>(msg, 20, ref index);
             r.Track2 = TryParse<string>(msg, 40, ref index);
             r.RRN = TryParse<string>(msg, 12, ref index);
-            r.CardBIN = TryParse<int>(msg, 2, ref index);
+            r.CardName = TryParse<int>(msg, 2, ref index);
             string txnFlags = TryParse<string>(msg, 8, ref index);
             r.TxnFlags = new TxnFlags(txnFlags.ToCharArray());
             r.BalanceReceived = TryParse<bool>(msg, 1, ref index);
@@ -242,51 +243,51 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
             if (msg.Length > 25)
             {
-                r.TerminalID = TryParse<string>(msg, 8, ref index);
-                r.MerchantID = TryParse<string>(msg, 15, ref index);
-                r.BankDateTime = TryParse<DateTime>(msg, 12, ref index, "ddMMyyHHmmss");
-                r.STAN = TryParse<int>(msg, 6, ref index);
-                r.PinpadVersion = TryParse<string>(msg, 16, ref index);
+                r.Catid = TryParse<string>(msg, 8, ref index);
+                r.Caid = TryParse<string>(msg, 15, ref index);
+                r.Date = TryParse<DateTime>(msg, 12, ref index, "ddMMyyHHmmss");
+                r.Stan = TryParse<int>(msg, 6, ref index);
+                r.PinPadVersion = TryParse<string>(msg, 16, ref index);
                 r.PurchaseAnalysisData = new PadField(TryParse<string>(msg, msg.Length - index, ref index));
             }
             return r;
         }
-        EFTResponse ParseDisplayResponse(string response)
+        EFTResponse ParseDisplayResponse(string msg)
         {
             int index = 1;
 
-            EFTDisplayResponse displayResponse = new EFTDisplayResponse();
+            var r = new EFTDisplayResponse();
             index++; // Skip sub code.
-            displayResponse.NumberOfLines = TryParse<int>(response, 2, ref index);
-            displayResponse.LineLength = TryParse<int>(response, 2, ref index);
-            for (int i = 0; i < displayResponse.NumberOfLines; i++)
-                displayResponse.DisplayText[i] = TryParse<string>(response, displayResponse.LineLength, ref index);
-            displayResponse.CancelKeyFlag = TryParse<bool>(response, 1, ref index);
-            displayResponse.AcceptYesKeyFlag = TryParse<bool>(response, 1, ref index);
-            displayResponse.DeclineNoKeyFlag = TryParse<bool>(response, 1, ref index);
-            displayResponse.AuthoriseKeyFlag = TryParse<bool>(response, 1, ref index);
-            displayResponse.InputType = TryParse<InputType>(response, 1, ref index);
-            displayResponse.OKKeyFlag = TryParse<bool>(response, 1, ref index);
+            r.NumberOfLines = TryParse<int>(msg, 2, ref index);
+            r.LineLength = TryParse<int>(msg, 2, ref index);
+            for (int i = 0; i < r.NumberOfLines; i++)
+                r.DisplayText[i] = TryParse<string>(msg, r.LineLength, ref index);
+            r.CancelKeyFlag = TryParse<bool>(msg, 1, ref index);
+            r.AcceptYesKeyFlag = TryParse<bool>(msg, 1, ref index);
+            r.DeclineNoKeyFlag = TryParse<bool>(msg, 1, ref index);
+            r.AuthoriseKeyFlag = TryParse<bool>(msg, 1, ref index);
+            r.InputType = TryParse<InputType>(msg, 1, ref index);
+            r.OKKeyFlag = TryParse<bool>(msg, 1, ref index);
             index += 2;
-            displayResponse.GraphicCode = TryParse<GraphicCode>(response, 1, ref index);
-            int padLength = TryParse<int>(response, 3, ref index);
-            displayResponse.PurchaseAnalysisData = new PadField(TryParse<string>(response, padLength, ref index));
+            r.GraphicCode = TryParse<GraphicCode>(msg, 1, ref index);
+            int padLength = TryParse<int>(msg, 3, ref index);
+            r.PurchaseAnalysisData = new PadField(TryParse<string>(msg, padLength, ref index));
 
-            return displayResponse;
+            return r;
         }
-        EFTResponse ParseReceiptResponse(string response)
+        EFTResponse ParseReceiptResponse(string msg)
         {
             int index = 1;
 
-            EFTReceiptResponse eftResponse = new EFTReceiptResponse
+            var r = new EFTReceiptResponse
             {
-                Type = TryParse<ReceiptType>(response, 1, ref index)
+                Type = TryParse<ReceiptType>(msg, 1, ref index)
             };
 
-            if (eftResponse.Type != ReceiptType.ReceiptText)
+            if (r.Type != ReceiptType.ReceiptText)
             {
-                lastReceiptType = eftResponse.Type;
-                eftResponse.IsPrePrint = true;
+                lastReceiptType = r.Type;
+                r.IsPrePrint = true;
             }
             else
             {
@@ -294,23 +295,23 @@ namespace PCEFTPOS.EFTClient.IPInterface
                 bool done = false;
                 while (!done)
                 {
-                    int lineLength = response.Substring(index).IndexOf("\r\n");
+                    int lineLength = msg.Substring(index).IndexOf("\r\n");
                     if (lineLength > 0)
                     {
-                        receiptLines.Add(response.Substring(index, lineLength));
+                        receiptLines.Add(msg.Substring(index, lineLength));
                         index += lineLength + 2;
-                        if (index >= response.Length)
+                        if (index >= msg.Length)
                             done = true;
                     }
                     else
                         done = true;
                 }
 
-                eftResponse.ReceiptText = receiptLines.ToArray();
-                eftResponse.Type = lastReceiptType;
+                r.ReceiptText = receiptLines.ToArray();
+                r.Type = lastReceiptType;
             }
 
-            return eftResponse;
+            return r;
         }
         EFTResponse ParseControlPanelResponse(string msg)
         {
@@ -324,35 +325,35 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
             return r;
         }
-        EFTResponse ParseEFTReprintReceiptResponse(string response)
+        EFTResponse ParseEFTReprintReceiptResponse(string msg)
         {
             int index = 1;
 
-            EFTReprintReceiptResponse eftResponse = new EFTReprintReceiptResponse();
+            var r = new EFTReprintReceiptResponse();
             index++; // Skip sub code.
-            eftResponse.Success = TryParse<bool>(response, 1, ref index);
-            eftResponse.ResponseCode = TryParse<string>(response, 2, ref index);
-            eftResponse.ResponseText = TryParse<string>(response, 20, ref index);
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
 
             List<string> receiptLines = new List<string>();
             bool done = false;
             while (!done)
             {
-                int lineLength = response.Substring(index).IndexOf("\r\n");
+                int lineLength = msg.Substring(index).IndexOf("\r\n");
                 if (lineLength > 0)
                 {
-                    receiptLines.Add(response.Substring(index, lineLength));
+                    receiptLines.Add(msg.Substring(index, lineLength));
                     index += lineLength + 2;
-                    if (index >= response.Length)
+                    if (index >= msg.Length)
                         done = true;
                 }
                 else
                     done = true;
             }
 
-            eftResponse.ReceiptText = receiptLines.ToArray();
+            r.ReceiptText = receiptLines.ToArray();
 
-            return eftResponse;
+            return r;
         }
         EFTResponse ParseEFTSettlementResponse(string msg)
         {
@@ -450,119 +451,119 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
             return r;
         }
-        EFTResponse ParseQueryCardResponse(string response)
+        EFTResponse ParseQueryCardResponse(string msg)
         {
             int index = 1;
 
-            EFTQueryCardResponse eftResponse = new EFTQueryCardResponse
+            var r = new EFTQueryCardResponse
             {
-                AccountType = (AccountType)response[index++],
-                Success = TryParse<bool>(response, 1, ref index),
-                ResponseCode = TryParse<string>(response, 2, ref index),
-                ResponseText = TryParse<string>(response, 20, ref index)
+                AccountType = (AccountType)msg[index++],
+                Success = TryParse<bool>(msg, 1, ref index),
+                ResponseCode = TryParse<string>(msg, 2, ref index),
+                ResponseText = TryParse<string>(msg, 20, ref index)
             };
 
-            if (response.Length > 25)
+            if (msg.Length > 25)
             {
-                eftResponse.Track2 = response.Substring(index, 40); index += 40;
-                string track1or3 = response.Substring(index, 80); index += 80;
-                char trackFlag = response[index++];
+                r.Track2 = msg.Substring(index, 40); index += 40;
+                string track1or3 = msg.Substring(index, 80); index += 80;
+                char trackFlag = msg[index++];
                 switch (trackFlag)
                 {
                     case '1':
-                        eftResponse.TrackFlags = TrackFlags.Track1;
-                        eftResponse.Track1 = track1or3;
+                        r.TrackFlags = TrackFlags.Track1;
+                        r.Track1 = track1or3;
                         break;
                     case '2':
-                        eftResponse.TrackFlags = TrackFlags.Track2;
+                        r.TrackFlags = TrackFlags.Track2;
                         break;
                     case '3':
-                        eftResponse.TrackFlags = TrackFlags.Track1 | TrackFlags.Track2;
-                        eftResponse.Track1 = track1or3;
+                        r.TrackFlags = TrackFlags.Track1 | TrackFlags.Track2;
+                        r.Track1 = track1or3;
                         break;
                     case '4':
-                        eftResponse.TrackFlags = TrackFlags.Track3;
-                        eftResponse.Track3 = track1or3;
+                        r.TrackFlags = TrackFlags.Track3;
+                        r.Track3 = track1or3;
                         break;
                     case '6':
-                        eftResponse.TrackFlags = TrackFlags.Track2 | TrackFlags.Track3;
-                        eftResponse.Track3 = track1or3;
+                        r.TrackFlags = TrackFlags.Track2 | TrackFlags.Track3;
+                        r.Track3 = track1or3;
                         break;
                 }
 
-                eftResponse.CardBin = int.Parse(response.Substring(index, 2)); index += 2;
+                r.CardName = int.Parse(msg.Substring(index, 2)); index += 2;
 
                 int padLength;
                 try
                 {
-                    padLength = int.Parse(response.Substring(index, 3));
-                    eftResponse.PurchaseAnalysisData = new PadField(response.Substring(index, padLength));
+                    padLength = int.Parse(msg.Substring(index, 3));
+                    r.PurchaseAnalysisData = new PadField(msg.Substring(index, padLength));
                     index += padLength;
                 }
                 catch { padLength = 0; }
                 finally { index += 3; }
             }
 
-            return eftResponse;
+            return r;
         }
-        EFTResponse ParseEFTConfigureMerchantResponse(string response)
+        EFTResponse ParseEFTConfigureMerchantResponse(string msg)
         {
             int index = 1;
 
-            EFTConfigureMerchantResponse eftResponse = new EFTConfigureMerchantResponse();
+            var r = new EFTConfigureMerchantResponse();
             index++; // Skip sub code.
-            eftResponse.Success = TryParse<bool>(response, 1, ref index);
-            eftResponse.ResponseCode = TryParse<string>(response, 2, ref index);
-            eftResponse.ResponseText = TryParse<string>(response, 20, ref index);
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
 
-            return eftResponse;
+            return r;
         }
-        EFTResponse ParseEFTStatusResponse(string response)
+        EFTResponse ParseEFTStatusResponse(string msg)
         {
             int index = 1;
 
-            EFTStatusResponse eftResponse = new EFTStatusResponse();
+            var r = new EFTStatusResponse();
             index++; // Skip sub code.
-            eftResponse.Success = TryParse<bool>(response, 1, ref index);
-            eftResponse.ResponseCode = TryParse<string>(response, 2, ref index);
-            eftResponse.ResponseText = TryParse<string>(response, 20, ref index);
-            if (index >= response.Length) return eftResponse;
-            index += 2; // Skip merchant number.
-            eftResponse.AIIC = TryParse<string>(response, 11, ref index);
-            eftResponse.NII = TryParse<int>(response, 3, ref index);
-            eftResponse.MerchantID = TryParse<string>(response, 15, ref index);
-            eftResponse.TerminalID = TryParse<string>(response, 8, ref index);
-            eftResponse.Timeout = TryParse<int>(response, 3, ref index);
-            eftResponse.LoggedOn = TryParse<bool>(response, 1, ref index);
-            eftResponse.PINPadSerialNumber = TryParse<string>(response, 16, ref index);
-            eftResponse.PINPadVersion = TryParse<string>(response, 16, ref index);
-            eftResponse.BankDescription = TryParse<string>(response, 32, ref index);
-            int padLength = TryParse<int>(response, 3, ref index);
-            if (response.Length - index < padLength)
-                return eftResponse;
-            eftResponse.SAFCount = TryParse<int>(response, 4, ref index);
-            eftResponse.NetworkType = TryParse<NetworkType>(response, 1, ref index);
-            eftResponse.HardwareSerial = TryParse<string>(response, 16, ref index);
-            eftResponse.RetailerName = TryParse<string>(response, 40, ref index);
-            eftResponse.OptionsFlags = ParseStatusOptionFlags(response.Substring(index, 32).ToCharArray()); index += 32;
-            eftResponse.SAFCreditLimit = TryParse<int>(response, 9, ref index) / 100;
-            eftResponse.SAFDebitLimit = TryParse<int>(response, 9, ref index) / 100;
-            eftResponse.MaxSAF = TryParse<int>(response, 3, ref index);
-            eftResponse.KeyHandlingScheme = ParseKeyHandlingType(response[index++]);
-            eftResponse.CashoutLimit = TryParse<decimal>(response, 9, ref index) / 100;
-            eftResponse.RefundLimit = TryParse<decimal>(response, 9, ref index) / 100;
-            eftResponse.CPATVersion = TryParse<string>(response, 6, ref index);
-            eftResponse.NameTableVersion = TryParse<string>(response, 6, ref index);
-            eftResponse.TerminalCommsType = ParseTerminalCommsType(response[index++]);
-            eftResponse.CardMisreadCount = TryParse<int>(response, 6, ref index);
-            eftResponse.TotalMemoryInTerminal = TryParse<int>(response, 4, ref index);
-            eftResponse.FreeMemoryInTerminal = TryParse<int>(response, 4, ref index);
-            eftResponse.EFTTerminalType = ParseEFTTerminalType(response.Substring(index, 4)); index += 4;
-            eftResponse.NumAppsInTerminal = TryParse<int>(response, 2, ref index);
-            eftResponse.NumLinesOnDisplay = TryParse<int>(response, 2, ref index);
-            eftResponse.HardwareInceptionDate = TryParse<DateTime>(response, 6, ref index, "ddMMyy");
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
+            if (index >= msg.Length) return r;
+            r.Merchant = TryParse<string>(msg, 2, ref index);
+            r.AIIC = TryParse<string>(msg, 11, ref index);
+            r.NII = TryParse<int>(msg, 3, ref index);
+            r.Caid = TryParse<string>(msg, 15, ref index);
+            r.Catid = TryParse<string>(msg, 8, ref index);
+            r.Timeout = TryParse<int>(msg, 3, ref index);
+            r.LoggedOn = TryParse<bool>(msg, 1, ref index);
+            r.PinPadSerialNumber = TryParse<string>(msg, 16, ref index);
+            r.PinPadVersion = TryParse<string>(msg, 16, ref index);
+            r.BankDescription = TryParse<string>(msg, 32, ref index);
+            int padLength = TryParse<int>(msg, 3, ref index);
+            if (msg.Length - index < padLength)
+                return r;
+            r.SAFCount = TryParse<int>(msg, 4, ref index);
+            r.NetworkType = TryParse<NetworkType>(msg, 1, ref index);
+            r.HardwareSerial = TryParse<string>(msg, 16, ref index);
+            r.RetailerName = TryParse<string>(msg, 40, ref index);
+            r.OptionsFlags = ParseStatusOptionFlags(msg.Substring(index, 32).ToCharArray()); index += 32;
+            r.SAFCreditLimit = TryParse<int>(msg, 9, ref index) / 100;
+            r.SAFDebitLimit = TryParse<int>(msg, 9, ref index) / 100;
+            r.MaxSAF = TryParse<int>(msg, 3, ref index);
+            r.KeyHandlingScheme = ParseKeyHandlingType(msg[index++]);
+            r.CashoutLimit = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.RefundLimit = TryParse<decimal>(msg, 9, ref index) / 100;
+            r.CPATVersion = TryParse<string>(msg, 6, ref index);
+            r.NameTableVersion = TryParse<string>(msg, 6, ref index);
+            r.TerminalCommsType = ParseTerminalCommsType(msg[index++]);
+            r.CardMisreadCount = TryParse<int>(msg, 6, ref index);
+            r.TotalMemoryInTerminal = TryParse<int>(msg, 4, ref index);
+            r.FreeMemoryInTerminal = TryParse<int>(msg, 4, ref index);
+            r.EFTTerminalType = ParseEFTTerminalType(msg.Substring(index, 4)); index += 4;
+            r.NumAppsInTerminal = TryParse<int>(msg, 2, ref index);
+            r.NumLinesOnDisplay = TryParse<int>(msg, 2, ref index);
+            r.HardwareInceptionDate = TryParse<DateTime>(msg, 6, ref index, "ddMMyy");
 
-            return eftResponse;
+            return r;
         }
 
         TerminalCommsType ParseTerminalCommsType(char CommsType)
@@ -616,76 +617,84 @@ namespace PCEFTPOS.EFTClient.IPInterface
             if (Flags[index++] == '1') flags |= PINPadOptionFlags.StartCash;
             return flags;
         }
-        EFTResponse ParseChequeAuthResponse(string response)
+        EFTResponse ParseChequeAuthResponse(string msg)
         {
             int index = 1;
 
-            EFTChequeAuthResponse chqResponse = new EFTChequeAuthResponse();
+            var r = new EFTChequeAuthResponse();
             index++; // Skip sub code.
-            chqResponse.Success = TryParse<bool>(response, 1, ref index);
-            chqResponse.ResponseCode = TryParse<string>(response, 2, ref index);
-            chqResponse.ResponseText = TryParse<string>(response, 20, ref index);
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
 
-            if (response.Length > 25)
+            if (msg.Length > 25)
             {
-                index += 2; // Skip merchant number.
-                try { chqResponse.Amount = decimal.Parse(response.Substring(index, 9)) / 100; }
-                catch { chqResponse.Amount = 0; }
+                r.Merchant = TryParse<string>(msg, 2, ref index);
+                try { r.Amount = decimal.Parse(msg.Substring(index, 9)) / 100; }
+                catch { r.Amount = 0; }
                 finally { index += 9; }
-                try { chqResponse.AuthNumber = int.Parse(response.Substring(index, 6)); }
-                catch { chqResponse.AuthNumber = 0; }
+                try { r.AuthNumber = int.Parse(msg.Substring(index, 6)); }
+                catch { r.AuthNumber = 0; }
                 finally { index += 6; }
-                chqResponse.ReferenceNumber = response.Substring(index, 12); index += 12;
+                r.ReferenceNumber = msg.Substring(index, 12); index += 12;
             }
 
-            return chqResponse;
+            return r;
         }
-        EFTResponse ParseGenericPOSCommandResponse(string response)
+        EFTResponse ParseGenericPOSCommandResponse(string msg)
         {
+            // Validate response length
+            if(string.IsNullOrEmpty(msg))
+            {
+                return null;
+            }
+
             int index = 1;
 
-            CommandType commandType = (CommandType)(char)response[index++];
+            CommandType commandType = (CommandType)msg[index++];
             switch (commandType)
             {
                 case CommandType.GetPassword:
-                    EFTGetPasswordResponse pwdResponse = new EFTGetPasswordResponse
+                    var pwdResponse = new EFTGetPasswordResponse
                     {
-                        ResponseCode = response.Substring(index, 2)
+                        ResponseCode = msg.Substring(index, 2)
                     };
                     index += 2;
                     pwdResponse.Success = pwdResponse.ResponseCode == "00";
-                    pwdResponse.ResponseText = response.Substring(index, 20); index += 20;
+                    pwdResponse.ResponseText = msg.Substring(index, 20); index += 20;
 
-                    if (response.Length > 25)
+                    if (msg.Length > 25)
                     {
                         int pwdLength = 0;
-                        try { pwdLength = int.Parse(response.Substring(index, 2)); }
+                        try { pwdLength = int.Parse(msg.Substring(index, 2)); }
                         finally { index += 2; }
-                        pwdResponse.Password = response.Substring(index, pwdLength); index += pwdLength;
+                        pwdResponse.Password = msg.Substring(index, pwdLength); index += pwdLength;
                     }
                     return pwdResponse;
                 case CommandType.Slave:
-                    EFTSlaveResponse slaveResponse = new EFTSlaveResponse
+                    var slaveResponse = new EFTSlaveResponse
                     {
-                        ResponseCode = response.Substring(index, 2)
+                        ResponseCode = msg.Substring(index, 2)
                     };
                     index += 2;
-                    slaveResponse.Response = response.Substring(index);
+                    slaveResponse.Response = msg.Substring(index);
                     return slaveResponse;
 
                 case CommandType.PayAtTable:
-                    EFTPayAtTableResponse patResponse = new EFTPayAtTableResponse();
+                    var patResponse = new EFTPayAtTableResponse();
                     index = 22;
 
-                    var headerLength = response.Substring(index, 6); index += 6;
+                    var headerLength = msg.Substring(index, 6); index += 6;
                     int len = 0;
                     int.TryParse(headerLength, out len);
 
-                    patResponse.Header = response.Substring(index, len); index += len;
-                    patResponse.Content = response.Substring(index, response.Length - index);
+                    patResponse.Header = msg.Substring(index, len); index += len;
+                    patResponse.Content = msg.Substring(index, msg.Length - index);
 
                     return patResponse;
 
+                case CommandType.BasketData:
+                    return ParseBasketDataResponse(msg);
             }
 
             return null;
@@ -694,28 +703,42 @@ namespace PCEFTPOS.EFTClient.IPInterface
         {
             int index = 1;
 
-            EFTConfigureMerchantResponse eftResponse = new EFTConfigureMerchantResponse();
+            var r = new EFTConfigureMerchantResponse();
             index++; // Skip sub code.
-            eftResponse.Success = TryParse<bool>(msg, 1, ref index);
-            eftResponse.ResponseCode = TryParse<string>(msg, 2, ref index);
-            eftResponse.ResponseText = TryParse<string>(msg, 20, ref index);
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
 
-            return eftResponse;
+            return r;
         }
         EFTResponse ParseCloudLogonResponse(string msg)
         {
             int index = 1;
 
-            var eftResponse = new EFTCloudLogonResponse();
+            var r = new EFTCloudLogonResponse();
             index++; // Skip sub code.
-            eftResponse.Success = TryParse<bool>(msg, 1, ref index);
-            eftResponse.ResponseCode = TryParse<string>(msg, 2, ref index);
-            eftResponse.ResponseText = TryParse<string>(msg, 20, ref index);
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
 
-            return eftResponse;
+            return r;
         }
-        
-        
+
+        EFTResponse ParseBasketDataResponse(string msg)
+        {
+            int index = 1; // msg[0] is the command code
+
+            var r = new EFTBasketDataResponse();
+            index++; // Skip sub code.
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
+
+            r.Success = r.ResponseCode == "00";
+
+            return r;
+        }
+
+
         /// <summary>
         /// Convert a PC-EFTPOS message (e.g. #0010K0000) to a human readable debug string
         /// </summary>
@@ -870,6 +893,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
                 return BuildPayAtTableRequest((EFTPayAtTableRequest)eftRequest);
             }
 
+            if (eftRequest is EFTBasketDataRequest)
+            {
+                return BuildBasketDataRequest((EFTBasketDataRequest)eftRequest);
+            }
+
             throw new Exception("Unknown EFTRequest type.");
         }
         StringBuilder BuildEFTTransactionRequest(EFTTransactionRequest v)
@@ -877,19 +905,19 @@ namespace PCEFTPOS.EFTClient.IPInterface
             var r = new StringBuilder();
             r.Append("M");
             r.Append("0");
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append((char)v.TxnType);
             r.Append(v.TrainingMode ? '1' : '0');
-            r.Append(v.EnableTipping ? '1' : '0');
-            r.Append(v.AmountCash.PadLeftAsInt(9));
-            r.Append(v.AmountPurchase.PadLeftAsInt(9));
-            r.Append(v.AuthNumber.PadLeft(6));
-            r.Append(v.ReferenceNumber.PadRightAndCut(16));
+            r.Append(v.EnableTip ? '1' : '0');
+            r.Append(v.AmtCash.PadLeftAsInt(9));
+            r.Append(v.AmtPurchase.PadLeftAsInt(9));
+            r.Append(v.AuthCode.PadLeft(6));
+            r.Append(v.TxnRef.PadRightAndCut(16));
             r.Append((char)v.ReceiptPrintMode);
             r.Append((char)v.ReceiptCutMode);
-            r.Append((char)v.CardPANSource);
-            r.Append(v.CardPAN.PadRightAndCut(20));
-            r.Append(v.ExpiryDate.PadRightAndCut(4));
+            r.Append((char)v.PanSource);
+            r.Append(v.Pan.PadRightAndCut(20));
+            r.Append(v.DateExpiry.PadRightAndCut(4));
             r.Append(v.Track2.PadRightAndCut(40));
             r.Append((char)v.CardAccountType);
             r.Append(v.Application.ToApplicationString());
@@ -908,7 +936,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             var r = new StringBuilder();
             r.Append("G");
             r.Append((char)v.LogonType);
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append((char)v.ReceiptPrintMode);
             r.Append((char)v.ReceiptCutMode);
             r.Append(v.Application.ToApplicationString());
@@ -920,7 +948,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             var r = new StringBuilder();
             r.Append("C");
             r.Append((char)v.ReprintType);
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append((char)v.ReceiptCutMode);
             r.Append((char)v.ReceiptPrintMode);
             r.Append(v.Application.ToApplicationString());
@@ -939,12 +967,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
             var r = new StringBuilder();
             r.Append("2");
             r.Append(v.DisableDisplayEvents ? '5' : ' ');
-            r.Append((char)v.Type);
+            r.Append((char)v.DialogType);
             r.Append(v.DialogX.PadLeft(4));
             r.Append(v.DialogY.PadLeft(4));
-            r.Append(v.Position.ToString().PadRightAndCut(12));
-            r.Append(v.TopMost ? '1' : '0');
-            r.Append(v.Title.PadRightAndCut(32));
+            r.Append(v.DialogPosition.ToString().PadRightAndCut(12));
+            r.Append(v.EnableTopmost ? '1' : '0');
+            r.Append(v.DialogTitle.PadRightAndCut(32));
             return r;
         }
         StringBuilder BuildControlPanelRequest(ControlPanelRequest v)
@@ -962,7 +990,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             var r = new StringBuilder();
             r.Append("P");
             r.Append((char)v.SettlementType);
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append((char)v.ReceiptPrintMode);
             r.Append((char)v.ReceiptCutMode);
             r.Append(v.ResetTotals ? '1' : '0');
@@ -976,7 +1004,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             r.Append("J");
             r.Append((char)v.QueryCardType);
             r.Append(v.Application.ToApplicationString());
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append(v.PurchaseAnalysisData.GetAsString(true));
             return r;
         }
@@ -984,11 +1012,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
         {
             var r = new StringBuilder();
             r.Append("10");
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append(v.AIIC.PadLeft(11));
             r.Append(v.NII.PadLeft(3));
-            r.Append(v.MerchantID.PadRightAndCut(15));
-            r.Append(v.TerminalID.PadRightAndCut(8));
+            r.Append(v.Caid.PadRightAndCut(15));
+            r.Append(v.Catid.PadRightAndCut(8));
             r.Append(v.Timeout.PadLeft(3));
             r.Append(v.Application.ToApplicationString());
             return r;
@@ -998,7 +1026,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
             var r = new StringBuilder();
             r.Append("K");
             r.Append((char)v.StatusType);
-            r.Append(v.Application.ToMerchantString());
+            r.Append(v.Merchant.PadRightAndCut(2));
             r.Append(v.Application.ToApplicationString());
             return r;
         }
@@ -1086,6 +1114,133 @@ namespace PCEFTPOS.EFTClient.IPInterface
             return r;
         }
 
+        StringBuilder BuildBasketDataRequest(EFTBasketDataRequest request)
+        {
+            var jsonContent = "{}";
+
+            switch (request.Command)
+            {
+                case EFTBasketDataCommandCreate c:
+                    // Serializer the Basket object to JSON
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        // Would be better to use use Newtonsoft.Json here, but we don't want the dependency, so we are stuck with DataContractJsonSerializer
+                        // We need to add the possible known types from c.Basket.Items to the "known types" of the serializer otherwise it throws an exception
+                        var serializerSettings = new DataContractJsonSerializerSettings()
+                        {
+                            EmitTypeInformation = System.Runtime.Serialization.EmitTypeInformation.Never,
+                            IgnoreExtensionDataObject = false,
+                            SerializeReadOnlyTypes = true,
+                            KnownTypes = (c?.Basket?.Items?.Count > 0) ? c.Basket.Items.Select(bi => bi.GetType()).Distinct() : new List<Type>() { typeof(EFTBasketItem) }
+                        };
+                        var serializer = new DataContractJsonSerializer((c?.Basket != null) ? c.Basket.GetType() : typeof(EFTBasket), serializerSettings);
+                        serializer.WriteObject(ms, c.Basket);
+                        var json = ms.ToArray();
+                        ms.Close();
+                        jsonContent = System.Text.Encoding.UTF8.GetString(json, 0, json.Length);
+                    }
+                    break;
+
+                case EFTBasketDataCommandAdd c:
+                    // TODO: We can only have one item in an "add" command. Should we validate this request??
+
+                    // Serializer the Basket object to JSON
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        // Would be better to use use Newtonsoft.Json here, but we don't want the dependency, so we are stuck with DataContractJsonSerializer
+                        // We need to add the possible known types from c.Basket.Items to the "known types" of the serializer otherwise it throws an exception
+                        var serializerSettings = new DataContractJsonSerializerSettings()
+                        {
+                            EmitTypeInformation = System.Runtime.Serialization.EmitTypeInformation.Never,
+                            IgnoreExtensionDataObject = false,
+                            SerializeReadOnlyTypes = true,
+                            KnownTypes = (c?.Basket?.Items?.Count > 0) ? c.Basket.Items.Select(bi => bi.GetType()).Distinct() : new List<Type>() { typeof(EFTBasketItem) }
+                        };
+                        var serializer = new DataContractJsonSerializer((c?.Basket != null) ? c.Basket.GetType() : typeof(EFTBasket), serializerSettings);
+                        serializer.WriteObject(ms, c.Basket);
+                        var json = ms.ToArray();
+                        ms.Close();
+                        jsonContent = System.Text.Encoding.UTF8.GetString(json, 0, json.Length);
+                    }
+                    break;
+
+                case EFTBasketDataCommandDelete c:
+                    // Build our fake basket
+                    var b = new EFTBasket()
+                    {
+                        Id = c.BasketId,
+                        Items = new List<EFTBasketItem>()
+                        {
+                            new EFTBasketItem()
+                            {
+                                Id = c.BasketItemId
+                            }
+                        }
+                    };
+
+                    // Serializer the Basket object to JSON
+                    using (var ms = new System.IO.MemoryStream())
+                    {
+                        var serializer = new DataContractJsonSerializer(typeof(EFTBasket), new DataContractJsonSerializerSettings() { IgnoreExtensionDataObject = false, SerializeReadOnlyTypes = true });
+                        serializer.WriteObject(ms, b);
+                        var json = ms.ToArray();
+                        ms.Close();
+                        jsonContent = System.Text.Encoding.UTF8.GetString(json, 0, json.Length);
+                    }
+                    break;
+
+                case EFTBasketDataCommandRaw c:
+                    jsonContent = c.BasketContent;
+                    break;
+            }
+
+            var r = new StringBuilder();
+            r.Append("X");
+            r.Append((char)CommandType.BasketData);
+            r.Append(jsonContent.Length.PadLeft(6));
+            r.Append(jsonContent);
+            return r;
+        }
+
+
         #endregion
+
+        public EFTResponse XMLStringToEFTResponse(string msg)
+        {
+            EFTPosAsPinpadResponse response = null;
+            try
+            {
+                response = XMLSerializer.Deserialize<EFTPosAsPinpadResponse>(msg);
+            }
+            catch (Exception)
+            {
+            }
+
+            return response;
+        }
+
+        public string EFTRequestToXMLString(EFTRequest eftRequest)
+        {
+            switch (eftRequest)
+            {
+                case EFTPosAsPinpadRequest r: return EFTRequestToXMLString(r);
+                default: return string.Empty;
+            }
+        }
+
+        private string EFTRequestToXMLString(EFTPosAsPinpadRequest eftRequest)
+        {
+            try
+            {
+                var response = XMLSerializer.Serialize(eftRequest);
+                return response.Insert(0, $"&{(response.Length + 7).ToString("000000")}");
+            }
+            catch (Exception)
+            {
+                return string.Empty;
+            }
+        }
+
+        
     }
 }
