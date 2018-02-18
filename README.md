@@ -94,7 +94,7 @@ class EFTClientIPDemo
     
     class Program
     {
-        static async void Main(string[] args)
+        static void Main(string[] args)
         {
             (new EFTClientIPDemo()).Run();
             Console.WriteLine("Press any key to quit");
@@ -192,9 +192,9 @@ class EFTClientIPDemoAsync
 
     class Program
     {
-        static async void Main(string[] args)
+        static void Main(string[] args)
         {
-            await (new EFTClientIPDemoAsync()).RunAsync();
+            (new EFTClientIPDemoAsync()).RunAsync().GetAwaiter().GetResult();
             Console.WriteLine("Press any key to quit");
             Console.ReadLine();
         }
