@@ -202,7 +202,9 @@ class EFTClientIPDemoAsync
 ```
 
 ## Release notes
-
+## 1.4.0.0 (2018-04-30)
+* Added IDialogUIHandler for easier handling of POS custom dialogs.
+* Updated MessageParser to allow for custom parsing.
 
 ### 1.3.5.0 (2018-02-16)
 * Added support for .NET Standard 2.0

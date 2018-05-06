@@ -12,6 +12,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <param name="hostName">Address of host connection.</param>
         /// <param name="hostPort">Port Id of server connection.</param>
         /// <param name="useSSL">Enables SSL connection.</param>
+        /// <param name="useKeepAlive">True to enable TCP keep alives</param>
         /// <returns></returns>
         Task<bool> ConnectAsync(string hostName, int hostPort, bool useSSL = true, bool useKeepAlive = true);
 
@@ -32,6 +33,27 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <returns>FALSE if an error occurs</returns>
         /// <exception cref="ConnectionException">The socket is closed.</exception>
         Task<bool> WriteRequestAsync(EFTRequest request, [CallerMemberName] string member = "");
+
+        /// <summary>
+        /// Sends a request to the EFT-Client, and waits for the next EFT response of type T from the client. 
+        /// All other response types are discarded.. This function is useful for request/response pairs 
+        /// where other message types are not being handled (such as SetDialogRequest/SetDialogResponse).
+        /// 
+        /// Since receipts and dialog messages cannot be handled with this function, it is not 
+        /// recommended for use with transaction, logon, settlement ets
+        /// </summary>
+        /// <remarks>
+        /// This function will continue to wait until either a message is received, or an exception is thrown (e.g. socket disconnect, cancellationToken fires).
+        /// It is important to ensure cancellationToken is configured correctly.
+        /// </remarks>
+        /// <typeparam name="T">The type of EFTResponse to wait for</typeparam>
+        /// <param name="request">The <see cref="EFTRequest"/> to send</param>
+        /// <param name="cancellationToken">The token to monitor for cancellation requests</param>
+        /// <param name="member">Used for internal logging. Ignore</param>
+        /// <returns> An EFTResponse if one could be read, otherwise null </returns>
+        /// <exception cref="ConnectionException">The socket is closed.</exception>
+        /// <exception cref="TaskCanceledException">The cancellation token was cancelled before the task completed</exception>
+        Task<T> WriteRequestAndWaitAsync<T>(EFTRequest request, System.Threading.CancellationToken cancellationToken, [CallerMemberName] string member = "") where T : EFTResponse;
 
         /// <summary> 
         /// Retrieves the next EFT response from the client
@@ -109,5 +131,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary> Defines the level of logging that should be passed back in the OnLog event. Default <see cref="LogLevel.Off" />. <para>See <see cref="LogLevel"/></para></summary>
         LogLevel LogLevel { get; set; }
+
+        /// <summary>Implementation of a dialog manager</summary>
+        IDialogUIHandlerAsync DialogUIHandlerAsync { get; set; }
     }
 }

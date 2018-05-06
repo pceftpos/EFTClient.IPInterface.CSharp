@@ -18,6 +18,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
                     return "01";
                 case TerminalApplication.Loyalty:
                 case TerminalApplication.PrePaidCard:
+                case TerminalApplication.ETS:
                     return "02";                // PCEFTCSA
                 case TerminalApplication.GiftCard:
                     return "03";

@@ -20,7 +20,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTPosAsPinpadRequest : EFTRequest
     {
         /// <summary>Constructs a default POS as pinpad request object.</summary>
-        public EFTPosAsPinpadRequest() : base()
+        public EFTPosAsPinpadRequest() : base(false, typeof(EFTPosAsPinpadResponse))
         {
         }
 
@@ -44,7 +44,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTPosAsPinpadResponse : EFTResponse
     {
         /// <summary>Constructs a default POS as pinpad response object.</summary>
-        public EFTPosAsPinpadResponse() : base()
+        public EFTPosAsPinpadResponse() : base(typeof(EFTPosAsPinpadRequest))
         {
         }
 

@@ -41,7 +41,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	}
 
 	/// <summary>PIN pad terminal supported options.</summary>
-	[FlagsAttribute]
+	[Flags]
 	public enum PINPadOptionFlags
 	{
 		/// <summary>Tipping enabled flag.</summary>
@@ -115,7 +115,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTStatusRequest : EFTRequest
 	{
 		/// <summary>Constructs a default terminal status request object.</summary>
-		public EFTStatusRequest() : base()
+		public EFTStatusRequest() : base(true, typeof(EFTStatusResponse))
 		{
 		}
 
@@ -137,7 +137,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	{
 		/// <summary>Constructs a default terminal status response object.</summary>
 		public EFTStatusResponse()
-			: base()
+			: base(typeof(EFTStatusRequest))
 		{
 		}
 

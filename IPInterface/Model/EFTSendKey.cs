@@ -23,8 +23,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTSendKeyRequest : EFTRequest
     {
         /// <summary>Constructs a default client list object.</summary>
-        public EFTSendKeyRequest() : base()
+        public EFTSendKeyRequest() : base(false, null)
         {
+            isStartOfTransactionRequest = false;
         }
 
         /// <summary> The type of key to send </summary>

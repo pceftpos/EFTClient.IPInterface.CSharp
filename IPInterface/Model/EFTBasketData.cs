@@ -188,8 +188,15 @@ namespace PCEFTPOS.EFTClient.IPInterface
     }
 
 
+    /// <summary>
+    /// Represents a default basket request
+    /// </summary>
     public class EFTBasketDataRequest : EFTRequest
     {
+        public EFTBasketDataRequest() : base(false, typeof(EFTBasketDataResponse))
+        {
+        }
+
         /// <summary>
         /// The command to perform (create, update, delete)
         /// <see cref="EFTBasketDataCommandCreate"/>
@@ -206,6 +213,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
     /// </summary>
     public class EFTBasketDataResponse : EFTResponse
     {
+
+        public EFTBasketDataResponse() : base(typeof(EFTBasketDataRequest))
+        {
+        }
+
 
         /// <summary>
         /// True if the request was successful

@@ -10,7 +10,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.Slave
 		NullCommand = ' ', SlaveMode = 'S', Status = 'N', DisplayMode = 'Z', Display = 'D', Print = 'P', MagneticCardRead = 'J', Audio = 'A', Key = 'K', Input = 'E', Storage = 'M',
 		Connection = 'C', External = '+', SendReceive = 'X', ICC = 'I',
 	}
-	public enum StatusType { Version = '0', DateTime = '1', SerialNumber = '2' }
+	public enum SlaveStatusType { Version = '0', DateTime = '1', SerialNumber = '2' }
 	public enum LightStatus { NoChange = ' ', Off = '0', On = '1', Auto = 'A' }
 	public enum TextAlignment { Left, Centre, Right }
 	public enum CardReadOptions { Once = '1', Off = '0', Multiple = '2' }
@@ -18,12 +18,61 @@ namespace PCEFTPOS.EFTClient.IPInterface.Slave
 	public enum InputPromptMode { Default = ' ', AmountEntry = '$', Apha = 'A', Password = '*' }
 	public enum KeyPressed { Enter = 'E', Cancel = 'C', Clear = 'B', ClearAll = 'D', Function = 'F', Alpha = 'A', Cheque = 'X', Savings = 'Y', Credit = 'Z', F0 = 'a', F1 = 'b', F2 = 'c', F3 = 'd', F4 = 'e', F5 = 'f', F6 = 'g', F7 = 'h', F8 = 'i', F9 = 'j', Zero = '0', One = '1', Two = '2', Three = '3', Four = '4', Five = '5', Six = '6', Seven = '7', Eight = '8', Nine = '9' }
 
+    public enum SlaveMode { Exit = '0', Enter = '1' }
+    public enum ComPortSpeed { NoChange = ' ', Baud9600 = '0', Baud19200 = '1', Baud38400 = '2', Baud115200 = '3' }
+
 	[Flags]
 	public enum KeyMask { Cancel = 0x01, Enter = 0x02, Clear = 0x04, NumberKeys = 0x08, FunctionKeys = 0x10, AccountKeys = 0x20, Function = 0x40, OtherKeys = 0x80 }
 	[Flags]
 	public enum TrackFlags { Track1 = 0x01, Track2 = 0x02, Track3 = 0x04 }
 
-	public class SlaveHelper
+    /// <summary>
+    /// Base class for all slave request commands
+    /// </summary>
+    public class SlaveCommandRequest
+    {
+    }
+
+    /// <summary>
+    /// Enter/exit slave mode
+    /// </summary>
+    public class SlaveCommandRequestMode : SlaveCommandRequest
+    {
+        public SlaveMode SlaveMode { get; set; } = SlaveMode.Exit;
+
+        /// <summary>
+        /// Seconds to stay in slave mode(‘000’ is infinite). Maximum = 999
+        /// </summary>
+        int _timeout = 60;
+        public int Timeout
+        {
+            get
+            {
+                return _timeout;
+            }
+            set
+            {
+                if (value < 0)
+                    _timeout = 0;
+                else if (value > 999)
+                    _timeout = 999;
+                else
+                    _timeout = value;
+            }
+        }
+
+        public ComPortSpeed ComPortSpeed { get; set; } = ComPortSpeed.NoChange;
+    }
+
+    public class SlaveCommandRequestStatus: SlaveCommandRequest
+    {
+    }
+
+
+
+
+
+    public class SlaveHelper
 	{
 		public static SlaveCommandResponse ResponseHelper( EFTSlaveResponse Response )
 		{
@@ -122,8 +171,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.Slave
 		char deviceCode = '1';
 
 		#region Slave Mode
-
-		public void AddEnterSlaveModeRequest()
+    	public void AddEnterSlaveModeRequest()
 		{
 			AddEnterSlaveModeRequest( 0 );
 		}

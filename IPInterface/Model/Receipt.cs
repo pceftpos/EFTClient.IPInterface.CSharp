@@ -21,7 +21,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTReceiptRequest : EFTRequest
     {
         /// <summary>Constructs a default display response object.</summary>
-		public EFTReceiptRequest() : base()
+		public EFTReceiptRequest() : base(false, typeof(EFTReceiptResponse))
         {
         }
     }
@@ -29,10 +29,15 @@ namespace PCEFTPOS.EFTClient.IPInterface
     /// <summary>A PC-EFTPOS receipt response object.</summary>
 	public class EFTReceiptResponse : EFTResponse
 	{
+        public EFTReceiptResponse() : base(typeof(EFTReceiptRequest))
+        {
+
+        }
+
         /// <summary>Constructs a default display response object.</summary>
-		public EFTReceiptResponse(): base()
-		{
-		}
+        //public EFTReceiptResponse(): base(false, typeof(EFTReceiptRequest))
+        //{
+        //}
 
         /// <summary>The receipt type.</summary>
         /// <value>Type: <see cref="ReceiptType" /></value>

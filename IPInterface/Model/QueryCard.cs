@@ -38,11 +38,19 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		Track3
 	}
 
-	/// <summary>A PC-EFTPOS terminal query card request object.</summary>
-	public class QueryCardRequest : EFTRequest
+    /// <summary>A PC-EFTPOS terminal query card request object.</summary>
+    public class EFTQueryCardRequest : QueryCardRequest
+    {
+    }
+
+    /// <summary>
+    /// QueryCardRequest is obsolete. Please use EFTQueryCardRequest
+    /// </summary>
+    [Obsolete("QueryCardRequest is obsolete. Please use EFTQueryCardRequest")]
+    public class QueryCardRequest : EFTRequest
 	{
 		/// <summary>Constructs a default terminal query card request object.</summary>
-		public QueryCardRequest() : base()
+		public QueryCardRequest() : base(true, typeof(EFTQueryCardResponse))
 		{
 		}
 
@@ -68,7 +76,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	{
 		/// <summary>Constructs a default terminal logon response object.</summary>
 		public EFTQueryCardResponse()
-			: base()
+			: base(typeof(EFTQueryCardRequest))
 		{
 		}
 

@@ -29,13 +29,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTLogonRequest : EFTRequest
     {
         /// <summary>Constructs a default terminal logon request object.</summary>
-        public EFTLogonRequest() : base()
+        public EFTLogonRequest() : this(LogonType.Standard)
         {
         }
 
         /// <summary>Constructs a terminal logon request object.</summary>
         /// <param name="LogonType">The logon type to perform.</param>
-        public EFTLogonRequest(LogonType LogonType) : base()
+        public EFTLogonRequest(LogonType LogonType) : base(true, typeof(EFTLogonResponse))
         {
             this.LogonType = LogonType;
         }
@@ -69,7 +69,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTLogonResponse : EFTResponse
     {
         /// <summary>Constructs a default terminal logon response object.</summary>
-        public EFTLogonResponse() : base()
+        public EFTLogonResponse() : base(typeof(EFTLogonRequest))
         {
         }
 

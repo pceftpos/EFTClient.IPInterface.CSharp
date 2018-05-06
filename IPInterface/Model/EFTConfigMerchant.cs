@@ -6,7 +6,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTConfigureMerchantRequest : EFTRequest
 	{
 		/// <summary>Constructs a default terminal configure request object.</summary>
-		public EFTConfigureMerchantRequest() : base()
+		public EFTConfigureMerchantRequest() : base(true, typeof(EFTConfigureMerchantResponse))
 		{
 		}
 
@@ -56,7 +56,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTConfigureMerchantResponse : EFTResponse
 	{
 		/// <summary>Constructs a default terminal configure response object.</summary>
-		public EFTConfigureMerchantResponse() : base()
+		public EFTConfigureMerchantResponse() : base(typeof(EFTConfigureMerchantRequest))
 		{
 		}
 

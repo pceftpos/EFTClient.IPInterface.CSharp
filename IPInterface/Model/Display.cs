@@ -7,7 +7,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTDisplayResponse : EFTResponse
     {
 		/// <summary>Constructs a default display response object.</summary>
-		public EFTDisplayResponse() : base()
+		public EFTDisplayResponse() : base(null)
 		{
 		}
 

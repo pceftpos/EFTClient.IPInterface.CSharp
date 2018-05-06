@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCEFTPOS.EFTClient.IPInterface.Slave;
+using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
@@ -70,7 +71,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         #region Data
 
         SynchronizationContext syncContext;
-        IMessageParser parser;
+        IMessageParser _parser;
         ITcpSocket socket;
         EFTRequest currentRequest;
         AutoResetEvent hideDialogEvent;
@@ -134,6 +135,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <returns>FALSE if an error occurs</returns>
         public bool DoRequest(EFTRequest request, [CallerMemberName] string member = "")
         {
+			SetCurrentRequest(request);
             Log(LogLevel.Info, tr => tr.Set($"Request via {member}"));
 
             // Save the current synchronization context so we can use it to send events 
@@ -264,9 +266,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
         }
 
         /// <summary>Send a request to PC-EFTPOS for a cheque authorization.</summary>
-        /// <param name="request">An <see cref="ChequeAuthRequest" /> object.</param>
+        /// <param name="request">An <see cref="EFTChequeAuthRequest" /> object.</param>
         /// <returns>FALSE if an error occured.</returns>
-        public bool DoChequeAuth(ChequeAuthRequest request)
+        public bool DoChequeAuth(EFTChequeAuthRequest request)
         {
             return DoRequest(request);
         }
@@ -289,7 +291,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <returns>FALSE if an error occured.</returns>
         public bool DoSlaveCommand(string command)
         {
-            return DoRequest(new EFTSlaveRequest() { Command = command });
+            return DoRequest(new EFTSlaveRequest() { RawCommand = command });
         }
 
         /// <summary>Send a request to PC-EFTPOS for a merchant config.</summary>
@@ -343,7 +345,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         {
             recvBuf = "";
             recvTickCount = 0;
-            parser = new MessageParser();
+            _parser = new DefaultMessageParser();
 
             socket = new TcpSocket(HostName, HostPort);
             socket.OnTerminated += new TcpSocketEventHandler(_OnTerminated);
@@ -391,6 +393,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
                         break;
 
                     case EFTDisplayResponse r:
+						//DialogUIHandler.HandleDisplayResponse(r);
                         FireClientResponseEvent(nameof(OnDisplay), OnDisplay, new EFTEventArgs<EFTDisplayResponse>(r));
                         break;
 
@@ -446,6 +449,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
                         FireClientResponseEvent(nameof(OnConfigMerchant), OnConfigMerchant, new EFTEventArgs<EFTConfigureMerchantResponse>(r));
                         break;
 
+					case EFTClientListResponse r:
+						FireClientResponseEvent(nameof(OnClientList), OnClientList, new EFTEventArgs<EFTClientListResponse>(r));
+						break;
+
                     default:
                         Log(LogLevel.Error, tr => tr.Set($"Unknown response type", response));
                         break;
@@ -468,13 +475,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
         {
             // Store current request.
             this.currentRequest = eftRequest;
-
+			
             // Build request
             var requestString = "";
 
             try
             {
-                requestString = parser.EFTRequestToString(eftRequest);
+                requestString = _parser.EFTRequestToString(eftRequest);
             }
             catch (Exception e)
             {
@@ -487,11 +494,22 @@ namespace PCEFTPOS.EFTClient.IPInterface
             // Send the request string to the IP client.
             return socket.Send(requestString);
         }
-        #endregion
 
-        #region Parse response
+		private void SetCurrentRequest(EFTRequest request)
+		{
+			// Always set _currentRequest to the last request we send
+			currentRequest = request;
 
-        bool ReceiveEFTResponse(byte[] data)
+			if (request.GetIsStartOfTransactionRequest())
+			{
+				_currentStartTxnRequest = request;
+			}
+		}
+		#endregion
+
+		#region Parse response
+
+		bool ReceiveEFTResponse(byte[] data)
         {
             // Clear the receive buffer if 5 seconds has lapsed since the last message
             var tc = System.Environment.TickCount;
@@ -545,10 +563,16 @@ namespace PCEFTPOS.EFTClient.IPInterface
                         var response = recvBuf.Substring(index, length - 5);
                         FireOnTcpReceive(response);
 
-                        // Process the response
+						// Process the response
+						EFTResponse eftResponse = null;
                         try
                         {
-                            ProcessEFTResponse(parser.StringToEFTResponse(response));
+							eftResponse = _parser.StringToEFTResponse(response);
+							ProcessEFTResponse(eftResponse);
+							if(eftResponse.GetType() == _currentStartTxnRequest?.GetPairedResponseType())
+							{
+								dialogUIHandler.HandleCloseDisplay();
+							}
                         }
                         catch (ArgumentException argumentException)
                         {
@@ -688,7 +712,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <summary>The IP port of the PC-EFTPOS IP Client.</summary>
         /// <value>Type: <see cref="System.Int32" /><para>The listening port of the EFT Client IP interface.</para></value>
         /// <remarks>The setting of this property is required.<para>See <see cref="EFTClientIP.Connect"></see> example.</para></remarks>
-        public int HostPort { get; set; } = 6001;
+        public int HostPort { get; set; } = 2011;
 
         /// <summary>Indicates whether to use SSL encryption.</summary>
         /// <value>Type: <see cref="System.Boolean" /><para>Defaults to FALSE.</para></value>
@@ -709,6 +733,38 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary> Defines the level of logging that should be passed back in the OnLog event. Default <see cref="LogLevel.Off" />. <para>See <see cref="LogLevel"/></para></summary>
         public LogLevel LogLevel { get; set; } = LogLevel.Off;
+
+        IDialogUIHandler dialogUIHandler = null;
+		private EFTRequest _currentStartTxnRequest;
+
+		public IDialogUIHandler DialogUIHandler
+        {
+            get
+            {
+                return dialogUIHandler;
+            }
+            set
+            {
+                dialogUIHandler = value;
+                if (dialogUIHandler.EFTClientIP == null)
+                {
+                    dialogUIHandler.EFTClientIP = this;
+                }
+            }
+        }
+
+        public IMessageParser Parser
+        {
+            get
+            {
+                return _parser;
+            }
+            set
+            {
+                _parser = value;
+            }
+        }
+
 
         #endregion
 
@@ -755,6 +811,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
         public event EventHandler<EFTEventArgs<EFTSlaveResponse>> OnSlave;
         /// <summary>Fired when a get config merchant result is received.</summary>
         public event EventHandler<EFTEventArgs<EFTConfigureMerchantResponse>> OnConfigMerchant;
+		/// <summary>Fired whan a get client list result is received.</summary>
+		public event EventHandler<EFTEventArgs<EFTClientListResponse>> OnClientList;
         #endregion
     }
 }

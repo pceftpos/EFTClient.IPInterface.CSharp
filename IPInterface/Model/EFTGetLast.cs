@@ -6,7 +6,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTGetLastTransactionRequest : EFTRequest
 	{
 		/// <summary>Constructs a default EFTGetLastTransactionRequest object.</summary>
-		public EFTGetLastTransactionRequest() : base()
+		public EFTGetLastTransactionRequest() : base(true, typeof(EFTGetLastTransactionResponse))
 		{
 		}
 
@@ -24,7 +24,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	{
 		/// <summary>Constructs a default terminal transaction response object.</summary>
 		public EFTGetLastTransactionResponse()
-			: base()
+			: base(typeof(EFTGetLastTransactionRequest))
 		{ }
 
         /// <summary>Two digit merchant code</summary>

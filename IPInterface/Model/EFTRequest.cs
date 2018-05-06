@@ -31,10 +31,69 @@ namespace PCEFTPOS.EFTClient.IPInterface
     /// <summary>Abstract base class for EFT client requests.</summary>
     public abstract class EFTRequest
     {
+        protected bool isStartOfTransactionRequest = true;
+        protected Type pairedResponseType = null;
+
+        private EFTRequest()
+        {
+
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="isStartOfTransactionRequest"></param>
+        /// <param name="pairedResponseType"></param>
+        public EFTRequest(bool isStartOfTransactionRequest, Type pairedResponseType)
+        {
+            if(pairedResponseType != null && pairedResponseType.IsSubclassOf(typeof(EFTResponse)) != true)
+            {
+                throw new InvalidOperationException("pairedResponseType must be based on EFTResponse");
+            }
+
+            this.isStartOfTransactionRequest = isStartOfTransactionRequest;
+            this.pairedResponseType = pairedResponseType;
+        }
+
+        /// <summary>
+        /// True if this request starts a paired transaction request/response with displays etc (i.e. transaction, logon, settlement etc)
+        /// </summary>
+        public virtual bool GetIsStartOfTransactionRequest() { return isStartOfTransactionRequest; }
+
+        /// <summary>
+        /// Indicates the paired EFTResponse for this EFTRequest if one exists. Null otherwise.
+        /// e.g. EFTLogonRequest will have a paired EFTLogonResponse response
+        /// </summary>
+        public virtual Type GetPairedResponseType() { return pairedResponseType; }
     }
 
     /// <summary>Abstract base class for EFT client responses.</summary>
     public abstract class EFTResponse
     {
+        protected Type pairedRequestType = null;
+
+        /// <summary>
+        /// Hidden default constructor
+        /// </summary>
+        private EFTResponse()
+        {
+
+        }
+
+        public EFTResponse(Type pairedRequestType)
+        {
+            if (pairedRequestType != null && pairedRequestType.IsSubclassOf(typeof(EFTRequest)) != true)
+            {
+                throw new InvalidOperationException("pairedRequestType must be based on EFTRequest");
+            }
+
+            this.pairedRequestType = pairedRequestType;
+        }
+
+        /// <summary>
+        /// Indicates the paired EFTRequest for this EFTResponse if one exists. Null otherwise.
+        /// e.g. EFTLogonResponse will have a paired EFTLogonRequest request
+        /// </summary>
+        public virtual Type GetPairedRequestType() { return pairedRequestType; }
     }
 }

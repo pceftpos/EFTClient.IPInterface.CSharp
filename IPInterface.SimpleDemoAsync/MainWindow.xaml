@@ -65,7 +65,7 @@
 
     <Grid x:Name="ParentGrid" Margin="5">
 
-        <Grid x:Name="SettingsGrid" Visibility="Visible">
+        <Grid x:Name="SettingsGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -143,7 +143,7 @@
 
         </Grid>
 
-        <Grid x:Name="MainGrid" Visibility="Collapsed">
+        <Grid x:Name="MainGrid" Visibility="Visible">
             <Grid HorizontalAlignment="Stretch">
 
                 <Grid.ColumnDefinitions>
@@ -188,6 +188,7 @@
                     <!--Amount-->
                     <TextBlock Text="Amount" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
                     <TextBox x:Name="txtAmount" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Text="1.00"/>
+                    <CheckBox x:Name="chkBasketData" Content="Send Basket Data" HorizontalAlignment="Left" VerticalAlignment="Top" Grid.Column="2" Grid.Row="3"/>
                 </Grid>
 
                 <!--MainGrid-Footer-->

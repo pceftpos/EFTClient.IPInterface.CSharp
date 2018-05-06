@@ -344,12 +344,12 @@
                         <GroupBox Header="Response Dialogs" Margin="5,0,0,0">
                             <StackPanel >
                                 <RadioButton x:Name="rbShowDialogAlways" FontSize="12" Content="Always show" Margin="0,5,0,0" Width="Auto" Checked="DemoDialog_Checked" Unchecked="DemoDialog_Unchecked"/>
-                                <RadioButton x:Name="rbShowDialogOnEvents" FontSize="12" Content="Show on responses (used for cloud)" Width="Auto" Checked="DemoDialog_Checked" Unchecked="DemoDialog_Unchecked">
+                                <RadioButton x:Name="rbShowDialogOnEvents" FontSize="12" Content="Show on responses" Width="Auto" Checked="DemoDialog_Checked" Unchecked="DemoDialog_Unchecked">
                                     <RadioButton.Resources>
                                         <Style TargetType="RadioButton">
                                             <Style.Triggers>
                                                 <DataTrigger Binding="{Binding ElementName=chkUseSsl, Path=IsChecked}" Value="False">
-                                                    <Setter Property="Visibility" Value="Collapsed"/>        
+                                                    <Setter Property="Visibility" Value="Visible"/>        
                                                 </DataTrigger>
                                             </Style.Triggers>
                                             <Setter Property="Visibility" Value="Visible"/>
@@ -422,6 +422,8 @@
                         <ComboBox x:Name="cboEtsType" HorizontalAlignment="Left" VerticalAlignment="Top" Width="279" Height="27" 
                                           ItemsSource="{Binding Data.TerminalList}" SelectedItem="{Binding Data.TransactionRequest.Application}" 
                                           SelectedIndex="0" IsEnabled="{Binding ElementName=chkTxnType, Path=IsChecked}" />
+                        <Label Content="Merchant Number"/>
+                        <TextBox x:Name="txtMerchantNumber" Text="{Binding Data.TransactionRequest.Merchant}" IsEnabled="{Binding ElementName=chkTxnType, Path=IsChecked}" Width="50"></TextBox>
                     </WrapPanel>
                     <WrapPanel Margin="0,5,0,0">
                         <Label x:Name="lblTTxnRef" Content="Txn Ref" Height="27" Width="120" FontSize="12" />
@@ -522,6 +524,8 @@
                     <WrapPanel HorizontalAlignment="Left" Margin="5,5,0,0">
                         <CheckBox x:Name="chkTTrainingMode" Content="Training Mode" IsChecked="{Binding Data.TransactionRequest.TrainingMode}"/>
                         <CheckBox x:Name="chkTEnableTip" Content="Enable Tip" IsChecked="{Binding Data.TransactionRequest.EnableTipping}"/>
+                        <CheckBox x:Name="chkPrintTime" Content="Print Timeout" IsChecked="{Binding Data.IsPrintTimeOut}" />
+                        <CheckBox x:Name="chkPrePrintTime" Content="PrePrint Timeout" IsChecked="{Binding Data.IsPrePrintTimeOut}" />
                     </WrapPanel>
                     <WrapPanel>
                         <Button x:Name="btnTransaction" Content="Transaction" Command="{Binding Transaction}" Style="{StaticResource ButtonTxnStyle}"/>
@@ -675,7 +679,7 @@
                             <StackPanel>
                                 <WrapPanel Margin="0,5,0,0">
                                     <Label x:Name="lblDialogTitle" Content="Dialog Title" Width="120" />
-                                    <TextBox x:Name="txtDialogTitle" Text="{Binding Data.DialogRequest.Title}" Width="250" MaxLength="32"/>
+                                    <TextBox x:Name="txtDialogTitle" Text="{Binding Data.DialogRequest.DialogTitle}" Width="250" MaxLength="32"/>
                                 </WrapPanel>
                                 <StackPanel>
                                     <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
@@ -767,6 +771,15 @@
                                 </Button>
                             </StackPanel>
                         </TabItem>
+                    <TabItem Header="Client List Request">
+                        <StackPanel>
+                            <Button x:Name="btnClientListRequest" Command="{Binding ClientList}" Content="Request Client List">
+                                <Button.Resources>
+                                    <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}"/>
+                                </Button.Resources>
+                            </Button>
+                        </StackPanel>
+                    </TabItem>
                     </TabControl>
                 </TabItem>
             </TabControl>

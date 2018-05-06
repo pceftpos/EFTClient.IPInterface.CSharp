@@ -287,3 +287,6 @@ __pycache__/
 *.odx.cs
 *.xsd.cs
 *.bak
+/IPInterface/IPInterface.nuspec
+/IPInterface/pc-eftpos.cer
+/IPInterface/PCEFTPOS.EFTClient.IPInterface.snk

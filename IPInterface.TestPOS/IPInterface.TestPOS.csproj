@@ -75,14 +75,22 @@
     <Compile Include="CredentialLocker.cs" />
     <Compile Include="DataWriter.cs" />
     <Compile Include="ExternalData.cs" />
+    <Compile Include="ViewModels\DialogUIHandler.cs" />
     <Compile Include="ViewModels\EFTDisplayResponseVM.cs" />
     <Compile Include="ViewModels\ProxyViewModel.cs" />
     <Compile Include="Views\Converters.cs" />
     <Compile Include="PadViewModel.cs" />
+    <Compile Include="Views\TestDialogUI.xaml.cs">
+      <DependentUpon>TestDialogUI.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\ProxyDialog.xaml.cs">
       <DependentUpon>ProxyDialog.xaml</DependentUpon>
     </Compile>
     <Compile Include="RelayCommand.cs" />
+    <Page Include="Views\TestDialogUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -123,6 +131,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IPInterface.UIInterfaceDemo\IPInterface.UIInterfaceDemo.csproj">
+      <Project>{dd628b2f-ff0f-42a5-b9bf-1815440b0cb9}</Project>
+      <Name>IPInterface.UIInterfaceDemo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IPInterface\IPInterface.csproj">
       <Project>{3de3ff35-5303-41f0-9f66-5b5ab2b6b7df}</Project>
       <Name>IPInterface</Name>

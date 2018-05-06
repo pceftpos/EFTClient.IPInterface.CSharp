@@ -260,28 +260,29 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
                     }
                 }
             };
-
-            if(!await _eft.WriteRequestAsync(new EFTBasketDataRequest() { Command = new EFTBasketDataCommandCreate() { Basket = basket } }))
-            {
-                ShowNotification("FAILED TO SEND TXN", "", "", NotificationType.Error, true);
-            }
-            else
-            {
-                try
-                {
-                    await _eft.ReadResponseAsync<EFTBasketDataResponse>(new CancellationTokenSource(new TimeSpan(0, 0, 10)).Token);
-                }
-                catch (TaskCanceledException)
-                {
-                    // EFT-Client timeout waiting for response
-                    ShowNotification("EFT-CLIENT TIMEOUT", null, null, NotificationType.Error, true);
-                }
-                catch (Exception)
-                {
-                    // TODO: Handle failed EFTBasketDataRequest. Should still continue and attempt the transaction.
-                }
-            }
-
+			if (chkBasketData.IsChecked == true)
+			{
+				if (!await _eft.WriteRequestAsync(new EFTBasketDataRequest() { Command = new EFTBasketDataCommandCreate() { Basket = basket } }))
+				{
+					ShowNotification("FAILED TO SEND TXN", "", "", NotificationType.Error, true);
+				}
+				else
+				{
+					try
+					{
+						await _eft.ReadResponseAsync<EFTBasketDataResponse>(new CancellationTokenSource(new TimeSpan(0, 0, 10)).Token);
+					}
+					catch (TaskCanceledException)
+					{
+						// EFT-Client timeout waiting for response
+						ShowNotification("EFT-CLIENT TIMEOUT", null, null, NotificationType.Error, true);
+					}
+					catch (Exception)
+					{
+						// TODO: Handle failed EFTBasketDataRequest. Should still continue and attempt the transaction.
+					}
+				}
+			}
 
             // Transaction request
             var r = new EFTTransactionRequest();
@@ -297,7 +298,11 @@ namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync
             // Set application. Used for gift card & 3rd party payment
             r.Application = TerminalApplication.EFTPOS;
             // Set basket PAD tag
-            r.PurchaseAnalysisData.SetTag("SKU", basketId);
+			if(chkBasketData.IsChecked == true)
+			{
+				r.PurchaseAnalysisData.SetTag("SKU", basketId);
+			}
+			
 
             if (!await _eft.WriteRequestAsync(r))
             {

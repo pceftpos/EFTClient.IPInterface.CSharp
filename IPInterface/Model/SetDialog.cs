@@ -41,10 +41,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class SetDialogRequest : EFTRequest
     {
 		/// <summary>Constructs a default set dialog request object.</summary>
-		public SetDialogRequest() : base()
+		public SetDialogRequest() : base(false, typeof(SetDialogResponse))
     	{
-		}
-
+        }
 
         /// <summary>Indicates if the type of PC-EFTPOS dialog to use.</summary>
         /// <value>Type: <see cref="DialogType" /><para>The default is <see cref="DialogType.Standard" />.</para></value>
@@ -100,7 +99,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class SetDialogResponse : EFTResponse
 	{
 		/// <summary>Constructs a default set dialog response object.</summary>
-		public SetDialogResponse() : base()
+		public SetDialogResponse() : base(typeof(SetDialogRequest))
 		{
 		}
 

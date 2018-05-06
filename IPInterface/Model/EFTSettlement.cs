@@ -131,7 +131,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTSettlementRequest : EFTRequest
 	{
     	/// <summary>Constructs a default terminal settlement request object.</summary>
-		public EFTSettlementRequest(): base()
+		public EFTSettlementRequest(): base(true, typeof(EFTSettlementResponse))
 		{
 		}
 
@@ -171,7 +171,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		//SettlementTotals totalsData;
 
 		/// <summary>Constructs a default terminal settlement response object.</summary>
-		public EFTSettlementResponse() : base()
+		public EFTSettlementResponse() : base(typeof(EFTSettlementRequest))
 		{
 			//settleCardData = new List<SettlementCardTotals>();
 			//totalsData = new SettlementTotals();

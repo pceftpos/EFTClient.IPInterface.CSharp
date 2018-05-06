@@ -10,8 +10,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTClientListRequest : EFTRequest
     {
         /// <summary>Constructs a default client list object.</summary>
-        public EFTClientListRequest() : base()
-        { 
+        public EFTClientListRequest() : base(false, typeof(EFTClientListResponse))
+        {
         }
     }
 
@@ -29,9 +29,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
         }
 
         /// <summary>Constructs a default EFT-Client list response object.</summary>
-        public EFTClientListResponse() : base()
+        public EFTClientListResponse() : base(typeof(EFTClientListRequest))
         {
         }
+
+		public bool Success { get; set; } = true;
 
         public List<EFTClient> EFTClients { get; set; } = new List<EFTClient>();
     }

@@ -16,7 +16,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTReprintReceiptRequest : EFTRequest
 	{
 		/// <summary>Constructs a default EFTDuplicateReceiptRequest object.</summary>
-		public EFTReprintReceiptRequest() : base()
+		public EFTReprintReceiptRequest() : base(true, typeof(EFTReprintReceiptResponse))
 		{
 		}
 
@@ -45,7 +45,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTReprintReceiptResponse : EFTResponse
 	{
 		/// <summary>Constructs a default duplicate receipt response object.</summary>
-		public EFTReprintReceiptResponse() : base()
+		public EFTReprintReceiptResponse() : base(typeof(EFTReprintReceiptResponse))
 		{
 		}
 

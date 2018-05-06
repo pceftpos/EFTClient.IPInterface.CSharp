@@ -44,7 +44,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 	public class EFTGetPasswordRequest : EFTRequest
 	{
-		public int MinPasswordLength { get; set; }
+        public EFTGetPasswordRequest() : base(true, typeof(EFTGetPasswordResponse))
+        {
+        }
+            
+        public int MinPasswordLength { get; set; }
 		public int MaxPassworkLength { get; set; }
 		public int Timeout { get; set; }
 		public PasswordDisplay PasswordDisplay { get; set; }
@@ -52,7 +56,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 	public class EFTGetPasswordResponse : EFTResponse
 	{
-		public string Password { get; set; }
+        public EFTGetPasswordResponse() : base(typeof(EFTGetPasswordRequest))
+        {
+        }
+
+        public string Password { get; set; }
 
         /// <summary>Indicates if the request was successful.</summary>
         /// <value>Type: <see cref="System.Boolean"/></value>
@@ -67,26 +75,23 @@ namespace PCEFTPOS.EFTClient.IPInterface
         public string ResponseText { get; set; } = "";
     }
 
-	public class EFTSlaveRequest : EFTRequest
-	{
-		public string Command { get; set; }
-	}
-
-	public class EFTSlaveResponse : EFTResponse
-	{
-		public bool Success { get { return ResponseCode == "00"; } }
-		public string ResponseCode { get; set; }
-		public string Response { get; set; }
-	}
-
     public class EFTPayAtTableRequest : EFTRequest
     {
+        public EFTPayAtTableRequest(): base(false, typeof(EFTPayAtTableResponse))
+        {
+        }
+
         public string Header { get; set; }
         public string Content { get; set; }
     }
 
     public class EFTPayAtTableResponse : EFTResponse
     {
+        public EFTPayAtTableResponse() : base(typeof(EFTPayAtTableResponse))
+        {
+
+        }
+
         public string Header { get; set; } = string.Empty;
         public string Content { get; set; } = string.Empty;
     }

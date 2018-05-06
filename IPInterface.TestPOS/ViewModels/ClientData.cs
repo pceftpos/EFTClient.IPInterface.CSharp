@@ -14,168 +14,174 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
     public delegate void LogEvent(string message);
     public delegate void DisplayEvent(bool show);
 
-    public class ClientData : INotifyPropertyChanged
-    {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public event LogEvent OnLog;
-        public event DisplayEvent OnDisplay;
-        public event EventHandler OnDisplayChanged;
+	public class ClientData : INotifyPropertyChanged
+	{
+		public event PropertyChangedEventHandler PropertyChanged;
+		public event LogEvent OnLog;
+		public event DisplayEvent OnDisplay;
+		public event EventHandler OnDisplayChanged;
 
-        public ClientData()
-        {
-            _dctCommands.Add("Enter Slave Mode", "*@101S1004300 ");
-            _dctCommands.Add("Display 'Swipe Card'", "*@103Z 0060216  D 0240000   SWIPE CARD       D 0240100                 ");
-            _dctCommands.Add("Swipe Card", "*@102J1000K100810000010");
-            _dctCommands.Add("Exit Slave Mode", "*@101S0000");
-            _dctCommands.Add("Complete Read Card Command", "*@107S1004300 Z 0060216  D 0240000   SWIPE CARD       D 0240100                    J1000K100810000010S0000");
-        }
+		public ClientData()
+		{
+			_dctCommands.Add("Enter Slave Mode", "*@101S1004300 ");
+			_dctCommands.Add("Display 'Swipe Card'", "*@103Z 0060216  D 0240000   SWIPE CARD       D 0240100                 ");
+			_dctCommands.Add("Swipe Card", "*@102J1000K100810000010");
+			_dctCommands.Add("Exit Slave Mode", "*@101S0000");
+			_dctCommands.Add("Complete Read Card Command", "*@107S1004300 Z 0060216  D 0240000   SWIPE CARD       D 0240100                    J1000K100810000010S0000");
+		}
 
-        #region Connect
-        private ConnectedStatus _connectedState = ConnectedStatus.Disconnected;
-        public ConnectedStatus ConnectedState
-        {
-            get
-            {
-                return _connectedState;
-            }
-            set
-            {
-                _connectedState = value;
-                NotifyPropertyChanged("ConnectedState");
-            }
-        }
+		#region Connect
+		private ConnectedStatus _connectedState = ConnectedStatus.Disconnected;
+		public ConnectedStatus ConnectedState
+		{
+			get
+			{
+				return _connectedState;
+			}
+			set
+			{
+				_connectedState = value;
+				NotifyPropertyChanged("ConnectedState");
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Logon
-        public LogonType SelectedLogon { get; set; } = LogonType.Standard;
-        public ObservableCollection<string> LogonList { get { return GetEnum<LogonType>(); } }
+		#region Logon
+		public LogonType SelectedLogon { get; set; } = LogonType.Standard;
+		public ObservableCollection<string> LogonList { get { return GetEnum<LogonType>(); } }
 
-        private bool _logonTestEnabled = false;
-        public bool LogonTestEnabled
-        {
-            set
-            {
-                _logonTestEnabled = value;
-                NotifyPropertyChanged("LogonTestEnabled");
-            }
-            get
-            {
-                return _logonTestEnabled;
-            }
-        }
+		private bool _logonTestEnabled = false;
+		public bool LogonTestEnabled
+		{
+			set
+			{
+				_logonTestEnabled = value;
+				NotifyPropertyChanged("LogonTestEnabled");
+			}
+			get
+			{
+				return _logonTestEnabled;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region Receipt Options
+		#region Receipt Options
 
-        public bool CutReceipt { set; get; }
-        public ReceiptCutModeType CutReceiptMode
-        {
-            get
-            {
-                return (CutReceipt ? ReceiptCutModeType.Cut : ReceiptCutModeType.DontCut);
-            }
-        }
+		public bool CutReceipt { set; get; }
+		public ReceiptCutModeType CutReceiptMode
+		{
+			get
+			{
+				return (CutReceipt ? ReceiptCutModeType.Cut : ReceiptCutModeType.DontCut);
+			}
+		}
 
-        public ReceiptPrintModeType PrintMode { get; set; } = ReceiptPrintModeType.PinpadPrinter;
-        public ObservableCollection<string> PrintModeList { get { return GetEnum<ReceiptPrintModeType>(); } }
-        #endregion
+		public ReceiptPrintModeType PrintMode { get; set; } = ReceiptPrintModeType.PinpadPrinter;
+		public ObservableCollection<string> PrintModeList { get { return GetEnum<ReceiptPrintModeType>(); } }
+		#endregion
 
-        #region Transaction
-        public bool IsETS { get; set; } = false;
-        public ObservableCollection<string> TerminalList { get { return GetEnum<TerminalApplication>(); } }
+		#region Transaction
+		public bool IsETS { get; set; } = false;
+		public bool IsPrintTimeOut { get; set; } = false;
+		public bool IsPrePrintTimeOut { get; set; } = false;
+		public ObservableCollection<string> TerminalList { get { return GetEnum<TerminalApplication>(); } }
 
-        private int _transactionCount = 0;
-        public string TransactionReference
-        {
-            get
-            {
-                return string.Format("{0:ddMMyyyyHHmm}{1:D3}", DateTime.Now, _transactionCount);
-            }
-            set
-            {
-                _transactionCount++;
-                NotifyPropertyChanged("TransactionReference");
-            }
-        }
+		private int _transactionCount = 0;
+		public string TransactionReference
+		{
+			get
+			{
+				return string.Format("{0:ddMMyyyyHHmm}{1:D3}", DateTime.Now, _transactionCount);
+			}
+			set
+			{
+				_transactionCount++;
+				NotifyPropertyChanged("TransactionReference");
+			}
+		}
 
-        public EFTTransactionRequest TransactionRequest { get; set; } = new EFTTransactionRequest();
+		public EFTTransactionRequest TransactionRequest { get; set; } = new EFTTransactionRequest();
 
-        public ObservableCollection<string> TransactionList { get { return GetFilteredEnum<TransactionType>(); } }
+		public ObservableCollection<string> TransactionList { get { return GetFilteredEnum<TransactionType>(); } }
 
-        public ObservableCollection<string> CardSourceList { get { return GetEnum<PanSource>(); } }
-        string _selectedCardSource = string.Empty;
-        public string SelectedCardSource
-        {
-            get { return _selectedCardSource; }
-            set { _selectedCardSource = value; NotifyPropertyChanged("SelectedCardSource"); }
-        }
+		public ObservableCollection<string> CardSourceList { get { return GetEnum<PanSource>(); } }
+		string _selectedCardSource = string.Empty;
+		public string SelectedCardSource
+		{
+			get { return _selectedCardSource; }
+			set { _selectedCardSource = value; NotifyPropertyChanged("SelectedCardSource"); }
+		}
 
-        public ObservableCollection<string> AccountList { get { return GetEnum<AccountType>(); } }
+		public ObservableCollection<string> AccountList { get { return GetEnum<AccountType>(); } }
 
-        ExternalDataList _track2Items = new ExternalDataList();
-        public ExternalDataList Track2Items
-        {
-            get
-            {
-                return _track2Items;
-            }
-            set
-            {
-                _track2Items = value;
-                NotifyPropertyChanged("Track2List");
-            }
-        }
+		ExternalDataList _track2Items = new ExternalDataList();
+		public ExternalDataList Track2Items
+		{
+			get
+			{
+				return _track2Items;
+			}
+			set
+			{
+				_track2Items = value;
+				NotifyPropertyChanged("Track2List");
+			}
+		}
 
-        string _selectedTrack2 = string.Empty;
-        public string SelectedTrack2
-        {
-            get { return _selectedTrack2; }
-            set { _selectedTrack2 = value; NotifyPropertyChanged("SelectedTrack2"); }
-        }
+		string _selectedTrack2 = string.Empty;
+		public string SelectedTrack2
+		{
+			get { return _selectedTrack2; }
+			set { _selectedTrack2 = value; NotifyPropertyChanged("SelectedTrack2"); }
+		}
 
-        public ObservableCollection<string> Track2List 
-        {
-            get
-            {
-                var list = new ObservableCollection<string>();
-                _track2Items.ForEach(x => list.Add(x.ToString()));
-                return list;
-            }
-        }
+		public ObservableCollection<string> Track2List
+		{
+			get
+			{
+				var list = new ObservableCollection<string>();
+				_track2Items.ForEach(x => list.Add(x.ToString()));
+				return list;
+			}
+		}
 
-        ExternalDataList _padItems = new ExternalDataList();
-        public ExternalDataList PadItems
-        {
-            get { return _padItems; }
-            set { _padItems = value; NotifyPropertyChanged("PadList"); }
-        }
+		ExternalDataList _padItems = new ExternalDataList();
+		public ExternalDataList PadItems
+		{
+			get { return _padItems; }
+			set { _padItems = value; NotifyPropertyChanged("PadList"); }
+		}
 
-        
-        public string SelectedPad { get; set; } = string.Empty;
-        public ObservableCollection<string> PadList
-        {
-            get
-            {
-                var list = new ObservableCollection<string>();
-                PadItems.ForEach(x => list.Add(x.ToString()));
-                return list;
-            }
-        }
-#endregion
 
-        #region ETS Transaction
-        public ObservableCollection<string> ETSTransactionList { get { return GetFilteredEnum<TransactionType>("ETS"); } } 
-        #endregion
+		public string SelectedPad { get; set; } = string.Empty;
+		public ObservableCollection<string> PadList
+		{
+			get
+			{
+				var list = new ObservableCollection<string>();
+				PadItems.ForEach(x => list.Add(x.ToString()));
+				return list;
+			}
+		}
+		#endregion
 
-        #region Status
-        public StatusType SelectedStatus { get; set; } 
-        public ObservableCollection<string> StatusList { get { return GetEnum<StatusType>(); } }
-        #endregion
+		#region ETS Transaction
+		public ObservableCollection<string> ETSTransactionList { get { return GetFilteredEnum<TransactionType>("ETS"); } }
+		#endregion
 
-        #region Configure Merchant
-        public EFTConfigureMerchantRequest MerchantDetails { get; set; } = new EFTConfigureMerchantRequest();
+		#region Status
+		public StatusType SelectedStatus { get; set; }
+		public ObservableCollection<string> StatusList { get { return GetEnum<StatusType>(); } }
+		#endregion
+
+		#region ClientList
+		public EFTClientListRequest ClientListRequest{ get; set; } = new EFTClientListRequest();
+		#endregion
+
+		#region Configure Merchant
+		public EFTConfigureMerchantRequest MerchantDetails { get; set; } = new EFTConfigureMerchantRequest();
         #endregion
 
         #region Settlement
@@ -196,7 +202,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
         #endregion
 
         #region Cheque Auth
-        public ChequeAuthRequest ChequeRequest { get; set; } = new ChequeAuthRequest();
+        public EFTChequeAuthRequest ChequeRequest { get; set; } = new EFTChequeAuthRequest();
         public ObservableCollection<string> ChequeList { get { return GetEnum<ChequeType>(); } }
         #endregion
 

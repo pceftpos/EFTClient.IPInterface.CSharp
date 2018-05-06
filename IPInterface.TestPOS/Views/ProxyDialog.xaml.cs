@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Threading.Tasks;
+using System.Windows;
 using PCEFTPOS.EFTClient.IPInterface;
 
 
@@ -14,7 +15,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
             InitializeComponent();
         }
 
-        private  void Window_Closed(object sender, System.EventArgs e)
+		private  void Window_Closed(object sender, System.EventArgs e)
         {
             
         }

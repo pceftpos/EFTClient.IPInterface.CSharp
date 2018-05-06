@@ -28,11 +28,18 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		ImmediatelyAndWhenClosed = '2',
 	}
 
-	/// <summary>A PC-EFTPOS show control panel request object.</summary>
-	public class ControlPanelRequest : EFTRequest
-	{
+    /// <summary>A PC-EFTPOS show control panel request object.</summary>
+    public class EFTControlPanelRequest : ControlPanelRequest
+    {
+
+    }
+
+    /// <summary>ControlPanelRequest is obsolete. Please use EFTControlPanelRequest</summary>
+    [Obsolete("ControlPanelRequest is obsolete. Please use EFTControlPanelRequest")]
+    public class ControlPanelRequest : EFTRequest
+    {
 		/// <summary>Constructs a default show control panel request object.</summary>
-		public ControlPanelRequest() : base()
+		public ControlPanelRequest() : base(true, typeof(EFTControlPanelResponse))
 		{
 		}
 
@@ -58,7 +65,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	public class EFTControlPanelResponse : EFTResponse
 	{
 		/// <summary>Constructs a default show control panel response object.</summary>
-		public EFTControlPanelResponse() : base()
+		public EFTControlPanelResponse() : base(typeof(EFTControlPanelRequest))
 		{
 		}
 

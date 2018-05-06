@@ -14,10 +14,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	}
 
 	/// <summary>A PC-EFTPOS cheque authorization request object.</summary>
-	public class ChequeAuthRequest : EFTRequest
+	public class EFTChequeAuthRequest : EFTRequest
 	{
 		/// <summary>Constructs a default ChequeAuthRequest object.</summary>
-		public ChequeAuthRequest() : base()
+		public EFTChequeAuthRequest() : base(true, typeof(EFTChequeAuthResponse))
 		{
 		}
 
@@ -63,7 +63,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 		/// <summary>Constructs a default cheque authorization response object.</summary>
 		public EFTChequeAuthResponse()
-			: base()
+			: base(typeof(EFTChequeAuthRequest))
 		{
 			amount = 0;
 			authNumber = 0;

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCEFTPOS.EFTClient.IPInterface.Slave;
+using System;
 using System.Runtime.CompilerServices;
 
 namespace PCEFTPOS.EFTClient.IPInterface
@@ -41,6 +42,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <summary> Defines the level of logging that should be passed back in the OnLog event. Default <see cref="LogLevel.Off" />. <para>See <see cref="LogLevel"/></para></summary>
         PCEFTPOS.EFTClient.IPInterface.LogLevel LogLevel { get; set; }
 
+        /// <summary>Implementation of a dialog manager</summary>
+        IDialogUIHandler DialogUIHandler { get; set; }
         #endregion
 
         #region Methods
@@ -137,9 +140,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
         bool DoStatus(EFTStatusRequest request);
 
         /// <summary>Send a request to PC-EFTPOS for a cheque authorization.</summary>
-        /// <param name="request">An <see cref="ChequeAuthRequest" /> object.</param>
+        /// <param name="request">An <see cref="EFTChequeAuthRequest" /> object.</param>
         /// <returns>FALSE if an error occured.</returns>
-        bool DoChequeAuth(ChequeAuthRequest request);
+        bool DoChequeAuth(EFTChequeAuthRequest request);
 
         /// <summary>Send a request to PC-EFTPOS for a query card.</summary>
         /// <returns>FALSE if an error occured.</returns>

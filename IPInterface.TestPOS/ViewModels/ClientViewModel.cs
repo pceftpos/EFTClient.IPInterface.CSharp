@@ -414,10 +414,25 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
             }
         }
 
-        #endregion
+		#endregion
 
-        #region Configure Merchant
-        public RelayCommand ConfigureMerchant
+		#region ClientList
+
+		public RelayCommand ClientList
+		{
+			get
+			{
+				return new RelayCommand(async (o) =>
+				{
+					await _eftw.DoClientList(new EFTClientListRequest());
+				});
+			}
+		}
+
+		#endregion
+
+		#region Configure Merchant
+		public RelayCommand ConfigureMerchant
         {
             get
             {

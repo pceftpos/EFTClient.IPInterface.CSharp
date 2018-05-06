@@ -6,7 +6,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTCloudLogonRequest : EFTRequest
     {
         /// <summary>Constructs a default cloud logon request object.</summary>
-        public EFTCloudLogonRequest() : base()
+        public EFTCloudLogonRequest() : base(true, typeof(EFTCloudLogonResponse))
         {
         }
 
@@ -27,7 +27,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public class EFTCloudLogonResponse : EFTResponse
     {
         /// <summary>Constructs a default terminal logon response object.</summary>
-        public EFTCloudLogonResponse() : base()
+        public EFTCloudLogonResponse() : base(typeof(EFTCloudLogonRequest))
         {
         }
 
