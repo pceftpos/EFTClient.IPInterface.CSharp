@@ -14,7 +14,7 @@
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>PCEFTPOS PC-EFTPOS</PackageTags>
     <PackageProjectUrl>https://github.com/pceftpos/EFTClient.IPInterface.CSharp</PackageProjectUrl>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>PCEFTPOS.EFTClient.IPInterface.snk</AssemblyOriginatorKeyFile>
     <ReleaseNotes>
       1.3.5.0 (2018-02-11)
