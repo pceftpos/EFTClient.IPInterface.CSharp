@@ -14,7 +14,7 @@
             <Setter Property="FontSize" Value="18" />
             <Setter Property="Margin" Value="15,10,15,15" />
             <Setter Property="Height" Value="35" />
-            <Setter Property="Width" Value="150" />
+            <Setter Property="Width" Value="75" />
         </Style>
 
         <Style TargetType="TextBlock" x:Key="BaseTextBlockStyle">
@@ -33,18 +33,15 @@
             <Setter Property="Margin" Value="15,5,15,5" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="TextAlignment" Value="Center"/>
-        </Style>        
-        
+        </Style>
+
         <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
 
         </Style>
 
         <Style x:Key="LeftMostButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
             <Style.Triggers>
-                <DataTrigger Binding="{Binding DisplayDetails.CancelKeyFlag}" Value="True">
-                    <Setter Property="Content" Value="Cancel"/>
-                    <Setter Property="Visibility" Value="Visible"/>
-                </DataTrigger>
+
                 <DataTrigger Binding="{Binding DisplayDetails.AcceptYesKeyFlag}" Value="True">
                     <Setter Property="Content" Value="Yes"/>
                     <Setter Property="Visibility" Value="Visible"/>
@@ -64,6 +61,15 @@
                 </DataTrigger>
                 <DataTrigger Binding="{Binding DisplayDetails.AuthoriseKeyFlag}" Value="True">
                     <Setter Property="Content" Value="Authorise"/>
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+        <Style x:Key="CancelButtonStyle" BasedOn="{StaticResource BaseButtonStyle}" TargetType="Button">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DisplayDetails.CancelKeyFlag}" Value="True">
+                    <Setter Property="Content" Value="Cancel"/>
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -176,9 +182,9 @@
                                             <StopStoryboard BeginStoryboardName="Storyboard7"/>
                                         </DataTrigger.ExitActions>
                                     </DataTrigger>
-                                    
+
                                 </ControlTemplate.Triggers>
-                                
+
                                 <Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}">
                                     <Grid>
                                         <Canvas Height="60" Width="60">
@@ -210,7 +216,8 @@
             </UserControl.Resources>
             <Control Style="{StaticResource BusyAnimationStyle}" />
         </UserControl>
-        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal">
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="315">
+            <Button x:Name="btnCancelButton" Style="{StaticResource CancelButtonStyle}" Command="{Binding SendKeyCommand}" CommandParameter="{Binding ElementName=btnCancelButton, Path=Content}"/>
             <Button x:Name="btnLeftButton" Style="{StaticResource LeftMostButtonStyle}" Command="{Binding SendKeyCommand}" CommandParameter="{Binding ElementName=btnLeftButton, Path=Content}"/>
             <Button x:Name="btnRightButton" Style="{StaticResource RightMostButtonStyle}" Command="{Binding SendKeyCommand}" CommandParameter="{Binding ElementName=btnRightButton, Path=Content}"/>
         </StackPanel>
