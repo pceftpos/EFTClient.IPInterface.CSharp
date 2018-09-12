@@ -7,8 +7,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 {
 	class TcpSocketAsync : ITcpSocketAsync
 	{
-		TcpClient _client = null;
-		NetworkStream _clientStream = null;
+		private TcpClient _client = null;
 
 		public async Task<bool> ConnectAsync(string hostName, int hostPort, bool keepAlive)
 		{
@@ -54,7 +53,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
 					{
 						if (completedTask == timeoutTask) //the timeout task was the first to complete
 						{
+							// Visual Studio keeps saying this exception is unhandled. Looks to me like it's handled in the EFTClientIPAsync ReadResponse method?
 							throw new TaskCanceledException();
+							//return -1
 						}
 						else //the readTask completed
 						{
@@ -85,13 +86,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			try
 			{
 				// Check if the state is disconnected based on the last operation
-				if (_client?.Connected != true || _clientStream == null)
+				if (_client?.Connected != true || _client?.GetStream() == null)
 					return false;
 
 				// Otherwise the socket was connected the last time we used it, send 0 byte packet to see if it still is...
-				if (_clientStream != null)
+				if (_client?.GetStream() != null)
 				{
-					await _clientStream.WriteAsync(new byte[1], 0, 0);
+					await _client?.GetStream().WriteAsync(new byte[1], 0, 0);
 				}
 			}
 			catch (System.IO.IOException e)

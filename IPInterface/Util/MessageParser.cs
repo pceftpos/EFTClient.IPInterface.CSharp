@@ -846,7 +846,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		}
 		#endregion
 
-		#region EFTResponseToString
+		#region EFTRequestToString
 
 		public string EFTRequestToString(EFTRequest eftRequest)
 		{
@@ -885,9 +885,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
 				return BuildSetDialogRequest((SetDialogRequest)eftRequest);
 			}
 
-			if (eftRequest is ControlPanelRequest)
+			if (eftRequest is EFTControlPanelRequest)
 			{
-				return BuildControlPanelRequest((ControlPanelRequest)eftRequest);
+				return BuildControlPanelRequest((EFTControlPanelRequest)eftRequest);
 			}
 
 			if (eftRequest is EFTSettlementRequest)
@@ -905,9 +905,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
 				return BuildChequeAuthRequest((EFTChequeAuthRequest)eftRequest);
 			}
 
-			if (eftRequest is QueryCardRequest)
+			if (eftRequest is EFTQueryCardRequest)
 			{
-				return BuildQueryCardRequest((QueryCardRequest)eftRequest);
+				return BuildQueryCardRequest((EFTQueryCardRequest)eftRequest);
 			}
 
 			if (eftRequest is EFTGetPasswordRequest)
@@ -957,6 +957,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			throw new Exception("Unknown EFTRequest type.");
 		}
+
+
 		StringBuilder BuildEFTTransactionRequest(EFTTransactionRequest v)
 		{
 			var r = new StringBuilder();
@@ -1009,6 +1011,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append((char)v.ReceiptCutMode);
 			r.Append((char)v.ReceiptPrintMode);
 			r.Append(v.Application.ToApplicationString());
+			r.Append(v.OriginalTxnRef.PadRightAndCut(16));
 			return r;
 		}
 		StringBuilder BuildEFTGetLastTransactionRequest(EFTGetLastTransactionRequest v)
@@ -1016,8 +1019,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			var r = new StringBuilder();
 			r.Append("N");
 			r.Append("0");
-			r.Append(v.Application.ToApplicationString());
-			return r;
+            r.Append(v.Application.ToApplicationString());
+            r.Append(v.Merchant.PadRightAndCut(2));
+            r.Append(v.TxnRef.PadRightAndCut(16));
+            return r;
 		}
 		StringBuilder BuildSetDialogRequest(SetDialogRequest v)
 		{
@@ -1032,7 +1037,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.DialogTitle.PadRightAndCut(32));
 			return r;
 		}
-		StringBuilder BuildControlPanelRequest(ControlPanelRequest v)
+		StringBuilder BuildControlPanelRequest(EFTControlPanelRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("5"); // ControlPanel
@@ -1055,7 +1060,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.PurchaseAnalysisData.GetAsString(true));
 			return r;
 		}
-		StringBuilder BuildQueryCardRequest(QueryCardRequest v)
+		StringBuilder BuildQueryCardRequest(EFTQueryCardRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("J");

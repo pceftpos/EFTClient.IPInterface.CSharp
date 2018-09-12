@@ -79,35 +79,34 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 						string value = p.ToString();
 
 						Type tt = p.GetType();
-						if (p is TransactionType)
-						{
-							var txn = (TransactionType)p;
-							value = txn.ToTransactionString();
-						}
-						else if (tt.IsClass && tt != typeof(string) && !tt.IsArray)
-						{
-							var e = DictionaryFromType(p);
-							if (e.Count > 0)
-							{
-								value = string.Empty;
-								foreach (var i in e)
-								{
-									value += $"{i.Key}: {i.Value};{Environment.NewLine}";
-								}
-							}
-						}
-						else if (tt == typeof(string[]))
-						{
-							value = string.Empty;
-							string[] arr = p as string[];
-							foreach (string s in arr)
-							{
-								value += s + Environment.NewLine;
-							}
-							_data.Log(value);
-						}
+                        if (p is TransactionType txn)
+                        {
+                            value = txn.ToTransactionString();
+                        }
+                        else if (tt.IsClass && tt != typeof(string) && !tt.IsArray)
+                        {
+                            var e = DictionaryFromType(p);
+                            if (e.Count > 0)
+                            {
+                                value = string.Empty;
+                                foreach (var i in e)
+                                {
+                                    value += $"{i.Key}: {i.Value};{Environment.NewLine}";
+                                }
+                            }
+                        }
+                        else if (tt == typeof(string[]))
+                        {
+                            value = string.Empty;
+                            string[] arr = p as string[];
+                            foreach (string s in arr)
+                            {
+                                value += s + Environment.NewLine;
+                            }
+                            _data.Log(value);
+                        }
 
-						d.Add(prp.Name, value);
+                        d.Add(prp.Name, value);
 					}
 				}
 			}
@@ -374,7 +373,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		{
 			try
 			{
-				await _eft.WriteRequestAsync(new ControlPanelRequest()
+				await _eft.WriteRequestAsync(new EFTControlPanelRequest()
 				{
 					ControlPanelType = option,
 					ReceiptCutMode = cutMode,
@@ -445,7 +444,8 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			{
 				ReceiptCutMode = cutMode,
 				ReceiptPrintMode = printMode,
-				ReprintType = type
+				ReprintType = type,
+				OriginalTxnRef = "1234"
 			});
 		}
 		#endregion
@@ -502,7 +502,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		#region Query Card
 		public async Task QueryCard(PadField pad, QueryCardType cardType)
 		{
-			await SendRequest<EFTQueryCardResponse>(new QueryCardRequest
+			await SendRequest<EFTQueryCardResponse>(new EFTQueryCardRequest
 			{
 				QueryCardType = cardType,
 				PurchaseAnalysisData = pad
@@ -564,10 +564,11 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		#region Slave Mode
 		public async Task DoSlaveMode(string cmd)
 		{
-			//await SendRequest<EFTSlaveResponse>(new EFTSlaveRequest
-			//{
-			//    Command = cmd
-			//});
+            //await SendRequest<EFTSlaveResponse>(new EFTSlaveRequest
+            //{
+            //    Command = cmd
+            //});
+            await Task.CompletedTask;
 		}
 		#endregion
 

@@ -105,6 +105,12 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		public EFTTransactionRequest TransactionRequest { get; set; } = new EFTTransactionRequest();
 
 		public ObservableCollection<string> TransactionList { get { return GetFilteredEnum<TransactionType>(); } }
+		string _selectedApplication = string.Empty;
+		public string SelectedApplication
+		{
+			get { return _selectedApplication; }
+			set { _selectedApplication = value; NotifyPropertyChanged("Application"); }
+		}
 
 		public ObservableCollection<string> CardSourceList { get { return GetEnum<PanSource>(); } }
 		string _selectedCardSource = string.Empty;

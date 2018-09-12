@@ -45,7 +45,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     	{
         }
 
-        /// <summary>Indicates if the type of PC-EFTPOS dialog to use.</summary>
+        /// <summary>Indicates the type of PC-EFTPOS dialog to use.</summary>
         /// <value>Type: <see cref="DialogType" /><para>The default is <see cref="DialogType.Standard" />.</para></value>
         public DialogType DialogType { get; set; } = DialogType.Standard;
 
@@ -90,7 +90,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
         [System.Obsolete("Please use DialogTitle instead of Title")]
         public string Title { get { return DialogTitle; } set { Title = DialogTitle; } }
 
-        /// <summary>Disable all duture display events to the POS</summary>
+        /// <summary>Disable all future display events to the POS</summary>
         /// <value>Type: <see cref="System.Boolean" /><para>The default is FALSE.</para></value>
         public bool DisableDisplayEvents { get; set; } = false;
     }

@@ -328,5 +328,6 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                 tbLog.SelectionStart = tbLog.Text.Length;
             }
         }
-    }
+
+	}
 }

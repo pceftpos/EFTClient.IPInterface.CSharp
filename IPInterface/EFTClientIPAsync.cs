@@ -348,11 +348,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 						break;
 					}
 
-					// Try to get the length of the new message. If it's not a valid length 
-					// we might have some corrupt data, keep checking for a valid message
-					int length = 0;
-					var lengthStr = _recvBuf.Substring(index, lengthSize);
-					if (!int.TryParse(lengthStr, out length) || length <= (lengthSize + 1))
+                    // Try to get the length of the new message. If it's not a valid length 
+                    // we might have some corrupt data, keep checking for a valid message
+                    var lengthStr = _recvBuf.Substring(index, lengthSize);
+                    if (!int.TryParse(lengthStr, out int length) || length <= (lengthSize + 1))
 					{
 						Log(LogLevel.Error, tr => tr.Set($"Invalid length. Content:{lengthStr}"));
 						continue;
@@ -531,22 +530,22 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		}
 
 
-        public IMessageParser Parser
-        {
-            get
-            {
-                return _parser;
-            }
-            set
-            {
-                _parser = value;
-            }
-        }
+		public IMessageParser Parser
+		{
+			get
+			{
+				return _parser;
+			}
+			set
+			{
+				_parser = value;
+			}
+		}
 
-        #endregion
+		#endregion
 
-        #region IDisposable Support
-        private bool disposedValue = false; // To detect redundant calls
+		#region IDisposable Support
+		private bool disposedValue = false; // To detect redundant calls
 
 		protected virtual void Dispose(bool disposing)
 		{

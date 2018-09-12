@@ -28,11 +28,14 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		ImmediatelyAndWhenClosed = '2',
 	}
 
+#pragma warning disable CS0618
     /// <summary>A PC-EFTPOS show control panel request object.</summary>
     public class EFTControlPanelRequest : ControlPanelRequest
     {
 
     }
+#pragma warning restore CS0618
+
 
     /// <summary>ControlPanelRequest is obsolete. Please use EFTControlPanelRequest</summary>
     [Obsolete("ControlPanelRequest is obsolete. Please use EFTControlPanelRequest")]

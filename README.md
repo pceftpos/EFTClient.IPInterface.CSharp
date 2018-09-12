@@ -94,7 +94,7 @@ class EFTClientIPDemo
     
     class Program
     {
-        static void Main(string[] args)
+        static async void Main(string[] args)
         {
             (new EFTClientIPDemo()).Run();
             Console.WriteLine("Press any key to quit");
@@ -192,9 +192,9 @@ class EFTClientIPDemoAsync
 
     class Program
     {
-        static void Main(string[] args)
+        static async void Main(string[] args)
         {
-            (new EFTClientIPDemoAsync()).RunAsync().GetAwaiter().GetResult();
+            await (new EFTClientIPDemoAsync()).RunAsync();
             Console.WriteLine("Press any key to quit");
             Console.ReadLine();
         }
@@ -202,7 +202,20 @@ class EFTClientIPDemoAsync
 ```
 
 ## Release notes
-## 1.4.0.0 (2018-04-30)
+
+### 1.4.1.3 (2018-09-12)
+* Fixed for EFTTransactionResponse and typo
+
+### 1.4.1.2 (2018-09-12)
+* Changes to fields ReceiptAutoPrint, CutReceipt, AccountType and DateSettlement
+
+### 1.4.1.1 (2018-08-29)
+* Added support for EFTGetLastTransactionRequest by TxnRef
+
+### 1.4.1.0 (2018-07-17)
+* Updated PadField to support IList<PadTag>
+
+### 1.4.0.0 (2018-04-30)
 * Added IDialogUIHandler for easier handling of POS custom dialogs.
 * Updated MessageParser to allow for custom parsing.
 

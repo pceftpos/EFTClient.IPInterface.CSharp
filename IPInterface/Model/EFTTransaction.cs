@@ -215,7 +215,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 	/// <summary>Flags that indicate how the transaction was processed.</summary>
 	public class TxnFlags
 	{
-		char[] flags;
+        readonly char[] flags;
 
 		/// <summary>Constructs a TxnFlags object with default values.</summary>
 		public TxnFlags()
@@ -407,15 +407,21 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <remarks>Use this property when <see cref="PanSource"></see> is set to <see cref="PanSource.POSSwiped"></see> and passing the full Track2 from the card magnetic stripe to PC-EFTPOS.</remarks>
 		public string Track2 { get; set; } = "";
 
-		/// <summary>The account to use for this transaction.</summary>
-		/// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
-		/// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
-		public AccountType CardAccountType { get; set; } = AccountType.Default;
+        /// <summary>The account to use for this transaction.</summary>
+        /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        public AccountType AccountType { get; set; } = AccountType.Default;
 
-		/// <summary>The retrieval reference number for the transaction.</summary>
-		/// <value>Type: <see cref="System.String"/></value>
-		/// <remarks>This property is required for a <see cref="TransactionType.TipAdjust"></see> transaction type.</remarks>
-		public string RRN { get; set; } = "";
+        /// <summary>The account to use for this transaction.</summary>
+        /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        [System.Obsolete("Please use AccountType instead of CardAccountType")]
+        public AccountType CardAccountType { get { return AccountType; } set { AccountType = value; } }
+
+        /// <summary>The retrieval reference number for the transaction.</summary>
+        /// <value>Type: <see cref="System.String"/></value>
+        /// <remarks>This property is required for a <see cref="TransactionType.TipAdjust"></see> transaction type.</remarks>
+        public string RRN { get; set; } = "";
 
 		/// <summary>Additional information sent with the request.</summary>
 		/// <value>Type: <see cref="PadField"/></value>
@@ -425,18 +431,28 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <value>Type: <see cref="TerminalApplication"/><para>The default is <see cref="TerminalApplication.EFTPOS"/>.</para></value>
 		public TerminalApplication Application { get; set; } = TerminalApplication.EFTPOS;
 
-		/// <summary>Indicates whether to trigger receipt events.</summary>
-		/// <value>Type: <see cref="ReceiptPrintModeType"/><para>The default is POSPrinter.</para></value>
-		public ReceiptPrintModeType ReceiptPrintMode { get; set; } = ReceiptPrintModeType.POSPrinter;
+        /// <summary>Indicates whether to trigger receipt events.</summary>
+        /// <value>Type: <see cref="ReceiptPrintModeType"/><para>The default is POSPrinter.</para></value>
+        public ReceiptPrintModeType ReceiptAutoPrint { get; set; } = ReceiptPrintModeType.POSPrinter;
 
-		/// <summary>Indicates whether PC-EFTPOS should cut receipts.</summary>
-		/// <value>Type: <see cref="ReceiptCutModeType"/><para>The default is DontCut. This property only applies when <see cref="EFTRequest.ReceiptPrintMode"/> is set to EFTClientPrinter.</para></value>
-		public ReceiptCutModeType ReceiptCutMode { get; set; } = ReceiptCutModeType.DontCut;
+        /// <summary>Indicates whether to trigger receipt events.</summary>
+        /// <value>Type: <see cref="ReceiptPrintModeType"/><para>The default is POSPrinter.</para></value>
+        [System.Obsolete("Please use ReceiptAutoPrint instead of ReceiptPrintMode")]
+        public ReceiptPrintModeType ReceiptPrintMode { get { return ReceiptAutoPrint; } set { ReceiptAutoPrint = value; } }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		public int CVV { get; set; } = 0;
+        /// <summary>Indicates whether PC-EFTPOS should cut receipts.</summary>
+        /// <value>Type: <see cref="ReceiptCutModeType"/><para>The default is DontCut. This property only applies when <see cref="EFTRequest.ReceiptPrintMode"/> is set to EFTClientPrinter.</para></value>
+        public ReceiptCutModeType CutReceipt { get; set; } = ReceiptCutModeType.DontCut;
+
+        /// <summary>Indicates whether PC-EFTPOS should cut receipts.</summary>
+        /// <value>Type: <see cref="ReceiptCutModeType"/><para>The default is DontCut. This property only applies when <see cref="EFTRequest.ReceiptPrintMode"/> is set to EFTClientPrinter.</para></value>
+        [System.Obsolete("Please use CutReceipt instead of ReceiptCutMode")]
+        public ReceiptCutModeType ReceiptCutMode { get { return CutReceipt; } set { CutReceipt = value; } }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public int CVV { get; set; } = 0;
 	}
 
 	/// <summary>A PC-EFTPOS terminal transaction response object.</summary>
@@ -509,15 +525,21 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <remarks>The retrieval reference number is used when performing a tip adjustment transaction.</remarks>
 		public string RRN { get; set; } = "";
 
-		/// <summary>Indicates which settlement batch this transaction will be included in.</summary>
-		/// <value>Type: <see cref="System.DateTime" /><para>Settlement date is returned from the bank.</para></value>
-		/// <remarks>Use this property to balance POS EFT totals with settlement EFT totals.</remarks>
-		public DateTime SettlementDate { get; set; } = DateTime.MinValue;
+        /// <summary>Indicates which settlement batch this transaction will be included in.</summary>
+        /// <value>Type: <see cref="System.DateTime" /><para>Settlement date is returned from the bank.</para></value>
+        /// <remarks>Use this property to balance POS EFT totals with settlement EFT totals.</remarks
+        public DateTime DateSettlement { get; set; } = DateTime.MinValue;
 
-		/// <summary>The cash amount for the transaction.</summary>
-		/// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
-		/// <remarks>This property is mandatory for a <see cref="TransactionType.CashOut"></see> transaction type.</remarks>
-		public decimal AmtCash { get; set; } = 0;
+        /// <summary>Indicates which settlement batch this transaction will be included in.</summary>
+        /// <value>Type: <see cref="System.DateTime" /><para>Settlement date is returned from the bank.</para></value>
+        /// <remarks>Use this property to balance POS EFT totals with settlement EFT totals.</remarks>
+        [System.Obsolete("Please use DateSettlement instead of SettlementDate")]
+        public DateTime SettlementDate { get { return DateSettlement; } set { DateSettlement = value; } }
+
+        /// <summary>The cash amount for the transaction.</summary>
+        /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
+        /// <remarks>This property is mandatory for a <see cref="TransactionType.CashOut"></see> transaction type.</remarks>
+        public decimal AmtCash { get; set; } = 0;
 
 		/// <summary>The cash amount for the transaction.</summary>
 		/// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
@@ -593,13 +615,20 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <value>Type: <see cref="System.String" /><para>This property contains the partial track 2 data from the card used in this transaction.</para></value>
 		public string Track2 { get; set; } = "";
 
-		/// <summary>The account used for the transaction.</summary>
-		/// <value>Type: <see cref="AccountType" /><para>This is the account type selected by the customer or provided in the request.</para></value>
-		public AccountType CardAccountType { get; set; } = AccountType.Default;
+        /// <summary>The account to use for this transaction.</summary>
+        /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        public AccountType AccountType { get; set; } = AccountType.Default;
 
-		/// <summary>Flags that indicate how the transaction was processed.</summary>
-		/// <value>Type: <see cref="TxnFlags" /></value>
-		public TxnFlags TxnFlags { get; set; } = new TxnFlags();
+        /// <summary>The account to use for this transaction.</summary>
+        /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        [System.Obsolete("Please use AccountType instead of CardAccountType")]
+        public AccountType CardAccountType { get { return AccountType; } set { AccountType = value; } }
+
+        /// <summary>Flags that indicate how the transaction was processed.</summary>
+        /// <value>Type: <see cref="TxnFlags" /></value>
+        public TxnFlags TxnFlags { get; set; } = new TxnFlags();
 
 		/// <summary>Indicates if an available balance is present in the response.</summary>
 		/// <value>Type: <see cref="System.Boolean" /></value>

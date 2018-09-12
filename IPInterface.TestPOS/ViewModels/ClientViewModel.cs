@@ -585,6 +585,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
                 });
             }
         }
+
         
         #endregion
 

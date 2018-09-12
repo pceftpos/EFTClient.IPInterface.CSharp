@@ -3,6 +3,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
     public enum InputType { None = '0', Normal = '1', Amount = '2', Decimal = '3', Password = '4' }
 	public enum GraphicCode { Processing = '0', Verify = '1', Question = '2', Card = '3', Account = '4', PIN = '5', Finished = '6', None=' ' }
 
+
 	/// <summary>A PC-EFTPOS display response object.</summary>
 	public class EFTDisplayResponse : EFTResponse
     {

@@ -38,10 +38,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		Track3
 	}
 
+#pragma warning disable CS0618
     /// <summary>A PC-EFTPOS terminal query card request object.</summary>
     public class EFTQueryCardRequest : QueryCardRequest
     {
     }
+#pragma warning restore CS0618
+
 
     /// <summary>
     /// QueryCardRequest is obsolete. Please use EFTQueryCardRequest

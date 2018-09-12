@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 
 namespace PCEFTPOS.EFTClient.IPInterface
@@ -25,9 +26,15 @@ namespace PCEFTPOS.EFTClient.IPInterface
         }
     }
 
-    public class PadField
+    public class PadField: IList<PadTag>
     {
-        List<PadTag> tags;
+        List<PadTag> tags = new List<PadTag>();
+
+        public int Count => ((IList<PadTag>)tags).Count;
+
+        public bool IsReadOnly => ((IList<PadTag>)tags).IsReadOnly;
+
+        public PadTag this[int index] { get => ((IList<PadTag>)tags)[index]; set => ((IList<PadTag>)tags)[index] = value; }
 
         public PadField() : this(null)
         {
@@ -35,8 +42,6 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         public PadField(string data)
         {
-            tags = new List<PadTag>();
-
             if (data == null || data.Length == 0)
                 return;
 
@@ -46,8 +51,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         int AsInt(string s, int defaultValue)
         {
-            int r = 0;
-            if (!Int32.TryParse(s, out r))
+            if (!Int32.TryParse(s, out int r))
                 r = defaultValue;
             return r;
         }
@@ -192,5 +196,54 @@ namespace PCEFTPOS.EFTClient.IPInterface
             return pf.GetAsString(true);
         }
 
+        public int IndexOf(PadTag item)
+        {
+            return ((IList<PadTag>)tags).IndexOf(item);
+        }
+
+        public void Insert(int index, PadTag item)
+        {
+            ((IList<PadTag>)tags).Insert(index, item);
+        }
+
+        public void RemoveAt(int index)
+        {
+            ((IList<PadTag>)tags).RemoveAt(index);
+        }
+
+        public void Add(PadTag item)
+        {
+            ((IList<PadTag>)tags).Add(item);
+        }
+
+        public void Clear()
+        {
+            ((IList<PadTag>)tags).Clear();
+        }
+
+        public bool Contains(PadTag item)
+        {
+            return ((IList<PadTag>)tags).Contains(item);
+        }
+
+        public void CopyTo(PadTag[] array, int arrayIndex)
+        {
+            ((IList<PadTag>)tags).CopyTo(array, arrayIndex);
+        }
+
+        public bool Remove(PadTag item)
+        {
+            return ((IList<PadTag>)tags).Remove(item);
+        }
+
+        public IEnumerator<PadTag> GetEnumerator()
+        {
+            return ((IList<PadTag>)tags).GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return ((IList<PadTag>)tags).GetEnumerator();
+        }
     }
 }

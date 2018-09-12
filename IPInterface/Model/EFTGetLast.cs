@@ -4,11 +4,20 @@ namespace PCEFTPOS.EFTClient.IPInterface
 {
     /// <summary>A PC-EFTPOS get last transaction request object.</summary>
 	public class EFTGetLastTransactionRequest : EFTRequest
-	{
-		/// <summary>Constructs a default EFTGetLastTransactionRequest object.</summary>
-		public EFTGetLastTransactionRequest() : base(true, typeof(EFTGetLastTransactionResponse))
-		{
-		}
+    {
+        /// <summary>Constructs a default EFTGetLastTransactionRequest object.</summary>
+        public EFTGetLastTransactionRequest() : base(true, typeof(EFTGetLastTransactionResponse))
+        {
+        }
+
+        /// <summary>Constructs an EFTGetLastTransactionRequest with a TxnRef parameter to look up transaction by.</summary>
+        public EFTGetLastTransactionRequest(string TxnRef) : base(true, typeof(EFTGetLastTransactionResponse))
+        {
+            this.TxnRef = TxnRef ?? "";
+        }
+
+        /// <summary>The transaction reference to look up a past transaction by (optional when passed into constructor)</summary>
+        public string TxnRef { get; private set; } = "";
 
         /// <summary>Two digit merchant code</summary>
         /// <value>Type: <see cref="string"/><para>The default is "00"</para></value>
@@ -91,8 +100,14 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>Indicates which settlement batch this transaction will be included in.</summary>
         /// <value>Type: <see cref="System.DateTime" /><para>Settlement date is returned from the bank.</para></value>
+        /// <remarks>Use this property to balance POS EFT totals with settlement EFT totals.</remarks
+        public DateTime DateSettlement { get; set; } = DateTime.MinValue;
+
+        /// <summary>Indicates which settlement batch this transaction will be included in.</summary>
+        /// <value>Type: <see cref="System.DateTime" /><para>Settlement date is returned from the bank.</para></value>
         /// <remarks>Use this property to balance POS EFT totals with settlement EFT totals.</remarks>
-        public DateTime SettlementDate { get; set; } = DateTime.MinValue;
+        [System.Obsolete("Please use DateSettlement instead of SettlementDate")]
+        public DateTime SettlementDate { get { return DateSettlement; } set { DateSettlement = value; } }
 
         /// <summary>The cash amount for the transaction.</summary>
         /// <value>Type: <see cref="System.Decimal"/><para>The default is 0.</para></value>
@@ -173,9 +188,16 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <value>Type: <see cref="System.String" /><para>This property contains the partial track 2 data from the card used in this transaction.</para></value>
         public string Track2 { get; set; } = "";
 
-        /// <summary>The account used for the transaction.</summary>
-        /// <value>Type: <see cref="AccountType" /><para>This is the account type selected by the customer or provided in the request.</para></value>
-        public AccountType CardAccountType { get; set; } = AccountType.Default;
+        /// <summary>The account to use for this transaction.</summary>
+        /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        public AccountType AccountType { get; set; } = AccountType.Default;
+
+        /// <summary>The account to use for this transaction.</summary>
+        /// <value>Type: <see cref="AccountType"/><para>Default is <see cref="AccountType.Default"></see>. Use default to prompt user to enter the account type.</para></value>
+        /// <remarks>Use this property in conjunction with <see cref="PanSource"></see> when passing the account type to PC-EFTPOS.</remarks>
+        [System.Obsolete("Please use AccountType instead of CardAccountType")]
+        public AccountType CardAccountType { get { return AccountType; } set { AccountType = value; } }
 
         /// <summary>Indicates if the last transaction was successful.</summary>
         /// <value>Type: <see cref="System.Boolean" /></value>

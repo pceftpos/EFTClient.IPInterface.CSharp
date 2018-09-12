@@ -58,11 +58,21 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>Indicates whether to trigger receipt events.</summary>
         /// <value>Type: <see cref="ReceiptPrintModeType"/><para>The default is POSPrinter.</para></value>
-        public ReceiptPrintModeType ReceiptPrintMode { get; set; } = ReceiptPrintModeType.POSPrinter;
+        public ReceiptPrintModeType ReceiptAutoPrint { get; set; } = ReceiptPrintModeType.POSPrinter;
+
+        /// <summary>Indicates whether to trigger receipt events.</summary>
+        /// <value>Type: <see cref="ReceiptPrintModeType"/><para>The default is POSPrinter.</para></value>
+        [System.Obsolete("Please use ReceiptAutoPrint instead of ReceiptPrintMode")]
+        public ReceiptPrintModeType ReceiptPrintMode { get { return ReceiptAutoPrint; } set { ReceiptAutoPrint = value; } }
 
         /// <summary>Indicates whether PC-EFTPOS should cut receipts.</summary>
         /// <value>Type: <see cref="ReceiptCutModeType"/><para>The default is DontCut. This property only applies when <see cref="EFTRequest.ReceiptPrintMode"/> is set to EFTClientPrinter.</para></value>
-        public ReceiptCutModeType ReceiptCutMode { get; set; } = ReceiptCutModeType.DontCut;
+        public ReceiptCutModeType CutReceipt { get; set; } = ReceiptCutModeType.DontCut;
+
+        /// <summary>Indicates whether PC-EFTPOS should cut receipts.</summary>
+        /// <value>Type: <see cref="ReceiptCutModeType"/><para>The default is DontCut. This property only applies when <see cref="EFTRequest.ReceiptPrintMode"/> is set to EFTClientPrinter.</para></value>
+        [System.Obsolete("Please use CutReceipt instead of ReceiptCutMode")]
+        public ReceiptCutModeType ReceiptCutMode { get { return CutReceipt; } set { CutReceipt = value; } }
     }
 
     /// <summary>A PC-EFTPOS terminal logon response object.</summary>

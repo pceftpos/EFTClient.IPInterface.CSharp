@@ -782,7 +782,8 @@
                     </TabItem>
                     </TabControl>
                 </TabItem>
-            </TabControl>
+            <Button Content="Button" Height="100" Margin="0" Width="75"/>
+        </TabControl>
 
             <Expander x:Name="exUtilities" Header="Utilities" IsExpanded="{Binding Data.Settings.IsUtilitiesShown}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded">
                 <TabControl x:Name="tcUtilities" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MinHeight="150" SelectionChanged="tcUtilities_SelectionChanged">

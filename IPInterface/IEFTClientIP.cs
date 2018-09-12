@@ -124,10 +124,18 @@ namespace PCEFTPOS.EFTClient.IPInterface
         [Obsolete("DoSendEntryData is deprecated, please use DoSendKey(EFTPOSKey.Authorise, data) instead.")]
         bool DoSendEntryData(string data);
 
+#pragma warning disable CS0618
         /// <summary>Send a request to PC-EFTPOS to open the control panel.</summary>
         /// <param name="request">An <see cref="ControlPanelRequest" /> object.</param>
         /// <returns>FALSE if an error occured.</returns>
+        [Obsolete("Please use DoDisplayControlPanel(EFTControlPanelRequest request)")]
         bool DoDisplayControlPanel(ControlPanelRequest request);
+#pragma warning restore CS0618
+
+        /// <summary>Send a request to PC-EFTPOS to open the control panel.</summary>
+        /// <param name="request">An <see cref="ControlPanelRequest" /> object.</param>
+        /// <returns>FALSE if an error occured.</returns>
+        bool DoDisplayControlPanel(EFTControlPanelRequest request);
 
         /// <summary>Send a request to PC-EFTPOS to initiate a settlement.</summary>
         /// <param name="request">An <see cref="EFTSettlementRequest" /> object.</param>
@@ -146,7 +154,14 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
         /// <summary>Send a request to PC-EFTPOS for a query card.</summary>
         /// <returns>FALSE if an error occured.</returns>
+        bool DoQueryCard(EFTQueryCardRequest request);
+
+#pragma warning disable CS0618
+        /// <summary>Send a request to PC-EFTPOS for a query card.</summary>
+        /// <returns>FALSE if an error occured.</returns>
+        [Obsolete("Please use DoQueryCard(EFTQueryCardRequest request)")]
         bool DoQueryCard(QueryCardRequest request);
+#pragma warning restore CS0618
 
         /// <summary>Send a request to PC-EFTPOS to get password entry from the PIN pad.</summary>
         /// <returns>FALSE if an error occured.</returns>
