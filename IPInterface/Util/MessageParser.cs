@@ -102,6 +102,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 			return TryParse<T>(input, length, ref index, "");
 		}
+
 		T TryParse<T>(string input, int length, ref int index, string format)
 		{
 			T result = default(T);
@@ -178,6 +179,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseEFTGetLastTransactionResponse(string msg)
 		{
 			var index = 1;
@@ -226,6 +228,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseSetDialogResponse(string msg)
 		{
 			var index = 1;
@@ -236,6 +239,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseEFTLogonResponse(string msg)
 		{
 			var index = 1;
@@ -257,6 +261,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			}
 			return r;
 		}
+
 		EFTResponse ParseDisplayResponse(string msg)
 		{
 			int index = 1;
@@ -280,6 +285,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseReceiptResponse(string msg)
 		{
 			int index = 1;
@@ -318,6 +324,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseControlPanelResponse(string msg)
 		{
 			int index = 1;
@@ -330,6 +337,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseEFTReprintReceiptResponse(string msg)
 		{
 			int index = 1;
@@ -360,6 +368,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseEFTSettlementResponse(string msg)
 		{
 			var index = 1;
@@ -456,6 +465,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseQueryCardResponse(string msg)
 		{
 			int index = 1;
@@ -511,6 +521,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseClientListResponse(string msg)
 		{
 			var r = new EFTClientListResponse();
@@ -563,6 +574,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			}
 			return r;
 		}
+
 		EFTResponse ParseEFTConfigureMerchantResponse(string msg)
 		{
 			int index = 1;
@@ -575,6 +587,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseEFTStatusResponse(string msg)
 		{
 			int index = 1;
@@ -632,6 +645,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return commsType;
 		}
+
 		KeyHandlingType ParseKeyHandlingType(char KeyHandlingScheme)
 		{
 			KeyHandlingType keyHandlingType = KeyHandlingType.Unknown;
@@ -641,6 +655,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return keyHandlingType;
 		}
+
 		EFTTerminalType ParseEFTTerminalType(string TerminalType)
 		{
 			EFTTerminalType terminalType = EFTTerminalType.Unknown;
@@ -652,6 +667,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return terminalType;
 		}
+
 		PINPadOptionFlags ParseStatusOptionFlags(char[] Flags)
 		{
 			PINPadOptionFlags flags = 0;
@@ -674,6 +690,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			if (Flags[index++] == '1') flags |= PINPadOptionFlags.StartCash;
 			return flags;
 		}
+
 		EFTResponse ParseChequeAuthResponse(string msg)
 		{
 			int index = 1;
@@ -698,6 +715,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseGenericPOSCommandResponse(string msg)
 		{
 			// Validate response length
@@ -756,6 +774,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return null;
 		}
+
 		EFTResponse ParseConfigMerchantResponse(string msg)
 		{
 			int index = 1;
@@ -768,6 +787,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		EFTResponse ParseCloudLogonResponse(string msg)
 		{
 			int index = 1;
@@ -958,7 +978,6 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			throw new Exception("Unknown EFTRequest type.");
 		}
 
-
 		StringBuilder BuildEFTTransactionRequest(EFTTransactionRequest v)
 		{
 			var r = new StringBuilder();
@@ -972,13 +991,13 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.AmtPurchase.PadLeftAsInt(9));
 			r.Append(v.AuthCode.PadLeft(6));
 			r.Append(v.TxnRef.PadRightAndCut(16));
-			r.Append((char)v.ReceiptPrintMode);
-			r.Append((char)v.ReceiptCutMode);
+			r.Append((char)v.ReceiptAutoPrint);
+			r.Append((char)v.CutReceipt);
 			r.Append((char)v.PanSource);
 			r.Append(v.Pan.PadRightAndCut(20));
 			r.Append(v.DateExpiry.PadRightAndCut(4));
 			r.Append(v.Track2.PadRightAndCut(40));
-			r.Append((char)v.CardAccountType);
+			r.Append((char)v.AccountType);
 			r.Append(v.Application.ToApplicationString());
 			r.Append(v.RRN.PadRightAndCut(12));
 			r.Append(v.CurrencyCode.PadRightAndCut(3));
@@ -990,40 +1009,44 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 			return r;
 		}
+
 		StringBuilder BuildEFTLogonRequest(EFTLogonRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("G");
 			r.Append((char)v.LogonType);
 			r.Append(v.Merchant.PadRightAndCut(2));
-			r.Append((char)v.ReceiptPrintMode);
-			r.Append((char)v.ReceiptCutMode);
+			r.Append((char)v.ReceiptAutoPrint);
+			r.Append((char)v.CutReceipt);
 			r.Append(v.Application.ToApplicationString());
 			r.Append(v.PurchaseAnalysisData.GetAsString(true));
 			return r;
 		}
+
 		StringBuilder BuildEFTReprintReceiptRequest(EFTReprintReceiptRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("C");
 			r.Append((char)v.ReprintType);
 			r.Append(v.Merchant.PadRightAndCut(2));
-			r.Append((char)v.ReceiptCutMode);
-			r.Append((char)v.ReceiptPrintMode);
+			r.Append((char)v.CutReceipt);
+			r.Append((char)v.ReceiptAutoPrint);
 			r.Append(v.Application.ToApplicationString());
 			r.Append(v.OriginalTxnRef.PadRightAndCut(16));
 			return r;
 		}
+
 		StringBuilder BuildEFTGetLastTransactionRequest(EFTGetLastTransactionRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("N");
 			r.Append("0");
-            r.Append(v.Application.ToApplicationString());
-            r.Append(v.Merchant.PadRightAndCut(2));
-            r.Append(v.TxnRef.PadRightAndCut(16));
-            return r;
+			r.Append(v.Application.ToApplicationString());
+			r.Append(v.Merchant.PadRightAndCut(2));
+			r.Append(v.TxnRef.PadRightAndCut(16));
+			return r;
 		}
+
 		StringBuilder BuildSetDialogRequest(SetDialogRequest v)
 		{
 			var r = new StringBuilder();
@@ -1037,6 +1060,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.DialogTitle.PadRightAndCut(32));
 			return r;
 		}
+
 		StringBuilder BuildControlPanelRequest(EFTControlPanelRequest v)
 		{
 			var r = new StringBuilder();
@@ -1047,19 +1071,21 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append((char)v.ReturnType);
 			return r;
 		}
+
 		StringBuilder BuildSettlementRequest(EFTSettlementRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("P");
 			r.Append((char)v.SettlementType);
 			r.Append(v.Merchant.PadRightAndCut(2));
-			r.Append((char)v.ReceiptPrintMode);
-			r.Append((char)v.ReceiptCutMode);
+			r.Append((char)v.ReceiptAutoPrint);
+			r.Append((char)v.CutReceipt);
 			r.Append(v.ResetTotals ? '1' : '0');
 			r.Append(v.Application.ToApplicationString());
 			r.Append(v.PurchaseAnalysisData.GetAsString(true));
 			return r;
 		}
+
 		StringBuilder BuildQueryCardRequest(EFTQueryCardRequest v)
 		{
 			var r = new StringBuilder();
@@ -1070,6 +1096,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.PurchaseAnalysisData.GetAsString(true));
 			return r;
 		}
+
 		StringBuilder BuildConfigMerchantRequest(EFTConfigureMerchantRequest v)
 		{
 			var r = new StringBuilder();
@@ -1083,6 +1110,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.Application.ToApplicationString());
 			return r;
 		}
+
 		StringBuilder BuildStatusRequest(EFTStatusRequest v)
 		{
 			var r = new StringBuilder();
@@ -1092,6 +1120,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append(v.Application.ToApplicationString());
 			return r;
 		}
+
 		StringBuilder BuildChequeAuthRequest(EFTChequeAuthRequest v)
 		{
 			var r = new StringBuilder();

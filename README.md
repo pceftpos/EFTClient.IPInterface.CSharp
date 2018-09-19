@@ -203,6 +203,11 @@ class EFTClientIPDemoAsync
 
 ## Release notes
 
+### 1.4.2.0 (2018-09-19)
+* Added new ReceiptAutoPrint modes for EFTRequests
+* Updated MessageParser to use non-deprecated properties
+* Updated TestPOS ClientViewModel to do the same
+
 ### 1.4.1.3 (2018-09-12)
 * Fixed for EFTTransactionResponse and typo
 
