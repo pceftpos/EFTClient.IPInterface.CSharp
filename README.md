@@ -203,6 +203,10 @@ class EFTClientIPDemoAsync
 
 ## Release notes
 
+### 1.4.3.0 (2018-10-09)
+* Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command
+* Fixed bug in MessageParser that padded the TxnRef rather than leaving it blank, so the EFTClient didn't like it
+
 ### 1.4.2.0 (2018-09-19)
 * Added new ReceiptAutoPrint modes for EFTRequests
 * Updated MessageParser to use non-deprecated properties

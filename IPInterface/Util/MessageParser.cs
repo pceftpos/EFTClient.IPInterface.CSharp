@@ -1032,7 +1032,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append((char)v.CutReceipt);
 			r.Append((char)v.ReceiptAutoPrint);
 			r.Append(v.Application.ToApplicationString());
-			r.Append(v.OriginalTxnRef.PadRightAndCut(16));
+			r.Append(v.OriginalTxnRef.CutAndLeave(16));
 			return r;
 		}
 
@@ -1043,7 +1043,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append("0");
 			r.Append(v.Application.ToApplicationString());
 			r.Append(v.Merchant.PadRightAndCut(2));
-			r.Append(v.TxnRef.PadRightAndCut(16));
+			r.Append(v.TxnRef.CutAndLeave(16));
 			return r;
 		}
 

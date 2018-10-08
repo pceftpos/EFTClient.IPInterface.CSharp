@@ -445,7 +445,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				CutReceipt = cutMode,
 				ReceiptAutoPrint = printMode,
 				ReprintType = type,
-				OriginalTxnRef = "1234"
+				OriginalTxnRef = ""
 			});
 		}
 		#endregion

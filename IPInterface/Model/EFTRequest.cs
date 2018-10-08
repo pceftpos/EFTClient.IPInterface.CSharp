@@ -15,9 +15,9 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <summary> Receipts will be printed using the pinpad printer </summary>
 		PinpadPrinter = '9',
 		/// <summary> Merchant receipts print on internal printer, all other print on POS </summary>
-		MerchantPOSPrinter = '7',
+		MerchantInternalPOSPrinter = '7',
 		/// <summary> Merchant receipts print on internal printer, all other print using the printer configured in the EFT-Client (Windows only) </summary>
-		MerchantEFTClientPrinter = '8'
+		MerchantInternalEFTClientPrinter = '8'
 	}
 
 	/// <summary> 
