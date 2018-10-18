@@ -18,20 +18,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 				await _client.ConnectAsync(hostName, hostPort);
 				return _client.Connected;
 			}
-			catch (ObjectDisposedException ox)
+			catch
 			{
 				Close();
-				throw new ConnectionException(ox.Message, ox.InnerException);
-			}
-			catch (AuthenticationException ax)
-			{
-				Close();
-				throw new ConnectionException(ax.Message, ax.InnerException);
-			}
-			catch (Exception ex)
-			{
-				Close();
-				throw new ConnectionException(ex.Message, ex.InnerException);
+				throw;
 			}
 		}
 
@@ -64,14 +54,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 					});
 				}
 			}
-			catch (TaskCanceledException tc)
-			{
-				throw tc;
-			}
-			catch (Exception e)
+			catch
 			{
 				Close();
-				throw new ConnectionException(e.Message, e.InnerException);
+				throw;
 			}
 		}
 
@@ -121,17 +107,20 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			{
 				await _client.GetStream().WriteAsync(requestBytes, 0, requestBytes.Length);
 			}
-			catch (Exception e)
+			catch
 			{
 				Close();
-				throw new ConnectionException(e.Message, e.InnerException);
+				throw;
 			}
 			return true;
 		}
 
 		public void Close()
 		{
-			_client?.Close();
+            if (_client?.Client != null)
+            {
+                _client?.Close();
+            }
 		}
 
 		/// <summary> Defines the level of logging that should be passed back in the OnLog event. Default <see cref="LogLevel.Off" />. <para>See <see cref="LogLevel"/></para></summary>
@@ -158,7 +147,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// the current state of the connection. 
 		/// To check the current socket state call <see cref="CheckConnectStateAsync()"/>
 		/// </summary>
-		public bool IsConnected => _client?.Connected ?? false;
+		public bool IsConnected => _client?.Client != null && (_client?.Connected ?? false);
 
 		#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls

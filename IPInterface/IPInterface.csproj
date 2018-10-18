@@ -5,8 +5,8 @@
     <AssemblyName>PCEFTPOS.EFTClient.IPInterface</AssemblyName>
     <Title>PCEFTPOS.EFTClient.IPInterface</Title>
     <PackageId>PCEFTPOS.EFTClient.IPInterface</PackageId>
-    <PackageVersion>1.4.3.0</PackageVersion>
-    <Version>1.4.3.0</Version>
+    <PackageVersion>1.4.4.0</PackageVersion>
+    <Version>1.4.4.0</Version>
     <Description>TCP/IP library used for connecting to PC-EFTPOS Client</Description>
     <Authors>PC-EFTPOS Pty Ltd</Authors>
     <Company>PC-EFTPOS Pty Ltd</Company>
@@ -17,6 +17,10 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>pceftpos.pfx</AssemblyOriginatorKeyFile>
     <ReleaseNotes>
+	1.4.4.0 (2018-10-18)
+* Fixed bug with null TcpClient causing exception with IsConnected property
+* Removing catch-throw new Exceptions which suppress stack trace
+	
 	1.4.3.0 (2018-10-09)
 * Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command
 * Fixed bug in MessageParser that padded the TxnRef rather than leaving it blank, so the EFTClient didn't like it
@@ -26,7 +30,11 @@
 * Added new ReceiptAutoPrint modes for EFTRequests
 * Updated MessageParser to use non-deprecated properties
     </ReleaseNotes>
-    <PackageReleaseNotes>1.4.3.0 (2018-10-09)
+    <PackageReleaseNotes>1.4.4.0 (2018-10-18)
+* Fixed bug with null TcpClient causing exception with IsConnected property
+* Removing catch-throw new Exceptions which suppress stack trace
+
+1.4.3.0 (2018-10-09)
 * Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command
 * Fixed bug in MessageParser that padded the TxnRef rather than leaving it blank, so the EFTClient didn't like it
 
@@ -56,8 +64,8 @@
 * Added support for basket data API
 * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
 </PackageReleaseNotes>
-    <AssemblyVersion>1.4.3.0</AssemblyVersion>
-    <FileVersion>1.4.3.0</FileVersion>
+    <AssemblyVersion>1.4.4.0</AssemblyVersion>
+    <FileVersion>1.4.4.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
  

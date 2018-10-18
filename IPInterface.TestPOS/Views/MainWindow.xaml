@@ -642,7 +642,9 @@
                                                         Command="{Binding GetLastReceipt}"></Button>
                                     </DockPanel>
                                 </GroupBox>
-                            </StackPanel>
+                            <TextBlock Text="Original Transaction Reference:" Margin="5"/>
+                            <TextBox x:Name="txtBxOriginalTxnRef" Height="25" Width="200" HorizontalAlignment="Left" Padding="5" Margin="5" Text="{Binding Data.OriginalTransactionReference}"/>
+                        </StackPanel>
                         </TabItem>
                         <!--<TabItem Header="Cheque Auth">
                             <StackPanel>

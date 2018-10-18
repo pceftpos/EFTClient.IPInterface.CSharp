@@ -37,20 +37,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 					throw new AuthenticationException("Server and client's security protocol doesn't match.");
 				}
 			}
-			catch (ObjectDisposedException ox)
+			catch
 			{
 				Close();
-				throw new ConnectionException(ox.Message, ox.InnerException);
-			}
-			catch (AuthenticationException ax)
-			{
-				Close();
-				throw new ConnectionException(ax.Message, ax.InnerException);
-			}
-			catch (Exception ex)
-			{
-				Close();
-				throw new ConnectionException(ex.Message, ex.InnerException);
+				throw;
 			}
 		}
 
@@ -192,10 +182,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 				// Send the request string to the IP client.
 				await _clientStream.WriteAsync(requestBytes, 0, requestBytes.Length);
 			}
-			catch (Exception e)
+			catch
 			{
 				Close();
-				throw new ConnectionException(e.Message, e.InnerException);
+				throw;
 			}
 			return true;
 
@@ -228,21 +218,20 @@ namespace PCEFTPOS.EFTClient.IPInterface
 					});
 				}
 			}
-			catch (TaskCanceledException tc)
-			{
-				throw tc;
-			}
-			catch (Exception e)
+			catch
 			{
 				Close();
-				throw new ConnectionException(e.Message, e.InnerException);
+				throw;
 			}
 		}
 
 		public void Close()
 		{
 			_clientStream?.Close();
-			_client?.Close();
+            if (_client?.Client != null)
+            {
+                _client?.Close();
+            }
 		}
 		void Log(LogLevel level, Action<TraceRecord> traceAction)
 		{
@@ -257,15 +246,15 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			OnLog?.Invoke(this, new LogEventArgs() { LogLevel = level, Message = tr.Message, Exception = tr.Exception });
 		}
 
-		/// <summary>
-		/// Returns the connected state as of the last read or write operation. This does not necessarily represent 
-		/// the current state of the connection. 
-		/// To check the current socket state call <see cref="CheckConnectStateAsync()"/>
-		/// </summary>
-		public bool IsConnected => _client?.Connected ?? false;
+        /// <summary>
+        /// Returns the connected state as of the last read or write operation. This does not necessarily represent 
+        /// the current state of the connection. 
+        /// To check the current socket state call <see cref="CheckConnectStateAsync()"/>
+        /// </summary>
+        public bool IsConnected => _client?.Client != null && (_client?.Connected ?? false);
 
-		/// <summary> Defines the level of logging that should be passed back in the OnLog event. Default <see cref="LogLevel.Off" />. <para>See <see cref="LogLevel"/></para></summary>
-		public LogLevel LogLevel { get; set; }
+        /// <summary> Defines the level of logging that should be passed back in the OnLog event. Default <see cref="LogLevel.Off" />. <para>See <see cref="LogLevel"/></para></summary>
+        public LogLevel LogLevel { get; set; }
 
 		/// <summary> The log event to be called </summary>
 		public event EventHandler<LogEventArgs> OnLog;

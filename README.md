@@ -202,6 +202,9 @@ class EFTClientIPDemoAsync
 ```
 
 ## Release notes
+### 1.4.4.0 (2018-10-18)
+* Fixed bug with null TcpClient causing exception with IsConnected property
+* Removing catch-throw new Exceptions which suppress stack trace
 
 ### 1.4.3.0 (2018-10-09)
 * Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command

@@ -3,16 +3,15 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
-using PCEFTPOS.EFTClient.IPInterface;
 
 namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 {
-    public enum LogType { Info, Error, Warning };
+	public enum LogType { Info, Error, Warning };
 
-    public enum ConnectedStatus { Connected, Disconnected };
+	public enum ConnectedStatus { Connected, Disconnected };
 
-    public delegate void LogEvent(string message);
-    public delegate void DisplayEvent(bool show);
+	public delegate void LogEvent(string message);
+	public delegate void DisplayEvent(bool show);
 
 	public class ClientData : INotifyPropertyChanged
 	{
@@ -102,6 +101,20 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			}
 		}
 
+		private string _originalTransactionReference = "";
+		public string OriginalTransactionReference
+		{
+			get
+			{
+				return _originalTransactionReference;
+			}
+			set
+			{
+				_originalTransactionReference = value;
+				NotifyPropertyChanged("OriginalTransactionReference");
+			}
+		}
+
 		public EFTTransactionRequest TransactionRequest { get; set; } = new EFTTransactionRequest();
 
 		public ObservableCollection<string> TransactionList { get { return GetFilteredEnum<TransactionType>(); } }
@@ -183,242 +196,242 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		#endregion
 
 		#region ClientList
-		public EFTClientListRequest ClientListRequest{ get; set; } = new EFTClientListRequest();
+		public EFTClientListRequest ClientListRequest { get; set; } = new EFTClientListRequest();
 		#endregion
 
 		#region Configure Merchant
 		public EFTConfigureMerchantRequest MerchantDetails { get; set; } = new EFTConfigureMerchantRequest();
-        #endregion
+		#endregion
 
-        #region Settlement
-        public bool ResetTotals { get; set; } = false;
-        public SettlementType SelectedSettlement { get; set; }
-        public ObservableCollection<string> SettlementList { get { return GetEnum<SettlementType>(); } }
-        #endregion
+		#region Settlement
+		public bool ResetTotals { get; set; } = false;
+		public SettlementType SelectedSettlement { get; set; }
+		public ObservableCollection<string> SettlementList { get { return GetEnum<SettlementType>(); } }
+		#endregion
 
-        #region ControlPanel
-        public ControlPanelType SelectedDisplay { get; set; } 
-        public ObservableCollection<string> ControlPanelList { get { return GetEnum<ControlPanelType>(); } }
+		#region ControlPanel
+		public ControlPanelType SelectedDisplay { get; set; }
+		public ObservableCollection<string> ControlPanelList { get { return GetEnum<ControlPanelType>(); } }
 
-        #endregion
+		#endregion
 
-        #region QueryCard
-        public QueryCardType SelectedQuery { get; set; } 
-        public ObservableCollection<string> QueryCardList { get { return GetFilteredEnum<QueryCardType>(); } } 
-        #endregion
+		#region QueryCard
+		public QueryCardType SelectedQuery { get; set; }
+		public ObservableCollection<string> QueryCardList { get { return GetFilteredEnum<QueryCardType>(); } }
+		#endregion
 
-        #region Cheque Auth
-        public EFTChequeAuthRequest ChequeRequest { get; set; } = new EFTChequeAuthRequest();
-        public ObservableCollection<string> ChequeList { get { return GetEnum<ChequeType>(); } }
-        #endregion
+		#region Cheque Auth
+		public EFTChequeAuthRequest ChequeRequest { get; set; } = new EFTChequeAuthRequest();
+		public ObservableCollection<string> ChequeList { get { return GetEnum<ChequeType>(); } }
+		#endregion
 
-        #region Dialog
-        public ObservableCollection<string> DialogTypeList { get { return GetEnum<DialogType>(); } }
-        public ObservableCollection<string> DialogPositionList { get { return GetEnum<DialogPosition>(); } }
+		#region Dialog
+		public ObservableCollection<string> DialogTypeList { get { return GetEnum<DialogType>(); } }
+		public ObservableCollection<string> DialogPositionList { get { return GetEnum<DialogPosition>(); } }
 
-        public SetDialogRequest DialogRequest { get; set; } = new SetDialogRequest();
-        #endregion
+		public SetDialogRequest DialogRequest { get; set; } = new SetDialogRequest();
+		#endregion
 
-        #region Slave Mode
-        private Dictionary<string, string> _dctCommands = new Dictionary<string, string>();
+		#region Slave Mode
+		private Dictionary<string, string> _dctCommands = new Dictionary<string, string>();
 
-        string _commandRequest = string.Empty;
-        public string CommandRequest
-        {
-            set
-            {
-                _commandRequest = value;
-                NotifyPropertyChanged("CommandRequest");
-            }
-            get
-            {
-                return _commandRequest;
-            }
-        }
+		string _commandRequest = string.Empty;
+		public string CommandRequest
+		{
+			set
+			{
+				_commandRequest = value;
+				NotifyPropertyChanged("CommandRequest");
+			}
+			get
+			{
+				return _commandRequest;
+			}
+		}
 
-        string _command = string.Empty;
-        public string SelectedCommand
-        {
-            set
-            {
-                _command = value;
-                string cmdValue = string.Empty;
-                _dctCommands.TryGetValue(_command, out cmdValue);
-                CommandRequest = cmdValue;
-            }
-            get
-            {
-                return _command;
-            }
-        }
-        public ObservableCollection<string> CommandsList
-        {
-            get
-            {
-                var coll = new ObservableCollection<string>();
-                foreach (var item in _dctCommands.Keys)
-                {
-                    coll.Add(item);
-                }
+		string _command = string.Empty;
+		public string SelectedCommand
+		{
+			set
+			{
+				_command = value;
+				string cmdValue = string.Empty;
+				_dctCommands.TryGetValue(_command, out cmdValue);
+				CommandRequest = cmdValue;
+			}
+			get
+			{
+				return _command;
+			}
+		}
+		public ObservableCollection<string> CommandsList
+		{
+			get
+			{
+				var coll = new ObservableCollection<string>();
+				foreach (var item in _dctCommands.Keys)
+				{
+					coll.Add(item);
+				}
 
-                return coll;
-            }
-        }
-        #endregion
+				return coll;
+			}
+		}
+		#endregion
 
-        #region SendKey
-        public EFTPOSKey SelectedPosKey { get; set; } = EFTPOSKey.OkCancel;
-        public ObservableCollection<string> PosKeyList { get { return GetEnum<EFTPOSKey>(); } }
+		#region SendKey
+		public EFTPOSKey SelectedPosKey { get; set; } = EFTPOSKey.OkCancel;
+		public ObservableCollection<string> PosKeyList { get { return GetEnum<EFTPOSKey>(); } }
 
-        public string PosData { get; set; } = string.Empty;
-        bool _sendKeyEnabled = false;
-        public bool SendKeyEnabled
-        {
-            set
-            {
-                _sendKeyEnabled = value;
-                NotifyPropertyChanged("SendKeyEnabled"); 
-            }
-            get
-            {
-                return _sendKeyEnabled;
-            }
-        }
-        #endregion
+		public string PosData { get; set; } = string.Empty;
+		bool _sendKeyEnabled = false;
+		public bool SendKeyEnabled
+		{
+			set
+			{
+				_sendKeyEnabled = value;
+				NotifyPropertyChanged("SendKeyEnabled");
+			}
+			get
+			{
+				return _sendKeyEnabled;
+			}
+		}
+		#endregion
 
-        #region Common
+		#region Common
 
-        public bool HasResult
-        {
-            set
-            {
-            }
-            get
-            {
-                return (_lastTxnResult.Count > 0);
-            }
-        }
+		public bool HasResult
+		{
+			set
+			{
+			}
+			get
+			{
+				return (_lastTxnResult.Count > 0);
+			}
+		}
 
-        private Dictionary<string, string> _lastTxnResult = new Dictionary<string, string>();
-        public Dictionary<string, string> LastTxnResult
-        {
-            get
-            {
-                return _lastTxnResult;
-            }
-            set
-            {
-                _lastTxnResult = value;
-                NotifyPropertyChanged("LastTxnResult");
-                NotifyPropertyChanged("HasResult");
-            }
-        }
+		private Dictionary<string, string> _lastTxnResult = new Dictionary<string, string>();
+		public Dictionary<string, string> LastTxnResult
+		{
+			get
+			{
+				return _lastTxnResult;
+			}
+			set
+			{
+				_lastTxnResult = value;
+				NotifyPropertyChanged("LastTxnResult");
+				NotifyPropertyChanged("HasResult");
+			}
+		}
 
-        private string _messages = string.Empty;
-        public string LogMessages
-        {
-            get
-            {
-                return _messages;
-            }
-            set
-            {
-                _messages = value;
-                NotifyPropertyChanged("LogMessages");
-            }
-        }
+		private string _messages = string.Empty;
+		public string LogMessages
+		{
+			get
+			{
+				return _messages;
+			}
+			set
+			{
+				_messages = value;
+				NotifyPropertyChanged("LogMessages");
+			}
+		}
 
-        public void Log(string message, LogType logType = LogType.Info)
-        {
-            try
-            {
-                if (Settings.IsLogShown)
-                {
-                    //_messages += $"{DateTime.Now} [{logType}] : {message}" + Environment.NewLine;
-                    //OnLog(_messages);
-                    OnLog($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} [{logType}] : {message}{Environment.NewLine}");
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Trace.WriteLine(ex.Message);
-            }
-        }
+		public void Log(string message, LogType logType = LogType.Info)
+		{
+			try
+			{
+				if (Settings.IsLogShown)
+				{
+					//_messages += $"{DateTime.Now} [{logType}] : {message}" + Environment.NewLine;
+					//OnLog(_messages);
+					OnLog($"{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss:fff")} [{logType}] : {message}{Environment.NewLine}");
+				}
+			}
+			catch (Exception ex)
+			{
+				System.Diagnostics.Trace.WriteLine(ex.Message);
+			}
+		}
 
-        public void DisplayDialog(bool show)
-        {
-            OnDisplay(show);
-        }
+		public void DisplayDialog(bool show)
+		{
+			OnDisplay(show);
+		}
 
-        public IProgress<string> Progress { set; get; }
+		public IProgress<string> Progress { set; get; }
 
-        protected void NotifyPropertyChanged(string info)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
-        }
+		protected void NotifyPropertyChanged(string info)
+		{
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(info));
+		}
 
-        private ObservableCollection<string> GetEnum<T>()
-        {
-            return new ObservableCollection<string>(Enum.GetNames(typeof(T)));
-        }
+		private ObservableCollection<string> GetEnum<T>()
+		{
+			return new ObservableCollection<string>(Enum.GetNames(typeof(T)));
+		}
 
-        private ObservableCollection<string> GetFilteredEnum<T>()
-        {
-            var list = typeof(T).GetFields()
-                .Where(x => x.IsLiteral && ((FilterAttribute[])x.GetCustomAttributes(typeof(FilterAttribute), false)).Length == 0)
-                .Select(x => x.Name);
-            return new ObservableCollection<string>(list);
-        }
+		private ObservableCollection<string> GetFilteredEnum<T>()
+		{
+			var list = typeof(T).GetFields()
+				.Where(x => x.IsLiteral && ((FilterAttribute[])x.GetCustomAttributes(typeof(FilterAttribute), false)).Length == 0)
+				.Select(x => x.Name);
+			return new ObservableCollection<string>(list);
+		}
 
-        private ObservableCollection<string> GetFilteredEnum<T>(string filter)
-        {
-            var list = typeof(T).GetFields()
-                .Where(x => x.IsLiteral && ((FilterAttribute[])x.GetCustomAttributes(typeof(FilterAttribute), false)).Length > 0
-                        && ((FilterAttribute[])x.GetCustomAttributes(typeof(FilterAttribute), false))[0].CustomString.Equals(filter))
-                .Select(x => x.Name);
-            return new ObservableCollection<string>(list);
-        }
+		private ObservableCollection<string> GetFilteredEnum<T>(string filter)
+		{
+			var list = typeof(T).GetFields()
+				.Where(x => x.IsLiteral && ((FilterAttribute[])x.GetCustomAttributes(typeof(FilterAttribute), false)).Length > 0
+						&& ((FilterAttribute[])x.GetCustomAttributes(typeof(FilterAttribute), false))[0].CustomString.Equals(filter))
+				.Select(x => x.Name);
+			return new ObservableCollection<string>(list);
+		}
 
-        #endregion
+		#endregion
 
-        #region Proxy Dialog
-        private EFTDisplayResponse _displayDetails = new EFTDisplayResponse();
-        public EFTDisplayResponse DisplayDetails
-        {
-            get
-            {
-                _displayDetails.DisplayText[0] = _displayDetails.DisplayText[0].Trim();
-                _displayDetails.DisplayText[1] = _displayDetails.DisplayText[1].Trim();
+		#region Proxy Dialog
+		private EFTDisplayResponse _displayDetails = new EFTDisplayResponse();
+		public EFTDisplayResponse DisplayDetails
+		{
+			get
+			{
+				_displayDetails.DisplayText[0] = _displayDetails.DisplayText[0].Trim();
+				_displayDetails.DisplayText[1] = _displayDetails.DisplayText[1].Trim();
 
-                return _displayDetails;
-            }
-            set
-            {
-                _displayDetails = value;
-                NotifyPropertyChanged("DisplayDetails");
-                OnDisplayChanged?.Invoke(this, EventArgs.Empty);
-            }
-        }
-        #endregion
+				return _displayDetails;
+			}
+			set
+			{
+				_displayDetails = value;
+				NotifyPropertyChanged("DisplayDetails");
+				OnDisplayChanged?.Invoke(this, EventArgs.Empty);
+			}
+		}
+		#endregion
 
-        #region User Settings
-        public UserSettings Settings { get; set; } = new UserSettings();
-        #endregion
+		#region User Settings
+		public UserSettings Settings { get; set; } = new UserSettings();
+		#endregion
 
-        #region Receipts
-        private string _receiptInfo = string.Empty;
-        public string Receipt
-        {
-            get
-            {
-                return _receiptInfo;
-            }
-            set
-            {
-                _receiptInfo = value;
-                NotifyPropertyChanged("Receipt");
-            }
-        }
-        #endregion
-    }
+		#region Receipts
+		private string _receiptInfo = string.Empty;
+		public string Receipt
+		{
+			get
+			{
+				return _receiptInfo;
+			}
+			set
+			{
+				_receiptInfo = value;
+				NotifyPropertyChanged("Receipt");
+			}
+		}
+		#endregion
+	}
 }

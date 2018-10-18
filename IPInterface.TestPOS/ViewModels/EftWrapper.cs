@@ -137,6 +137,11 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				_data.Log($"Unable to process {request.ToString()}. There is already a request in progress");
 				return false;
 			}
+			if (!_eft.IsConnected || _data.ConnectedState == ConnectedStatus.Disconnected)
+			{
+				await _eft.ConnectAsync("127.0.0.1", 2011, false);
+				_data.ConnectedState = ConnectedStatus.Connected;
+			}
 
 			try
 			{
@@ -205,6 +210,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 						if (request is EFTReceiptRequest || request is EFTReprintReceiptRequest)
 						{
 							_requestInProgress = false;
+							_eft.Dispose();
 						}
 					}
 					else if (r is EFTQueryCardResponse)
@@ -214,22 +220,26 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 						_data.SelectedTrack2 = x.Track2;
 						_data.DisplayDialog(false);
 						_requestInProgress = false;
+						_eft.Dispose();
 					}
 					else if (r is EFTClientListResponse)
 					{
 						int index = 1;
 						var x = (EFTClientListResponse)r;
+						Dictionary<string, string> ClientList = new Dictionary<string, string>();
 						foreach (var clnt in x.EFTClients)
 						{
-							_data.LastTxnResult.Add("Client " + index.ToString() + " " + nameof(clnt.Name), clnt.Name);
-							_data.LastTxnResult.Add("Client " + index.ToString() + " " + nameof(clnt.IPAddress), clnt.IPAddress);
-							_data.LastTxnResult.Add("Client " + index.ToString() + " " + nameof(clnt.Port), clnt.Port.ToString());
-							_data.LastTxnResult.Add("Client " + index.ToString() + " " + nameof(clnt.State), clnt.State.ToString());
+							ClientList.Add("Client " + index.ToString() + " " + nameof(clnt.Name), clnt.Name);
+							ClientList.Add("Client " + index.ToString() + " " + nameof(clnt.IPAddress), clnt.IPAddress);
+							ClientList.Add("Client " + index.ToString() + " " + nameof(clnt.Port), clnt.Port.ToString());
+							ClientList.Add("Client " + index.ToString() + " " + nameof(clnt.State), clnt.State.ToString());
 							index++;
 						}
-						//_data.LastTxnResult = DictionaryFromType(x.EFTClients);
+						
+						_data.LastTxnResult = ClientList;
 						_data.DisplayDialog(false);
 						_requestInProgress = false;
+						_eft.Dispose();
 					}
 					else
 					{
@@ -239,6 +249,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 						result = (output.Equals("True"));
 						_data.DisplayDialog(false);
 						_requestInProgress = false;
+						_eft.Dispose();
 					}
 				}
 				while (_requestInProgress);
@@ -435,7 +446,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		#region Last Transaction
 		public async Task GetLastTransaction()
 		{
-			await SendRequest<EFTGetLastTransactionResponse>(new EFTGetLastTransactionRequest());
+			await SendRequest<EFTGetLastTransactionResponse>(new EFTGetLastTransactionRequest(_data.OriginalTransactionReference) { });
 		}
 
 		public async Task LastReceipt(ReceiptCutModeType cutMode, ReceiptPrintModeType printMode, ReprintType type)
@@ -445,7 +456,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				CutReceipt = cutMode,
 				ReceiptAutoPrint = printMode,
 				ReprintType = type,
-				OriginalTxnRef = ""
+				OriginalTxnRef = _data.OriginalTransactionReference
 			});
 		}
 		#endregion

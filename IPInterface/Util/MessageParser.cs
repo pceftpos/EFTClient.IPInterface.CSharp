@@ -526,7 +526,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		{
 			var r = new EFTClientListResponse();
 			// Get rid of the junk at the beginning, will look like #Q000001
-			string trimmedMsg = msg.Substring(msg.IndexOf('{'));
+			string trimmedMsg = msg.Substring(msg.IndexOf('{') + 1);
 			// Each client coming in will be in format {CLIENTNAME,IPADDRESS,PORT,STATUS}|{CLIENTNAME,IPADDRESS,PORT,STATUS} So we split on the | character
 			if (trimmedMsg.IndexOf('|') > -1)
 			{
@@ -664,6 +664,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			else if (TerminalType == "0069") terminalType = EFTTerminalType.IngenicoPX328;
 			else if (TerminalType == "7010") terminalType = EFTTerminalType.Ingenicoi3070;
 			else if (TerminalType == "5110") terminalType = EFTTerminalType.Ingenicoi5110;
+			else if (TerminalType == "0006") terminalType = EFTTerminalType.IngenicoIxx250;
+			else if (TerminalType == "i050") terminalType = EFTTerminalType.IngenicoMove5000;
+			else if (TerminalType == "p010") terminalType = EFTTerminalType.PCEFTPOSVirtualPinpad;
+			else if (TerminalType.ToLower() == "albt") terminalType = EFTTerminalType.Albert;
+			else if (TerminalType == "X690") terminalType = EFTTerminalType.VerifoneVx690;
+			else if (TerminalType == "0820") terminalType = EFTTerminalType.VerifoneVx820;
 
 			return terminalType;
 		}
@@ -1032,7 +1038,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append((char)v.CutReceipt);
 			r.Append((char)v.ReceiptAutoPrint);
 			r.Append(v.Application.ToApplicationString());
-			r.Append(v.OriginalTxnRef.CutAndLeave(16));
+			r.Append(v.OriginalTxnRef.Length > 0 ? v.OriginalTxnRef.PadRightAndCut(16) : "");
 			return r;
 		}
 
@@ -1043,7 +1049,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Append("0");
 			r.Append(v.Application.ToApplicationString());
 			r.Append(v.Merchant.PadRightAndCut(2));
-			r.Append(v.TxnRef.CutAndLeave(16));
+			r.Append(v.TxnRef.Length > 0 ? v.TxnRef.PadRightAndCut(16) : "");
 			return r;
 		}
 
