@@ -203,6 +203,13 @@ class EFTClientIPDemoAsync
 
 ## Release notes
 
+### 1.4.5.0 (2018-12-14)
+• Added in Void transaction type...
+• Added in a check on msg length for parsing Duplicate Receipt responses so it can handle TPP duplicate responses
+• Fixed 'Display Swipe Card' slave command
+• Added in support for Input On POS display requests
+• Added in MerchantNumber field for GetLastReceipt
+
 ### 1.4.3.0 (2018-10-09)
 * Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command
 * Fixed bug in MessageParser that padded the TxnRef rather than leaving it blank, so the EFTClient didn't like it
