@@ -592,33 +592,33 @@
                     </StackPanel>
                 </TabItem>
 
-                <TabItem Header="Other" >
+            <TabItem Header="Other" >
 
-                    <TabControl x:Name="tbOther" Style="{StaticResource TabControlNonCloudStyle}">
-                        <TabItem Header="Control Panel" Style="{StaticResource TabItemNonCloudStyle}">
-                            <StackPanel>
-                                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                                    <Label Content="Display Type: " Height="35" Width="120" Margin="0,0,5,0"/>
-                                    <ComboBox x:Name="cboControlPanelType" Height="25" Width="178" Margin="0,0,5,0"
+                <TabControl x:Name="tbOther" Style="{StaticResource TabControlNonCloudStyle}">
+                    <TabItem Header="Control Panel" Style="{StaticResource TabItemNonCloudStyle}">
+                        <StackPanel>
+                            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Label Content="Display Type: " Height="35" Width="120" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="cboControlPanelType" Height="25" Width="178" Margin="0,0,5,0"
                                               ItemsSource="{Binding Data.ControlPanelList}" SelectedItem="{Binding Data.SelectedDisplay}" SelectedIndex="0"/>
-                                </DockPanel>
+                            </DockPanel>
                             <Button x:Name="btnDisplayControlPanel" Content="Display Control Panel" Command="{Binding DisplayControlPanel}" Margin="5,10,0,10"/>
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Query Card">
-                            <StackPanel>
-                                <WrapPanel Margin="0,5,0,0">
-                                    <Label x:Name="lblQPad" Content="PAD" Width="120" Margin="0,0,5,0"/>
-                                    <ComboBox x:Name="cboQPad" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="27" FontSize="12" 
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Query Card">
+                        <StackPanel>
+                            <WrapPanel Margin="0,5,0,0">
+                                <Label x:Name="lblQPad" Content="PAD" Width="120" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="cboQPad" HorizontalAlignment="Left" VerticalAlignment="Top" Width="280" Height="27" FontSize="12" 
                                                       ItemsSource="{Binding Data.PadList}" SelectedItem="{Binding Data.SelectedPad}"/>
-                                    <Button x:Name="btnQPad" Content="..." Width="25" Margin="5,0,0,0" Command="{Binding LaunchPad}"></Button>
-                                </WrapPanel>
-                                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                                    <Label Content="Display Type: " Height="35" Width="120" Margin="0,0,5,0"/>
-                                    <ComboBox x:Name="cboQueryCardType" Height="25" Width="280" Margin="0,0,5,0"
+                                <Button x:Name="btnQPad" Content="..." Width="25" Margin="5,0,0,0" Command="{Binding LaunchPad}"></Button>
+                            </WrapPanel>
+                            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Label Content="Display Type: " Height="35" Width="120" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="cboQueryCardType" Height="25" Width="280" Margin="0,0,5,0"
                                               ItemsSource="{Binding Data.QueryCardList}" SelectedItem="{Binding Data.SelectedQuery}" SelectedIndex="0"/>
-                                </DockPanel>
-                                <!--<GroupBox Name="grpQCardType" Header="Query Type" Margin="5,5,0,5" Width="230" HorizontalAlignment="Left">
+                            </DockPanel>
+                            <!--<GroupBox Name="grpQCardType" Header="Query Type" Margin="5,5,0,5" Width="230" HorizontalAlignment="Left">
                                             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" >
                                                 <RadioButton x:Name="rbReadCard" Content="Read card" IsChecked="True"/>
                                                 <RadioButton x:Name="rbReadCardAndSelectAcct" Content="Read card and select account" />
@@ -626,27 +626,33 @@
                                             </StackPanel>
                                         </GroupBox>-->
                             <Button x:Name="btnQueryCard" Content="Query Card" Margin="5,10,0,10" Command="{Binding QueryCard}"/>
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Last Transaction">
-                            <StackPanel >
-                                <GroupBox Header="Last Transaction">
-                                    <Button x:Name="btnGetLastTxn" Content="Get Last Transaction" Height="25" Width="150" Margin="5,10,0,10"
-                                                    Command="{Binding LastTransaction}"></Button>
-                                </GroupBox>
-                                <GroupBox Header="Reprint Receipt">
-                                    <DockPanel>
-                                        <Button x:Name="btnReprintReceipt" Content="Reprint Receipt" Height="25" Width="150" Margin="5,10,0,10"
-                                                        Command="{Binding ReprintReceipt}"></Button>
-                                        <Button x:Name="btnLastReceipt" Content="Get Last Receipt" Height="25" Width="150" Margin="5,10,0,10"
-                                                        Command="{Binding GetLastReceipt}"></Button>
-                                    </DockPanel>
-                                </GroupBox>
-                            <TextBlock Text="Original Transaction Reference:" Margin="5"/>
-                            <TextBox x:Name="txtBxOriginalTxnRef" Height="25" Width="200" HorizontalAlignment="Left" Padding="5" Margin="5" Text="{Binding Data.OriginalTransactionReference}"/>
                         </StackPanel>
-                        </TabItem>
-                        <!--<TabItem Header="Cheque Auth">
+                    </TabItem>
+                    <TabItem Header="Last Transaction">
+                        <StackPanel >
+                            <GroupBox Header="Last Transaction">
+                                <Button x:Name="btnGetLastTxn" Content="Get Last Transaction" Height="25" Width="150" Margin="5,10,0,10"
+                                                    Command="{Binding LastTransaction}"></Button>
+                            </GroupBox>
+                            <GroupBox Header="Reprint Receipt">
+                                <DockPanel>
+                                    <Button x:Name="btnReprintReceipt" Content="Reprint Receipt" Height="25" Width="150" Margin="5,10,0,10"
+                                                        Command="{Binding ReprintReceipt}"></Button>
+                                    <Button x:Name="btnLastReceipt" Content="Get Last Receipt" Height="25" Width="150" Margin="5,10,0,10"
+                                                        Command="{Binding GetLastReceipt}"></Button>
+                                </DockPanel>
+                            </GroupBox>
+                            <GroupBox Header="Settings">
+                                <DockPanel>
+                                    <TextBlock Text="Original Transaction Reference:" Margin="5"/>
+                                    <TextBox x:Name="txtBxOriginalTxnRef" Height="25" Width="200" HorizontalAlignment="Left" Margin="5" Text="{Binding Data.OriginalTransactionReference}"/>
+                                    <TextBlock Text="Merchant Number:"  Margin="5"/>
+                                    <TextBox x:Name="txtBxLastMerchantNumber"  Height="25" Margin="5" Text="{Binding Data.LastReceiptMerchantNumber}"/>
+                                </DockPanel>
+                            </GroupBox>
+                        </StackPanel>
+                    </TabItem>
+                    <!--<TabItem Header="Cheque Auth">
                             <StackPanel>
                                 <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
                                     <Label Content="Branch Code" Height="35" Width="120" Margin="0,0,5,0"/>
@@ -677,73 +683,73 @@
                                                 Command="{Binding VerifyCheque}"></Button>
                             </StackPanel>
                         </TabItem>-->
-                        <TabItem Header="Dialog" Style="{StaticResource TabItemNonCloudStyle}">
+                    <TabItem Header="Dialog" Style="{StaticResource TabItemNonCloudStyle}">
+                        <StackPanel>
+                            <WrapPanel Margin="0,5,0,0">
+                                <Label x:Name="lblDialogTitle" Content="Dialog Title" Width="120" />
+                                <TextBox x:Name="txtDialogTitle" Text="{Binding Data.DialogRequest.DialogTitle}" Width="250" MaxLength="32"/>
+                            </WrapPanel>
                             <StackPanel>
-                                <WrapPanel Margin="0,5,0,0">
-                                    <Label x:Name="lblDialogTitle" Content="Dialog Title" Width="120" />
-                                    <TextBox x:Name="txtDialogTitle" Text="{Binding Data.DialogRequest.DialogTitle}" Width="250" MaxLength="32"/>
-                                </WrapPanel>
-                                <StackPanel>
-                                    <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                                        <Label Content="Style" Height="35" Width="120" />
-                                        <ComboBox Height="27" Width="250" Margin="0,0,5,0"
+                                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                    <Label Content="Style" Height="35" Width="120" />
+                                    <ComboBox Height="27" Width="250" Margin="0,0,5,0"
                                                   ItemsSource="{Binding Data.DialogTypeList}" SelectedItem="{Binding Data.DialogRequest.Type}" SelectedIndex="0"  />
-                                    </DockPanel>
-                                    <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                                        <Label Content="Dialog Position" Height="35" Width="120" />
-                                        <ComboBox Height="27" Width="250" Margin="0,0,5,0"
+                                </DockPanel>
+                                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                    <Label Content="Dialog Position" Height="35" Width="120" />
+                                    <ComboBox Height="27" Width="250" Margin="0,0,5,0"
                                                   ItemsSource="{Binding Data.DialogPositionList}" SelectedItem="{Binding Data.DialogRequest.Position}"   />
-                                    </DockPanel>
-                                    <StackPanel Margin="0,10,0,0">
-                                        <WrapPanel>
-                                            <Label x:Name="lblDialogX" Content="Dialog X" Width="120"/>
-                                            <TextBox x:Name="txtDialogX" Text="{Binding Data.DialogRequest.DialogX}" Width="50" MaxLength="4" HorizontalContentAlignment="Right" />
-                                        </WrapPanel>
-                                        <WrapPanel Margin="0,5,0,0">
-                                            <Label x:Name="lblDialogY" Content="Dialog Y" Width="120"/>
-                                            <TextBox x:Name="txtDialogY" Text="{Binding Data.DialogRequest.DialogY}" Width="50"  MaxLength="4" HorizontalContentAlignment="Right"/>
-                                        </WrapPanel>
-                                        <CheckBox x:Name="chkTopMost" Content="Top Most" Margin="5,5,0,0" IsChecked="{Binding Data.DialogRequest.TopMost}"/>
-                                    </StackPanel>
+                                </DockPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <WrapPanel>
+                                        <Label x:Name="lblDialogX" Content="Dialog X" Width="120"/>
+                                        <TextBox x:Name="txtDialogX" Text="{Binding Data.DialogRequest.DialogX}" Width="50" MaxLength="4" HorizontalContentAlignment="Right" />
+                                    </WrapPanel>
+                                    <WrapPanel Margin="0,5,0,0">
+                                        <Label x:Name="lblDialogY" Content="Dialog Y" Width="120"/>
+                                        <TextBox x:Name="txtDialogY" Text="{Binding Data.DialogRequest.DialogY}" Width="50"  MaxLength="4" HorizontalContentAlignment="Right"/>
+                                    </WrapPanel>
+                                    <CheckBox x:Name="chkTopMost" Content="Top Most" Margin="5,5,0,0" IsChecked="{Binding Data.DialogRequest.TopMost}"/>
                                 </StackPanel>
-
-
-
-                                <Button x:Name="btnSetDialog" Content="Apply Changes" Margin="5,10,0,5" Command="{Binding SetDialog}"/>
                             </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Slave Mode">
-                            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" >
-                                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                                    <Label Content="Commands" Height="35" Width="100" Margin="0,0,5,0"/>
-                                    <ComboBox x:Name="cboCommands" Height="25" Width="350" Margin="0,0,5,0" 
+
+
+
+                            <Button x:Name="btnSetDialog" Content="Apply Changes" Margin="5,10,0,5" Command="{Binding SetDialog}"/>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Slave Mode">
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" >
+                            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Label Content="Commands" Height="35" Width="100" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="cboCommands" Height="25" Width="350" Margin="0,0,5,0" 
                                                       ItemsSource="{Binding Data.CommandsList}" SelectedItem="{Binding Data.SelectedCommand}"/>
-                                </DockPanel>
-                                <WrapPanel>
-                                    <Label Content="Request" Height="35" Width="100" Margin="0,0,5,0"/>
-                                    <TextBox x:Name="txtCommands" Width="700" Text="{Binding Data.CommandRequest}"></TextBox>
-                                </WrapPanel>
-                                <Label Content="Note: Two bytes after a backslash (\) are converted to a single byte. A double backslash (\\) is converted to a single backslash (\).  (ie. A\\B\01C (8 bytes) will be A\B\x01C (5 bytes)" HorizontalAlignment="Left" Height="35" Width="800" Margin="0,0,5,0" FontSize="10"/>
-                                <Button x:Name="btnDoSlaveMode" Content="Execute" Height="25" Width="150" Margin="5,10,0,5" Command="{Binding SlaveMode}"></Button>
-                            </StackPanel>
-                        </TabItem>
-                        <TabItem Header="Send Key">
-                            <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" >
-                                <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
-                                    <Label Content="Key" Height="35" Width="100" Margin="0,0,5,0"/>
-                                    <ComboBox x:Name="cboSendKey" Height="25" Width="150" Margin="0,0,5,0" 
+                            </DockPanel>
+                            <WrapPanel>
+                                <Label Content="Request" Height="35" Width="100" Margin="0,0,5,0"/>
+                                <TextBox x:Name="txtCommands" Width="700" Text="{Binding Data.CommandRequest}"></TextBox>
+                            </WrapPanel>
+                            <Label Content="Note: Two bytes after a backslash (\) are converted to a single byte. A double backslash (\\) is converted to a single backslash (\).  (ie. A\\B\01C (8 bytes) will be A\B\x01C (5 bytes)" HorizontalAlignment="Left" Height="35" Width="800" Margin="0,0,5,0" FontSize="10"/>
+                            <Button x:Name="btnDoSlaveMode" Content="Execute" Height="25" Width="150" Margin="5,10,0,5" Command="{Binding SlaveMode}"></Button>
+                        </StackPanel>
+                    </TabItem>
+                    <TabItem Header="Send Key">
+                        <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left" >
+                            <DockPanel VerticalAlignment="Top" HorizontalAlignment="Left">
+                                <Label Content="Key" Height="35" Width="100" Margin="0,0,5,0"/>
+                                <ComboBox x:Name="cboSendKey" Height="25" Width="150" Margin="0,0,5,0" 
                                                       ItemsSource="{Binding Data.PosKeyList}" SelectedItem="{Binding Data.SelectedPosKey}"/>
-                                </DockPanel>
-                                <WrapPanel>
-                                    <Label Content="Data" Height="35" Width="100" Margin="0,0,5,0"/>
-                                    <TextBox x:Name="txtData" Width="150" Height="27" HorizontalAlignment="Left" Text="{Binding Data.PosData}"/>
-                                </WrapPanel>
-                                <Button x:Name="btnSendKey" Content="Send Key" Height="25" Width="150" Margin="5,10,0,5" Command="{Binding Path=SendKey}"></Button>
-                                <Button x:Name="btnSendToggle" HorizontalAlignment="Left" Height="25" Width="150" Margin="5,10,0,5" 
+                            </DockPanel>
+                            <WrapPanel>
+                                <Label Content="Data" Height="35" Width="100" Margin="0,0,5,0"/>
+                                <TextBox x:Name="txtData" Width="150" Height="27" HorizontalAlignment="Left" Text="{Binding Data.PosData}"/>
+                            </WrapPanel>
+                            <Button x:Name="btnSendKey" Content="Send Key" Height="25" Width="150" Margin="5,10,0,5" Command="{Binding Path=SendKey}"></Button>
+                            <Button x:Name="btnSendToggle" HorizontalAlignment="Left" Height="25" Width="150" Margin="5,10,0,5" 
                                                 Style="{StaticResource ToggleButtonStyle}" Command="{Binding Path=ToggleSendKey}"></Button>
-                            </StackPanel>
-                        </TabItem>
-                        <!--<TabItem Header="PIN">
+                        </StackPanel>
+                    </TabItem>
+                    <!--<TabItem Header="PIN">
                             <StackPanel VerticalAlignment="Top" HorizontalAlignment="Left">
                                 <GroupBox Header="Auth PIN">
                                     <Button x:Name="btnAuthPin" Content="PIN Auth" Height="25" Width="150" Margin="5,10,0,5" Command="{Binding AuthPin}"></Button>
@@ -754,25 +760,25 @@
                             </StackPanel>
 
                         </TabItem>-->
-                        <TabItem Header="Test">
-                            <StackPanel>
-                                <Button x:Name="btnLogonTest" 
+                    <TabItem Header="Test">
+                        <StackPanel>
+                            <Button x:Name="btnLogonTest" 
                                                 Command="{Binding ToggleLogon}" Margin="5,10,0,10">
-                                    <Button.Resources>
-                                        <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
-                                            <Style.Triggers>
-                                                <DataTrigger Binding="{Binding Data.LogonTestEnabled}" Value="True">
-                                                    <Setter Property="Content" Value="Stop Logon Test"/>
-                                                </DataTrigger>
-                                                <DataTrigger Binding="{Binding Data.LogonTestEnabled}" Value="False">
-                                                    <Setter Property="Content" Value="Start Logon Test"/>
-                                                </DataTrigger>
-                                            </Style.Triggers>
-                                        </Style>
-                                    </Button.Resources>
-                                </Button>
-                            </StackPanel>
-                        </TabItem>
+                                <Button.Resources>
+                                    <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Data.LogonTestEnabled}" Value="True">
+                                                <Setter Property="Content" Value="Stop Logon Test"/>
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Data.LogonTestEnabled}" Value="False">
+                                                <Setter Property="Content" Value="Start Logon Test"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </StackPanel>
+                    </TabItem>
                     <TabItem Header="Client List Request">
                         <StackPanel>
                             <Button x:Name="btnClientListRequest" Command="{Binding ClientList}" Content="Request Client List">
@@ -782,9 +788,8 @@
                             </Button>
                         </StackPanel>
                     </TabItem>
-                    </TabControl>
-                </TabItem>
-            <Button Content="Button" Height="100" Margin="0" Width="75"/>
+                </TabControl>
+            </TabItem>
         </TabControl>
 
             <Expander x:Name="exUtilities" Header="Utilities" IsExpanded="{Binding Data.Settings.IsUtilitiesShown}" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Collapsed="Expander_Collapsed" Expanded="Expander_Expanded">

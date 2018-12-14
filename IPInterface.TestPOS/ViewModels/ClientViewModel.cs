@@ -44,9 +44,9 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			ProxyVM.DisplayDetails = _data.DisplayDetails;
 		}
 
-		private async void _proxyVM_OnSendKey(object sender, EFTPOSKey e)
+		private async void _proxyVM_OnSendKey(object sender, EFTSendKeyRequest e)
 		{
-			await _eftw.SendKey(e);
+			await _eftw.SendKey(e.Key, e.Data);
 		}
 
 		private void _data_OnDisplay(bool show)

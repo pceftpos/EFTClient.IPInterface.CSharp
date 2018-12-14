@@ -5,8 +5,8 @@
     <AssemblyName>PCEFTPOS.EFTClient.IPInterface</AssemblyName>
     <Title>PCEFTPOS.EFTClient.IPInterface</Title>
     <PackageId>PCEFTPOS.EFTClient.IPInterface</PackageId>
-    <PackageVersion>1.4.4.0</PackageVersion>
-    <Version>1.4.4.0</Version>
+    <PackageVersion>1.4.5.0</PackageVersion>
+    <Version>1.4.5.0</Version>
     <Description>TCP/IP library used for connecting to PC-EFTPOS Client</Description>
     <Authors>PC-EFTPOS Pty Ltd</Authors>
     <Company>PC-EFTPOS Pty Ltd</Company>
@@ -17,10 +17,13 @@
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>pceftpos.pfx</AssemblyOriginatorKeyFile>
     <ReleaseNotes>
-	1.4.4.0 (2018-10-18)
-* Fixed bug with null TcpClient causing exception with IsConnected property
-* Removing catch-throw new Exceptions which suppress stack trace
-	
+	1.4.5.0 (2018-12-14)
+	• Added in Void transaction type
+• Added in a check on msg length for parsing Duplicate Receipt responses so it can handle TPP duplicate responses
+• Fixed 'Display Swipe Card' slave command
+• Added in support for Input On POS display requests
+• Added in MerchantNumber field for GetLastReceipt
+
 	1.4.3.0 (2018-10-09)
 * Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command
 * Fixed bug in MessageParser that padded the TxnRef rather than leaving it blank, so the EFTClient didn't like it
@@ -30,9 +33,12 @@
 * Added new ReceiptAutoPrint modes for EFTRequests
 * Updated MessageParser to use non-deprecated properties
     </ReleaseNotes>
-    <PackageReleaseNotes>1.4.4.0 (2018-10-18)
-* Fixed bug with null TcpClient causing exception with IsConnected property
-* Removing catch-throw new Exceptions which suppress stack trace
+    <PackageReleaseNotes>1.4.5.0 (2018-12-14)
+• Added in Void transaction type
+• Added in a check on msg length for parsing Duplicate Receipt responses so it can handle TPP duplicate responses
+• Fixed 'Display Swipe Card' slave command
+• Added in support for Input On POS display requests
+• Added in MerchantNumber field for GetLastReceipt
 
 1.4.3.0 (2018-10-09)
 * Deleted a hard-coded TxnRef in TestPOS GetLast and ReprintReceipt command
@@ -64,8 +70,8 @@
 * Added support for basket data API
 * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
 </PackageReleaseNotes>
-    <AssemblyVersion>1.4.4.0</AssemblyVersion>
-    <FileVersion>1.4.4.0</FileVersion>
+    <AssemblyVersion>1.4.5.0</AssemblyVersion>
+    <FileVersion>1.4.5.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
  
@@ -76,7 +82,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netstandard2.0|AnyCPU'">
     <DocumentationFile>bin\Release\netstandard2.0\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
   </PropertyGroup>
-
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net45|AnyCPU'">
     <DocumentationFile>bin\Release\net45\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
   </PropertyGroup>

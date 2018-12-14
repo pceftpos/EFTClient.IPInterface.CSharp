@@ -1,4 +1,6 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Globalization;
+using System.Threading.Tasks;
 using System.Windows;
 using PCEFTPOS.EFTClient.IPInterface;
 
@@ -27,7 +29,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
             {
                 if (!d.ProxyWindowClosing)
                 {
-                    d.SendKeyFunc(EFTPOSKey.OkCancel);
+                    d.SendKeyFunc(new EFTSendKeyRequest() { Key = EFTPOSKey.OkCancel });
                 }
             }
         }

@@ -84,7 +84,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 					_clientStream = new TcpSocketAsync();
 				}
 
-				_clientStream.LogLevel = (LogLevel)LogLevel;
+				_clientStream.LogLevel = LogLevel;
 				_clientStream.OnLog += _clientStream_OnLog;
 
 				var connected = await _clientStream.ConnectAsync(hostName, hostPort, useSSL);
@@ -111,7 +111,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
 		private void _clientStream_OnLog(object sender, LogEventArgs e)
 		{
-			Log((LogLevel)e.LogLevel, tr => tr.Set(e.Message, e.Exception));
+			Log(e.LogLevel, tr => tr.Set(e.Message, e.Exception));
 		}
 
 
@@ -348,10 +348,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 						break;
 					}
 
-                    // Try to get the length of the new message. If it's not a valid length 
-                    // we might have some corrupt data, keep checking for a valid message
-                    var lengthStr = _recvBuf.Substring(index, lengthSize);
-                    if (!int.TryParse(lengthStr, out int length) || length <= (lengthSize + 1))
+					// Try to get the length of the new message. If it's not a valid length 
+					// we might have some corrupt data, keep checking for a valid message
+					var lengthStr = _recvBuf.Substring(index, lengthSize);
+					if (!int.TryParse(lengthStr, out int length) || length <= (lengthSize + 1))
 					{
 						Log(LogLevel.Error, tr => tr.Set($"Invalid length. Content:{lengthStr}"));
 						continue;

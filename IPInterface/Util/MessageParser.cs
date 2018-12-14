@@ -347,7 +347,12 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			r.Success = TryParse<bool>(msg, 1, ref index);
 			r.ResponseCode = TryParse<string>(msg, 2, ref index);
 			r.ResponseText = TryParse<string>(msg, 20, ref index);
-
+			// index will be 20 if the TryParse above fails i.e. if the msg is shorter than index + 20. So index is 20 if there is no more message. If there's no more message then we return what we have and don't try to parse a receipt.
+			if (index == 20)
+			{
+				return r;
+			}
+			// If we get here then there is more message and so we should try to parse a receipt.
 			List<string> receiptLines = new List<string>();
 			bool done = false;
 			while (!done)
@@ -1034,10 +1039,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			var r = new StringBuilder();
 			r.Append("C");
 			r.Append((char)v.ReprintType);
-			r.Append(v.Merchant.PadRightAndCut(2));
+			r.Append(v.Application.ToApplicationString());
 			r.Append((char)v.CutReceipt);
 			r.Append((char)v.ReceiptAutoPrint);
-			r.Append(v.Application.ToApplicationString());
+			r.Append(v.Merchant.PadRightAndCut(2));
 			r.Append(v.OriginalTxnRef.Length > 0 ? v.OriginalTxnRef.PadRightAndCut(16) : "");
 			return r;
 		}

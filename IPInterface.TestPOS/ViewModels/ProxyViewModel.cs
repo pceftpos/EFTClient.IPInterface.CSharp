@@ -1,13 +1,16 @@
 ﻿
 using System;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 
 namespace PCEFTPOS.EFTClient.IPInterface.TestPOS.ViewModels
 {
 	public class ProxyViewModel : INotifyPropertyChanged
 	{
 		public event PropertyChangedEventHandler PropertyChanged;
-		public event EventHandler<EFTPOSKey> OnSendKey;
+		public event EventHandler<EFTSendKeyRequest> OnSendKey;
+		public char[] trimChars = { (char)0x02, '\0', '2' };
 
 		protected void OnPropertyChanged(string info)
 		{
@@ -19,8 +22,8 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS.ViewModels
 		{
 			get
 			{
-				_displayDetails.DisplayText[0] = _displayDetails.DisplayText[0].Trim();
-				_displayDetails.DisplayText[1] = _displayDetails.DisplayText[1].Trim();
+				_displayDetails.DisplayText[0] = _displayDetails.DisplayText[0].Trim(trimChars);
+				_displayDetails.DisplayText[1] = _displayDetails.DisplayText[1].Trim(trimChars);
 
 				return _displayDetails;
 			}
@@ -51,18 +54,31 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS.ViewModels
 			return result;
 		}
 
+		EFTSendKeyRequest _keyRequest = new EFTSendKeyRequest();
+		public EFTSendKeyRequest KeyRequest { get { return _keyRequest; } set { _keyRequest = value; OnPropertyChanged(nameof(KeyRequest)); } }
+
 		EFTPOSKey _key;
 		public EFTPOSKey Key { get { return _key; } set { _key = value; OnPropertyChanged(nameof(Key)); } }
 
+		string _keyData = "";
+		public string KeyData
+		{
+			get { return _keyData; }
+			set { _keyData = value; OnPropertyChanged(nameof(KeyData)); }
+		}
 		RelayCommand _sendKeyCommand;
 		public RelayCommand SendKeyCommand => _sendKeyCommand ?? (_sendKeyCommand = new RelayCommand((o) =>
 			  {
 				  string name = o.ToString();
+				  ProxyDialog window = Application.Current.Windows.OfType<ProxyDialog>().FirstOrDefault();
 				  EFTPOSKey key = EFTPOSKey.OkCancel;
-
 				  if (EnumContains(name, out key))
 				  {
-					  OnSendKey?.Invoke(this, key);
+					  KeyRequest.Key = key;
+					  KeyRequest.Data = KeyData.ToString() + window.pwordInput.Password;
+					  OnSendKey?.Invoke(this, KeyRequest);
+					  KeyData = "";
+					  window.pwordInput.Password = "";
 				  }
 			  }));
 
@@ -70,7 +86,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS.ViewModels
 		public bool ProxyWindowClosing = false;
 
 
-		public void SendKeyFunc(EFTPOSKey key)
+		public void SendKeyFunc(EFTSendKeyRequest key)
 		{
 			OnSendKey?.Invoke(this, key);
 		}

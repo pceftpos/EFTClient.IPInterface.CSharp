@@ -23,7 +23,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		public ClientData()
 		{
 			_dctCommands.Add("Enter Slave Mode", "*@101S1004300 ");
-			_dctCommands.Add("Display 'Swipe Card'", "*@103Z 0060216  D 0240000   SWIPE CARD       D 0240100                 ");
+			_dctCommands.Add("Display 'Swipe Card'", "*@103Z 0060220  D 0240000   SWIPE CARD       D 0240100                    ");
 			_dctCommands.Add("Swipe Card", "*@102J1000K100810000010");
 			_dctCommands.Add("Exit Slave Mode", "*@101S0000");
 			_dctCommands.Add("Complete Read Card Command", "*@107S1004300 Z 0060216  D 0240000   SWIPE CARD       D 0240100                    J1000K100810000010S0000");
@@ -112,6 +112,21 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			{
 				_originalTransactionReference = value;
 				NotifyPropertyChanged("OriginalTransactionReference");
+			}
+		}
+
+		private string _lastReceiptMerchantNumber = "00";
+
+		public string LastReceiptMerchantNumber
+		{
+			get
+			{
+				return _lastReceiptMerchantNumber;
+			}
+			set
+			{
+				_lastReceiptMerchantNumber = value;
+				NotifyPropertyChanged("LastReceiptMerchantNumber");
 			}
 		}
 

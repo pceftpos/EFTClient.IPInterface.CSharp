@@ -68,6 +68,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		AuthPIN = 'X',
 		/// <summary>A enhanced pin EFT transaction type ('K').</summary>
 		EnhancedPIN = 'K',
+		/// <summary>This command will cancel or void a previous sale ('I').</summary>
+		Void = 'I',
 
 		/// <summary>A Redemption allows the POS to use the card as a payment type. This will take the amount from the Card balance ('P').</summary>
 		[Filter("ETS")]

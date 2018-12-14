@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PCEFTPOS.EFTClient.IPInterface.Slave;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -151,6 +152,8 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				do
 				{
 					var timeoutToken = new CancellationTokenSource(new TimeSpan(0, 5, 0)).Token; // 5 minute timeout
+					if (request.GetType().Equals(typeof(EFTSlaveRequest)))
+						_requestInProgress = false;
 					var r = await _eft.ReadResponseAsync(timeoutToken);
 
 					if (r == null) // stream is busy
@@ -207,7 +210,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 							_data.Receipt = receipt.ToString();
 						}
 
-						if (request is EFTReceiptRequest || request is EFTReprintReceiptRequest)
+						if (request is EFTReceiptRequest || (request is EFTReprintReceiptRequest && request.GetPairedResponseType() == r.GetType()))
 						{
 							_requestInProgress = false;
 							_eft.Dispose();
@@ -235,7 +238,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 							ClientList.Add("Client " + index.ToString() + " " + nameof(clnt.State), clnt.State.ToString());
 							index++;
 						}
-						
+
 						_data.LastTxnResult = ClientList;
 						_data.DisplayDialog(false);
 						_requestInProgress = false;
@@ -456,7 +459,8 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				CutReceipt = cutMode,
 				ReceiptAutoPrint = printMode,
 				ReprintType = type,
-				OriginalTxnRef = _data.OriginalTransactionReference
+				OriginalTxnRef = _data.OriginalTransactionReference,
+				Merchant = _data.LastReceiptMerchantNumber
 			});
 		}
 		#endregion
@@ -575,10 +579,10 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		#region Slave Mode
 		public async Task DoSlaveMode(string cmd)
 		{
-			//await SendRequest<EFTSlaveResponse>(new EFTSlaveRequest
-			//{
-			//    Command = cmd
-			//});
+			await SendRequest<Slave.EFTSlaveResponse>(new Slave.EFTSlaveRequest
+			{
+				RawCommand = cmd
+			});
 			await Task.CompletedTask;
 		}
 		#endregion

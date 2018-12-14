@@ -12,9 +12,9 @@
             <Setter Property="HorizontalAlignment" Value="Left" />
             <Setter Property="VerticalAlignment" Value="Center" />
             <Setter Property="FontSize" Value="18" />
-            <Setter Property="Margin" Value="15,10,15,15" />
+            <Setter Property="Margin" Value="15,10,0,15" />
             <Setter Property="Height" Value="35" />
-            <Setter Property="Width" Value="75" />
+            <Setter Property="Width" Value="100" />
         </Style>
 
         <Style TargetType="TextBlock" x:Key="BaseTextBlockStyle">
@@ -33,8 +33,14 @@
             <Setter Property="Margin" Value="15,5,15,5" />
             <Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="TextAlignment" Value="Center"/>
+            
         </Style>
-
+        <Style TargetType="PasswordBox" x:Key="BasePasswordBoxStyle">
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="22" />
+            <Setter Property="Margin" Value="15,5,15,5" />
+        </Style>
         <Style TargetType="Button" BasedOn="{StaticResource BaseButtonStyle}">
 
         </Style>
@@ -76,13 +82,52 @@
             <Setter Property="Visibility" Value="Collapsed"/>
         </Style>
         <Style x:Key="InputBoxStyle" BasedOn="{StaticResource BaseTextBoxStyle}" TargetType="TextBox">
+           
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="None">
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Password">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Decimal">
+                        <Setter Property="Text">
+                            <Setter.Value>
+                                <Binding StringFormat="{}{0:F2}"/>
+                        </Setter.Value>
+                        </Setter>
+                    </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Amount">
+                    <Setter Property="Text">
+                        <Setter.Value>
+                            <Binding StringFormat="{}}{0:C2}"/>
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
-
+        <Style x:Key="InputPasswordStyle" BasedOn="{StaticResource BasePasswordBoxStyle}" TargetType="PasswordBox">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="None">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Normal">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Amount">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Decimal">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Password">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding DisplayDetails.InputType}" Value="Char">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
 
     </Window.Resources>
     <StackPanel>
@@ -216,7 +261,9 @@
             </UserControl.Resources>
             <Control Style="{StaticResource BusyAnimationStyle}" />
         </UserControl>
-        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="315">
+        <TextBox x:Name="txtBxInput" Style="{StaticResource InputBoxStyle}" Text="{Binding KeyData, StringFormat={}{0:F}}" />
+        <PasswordBox x:Name="pwordInput" Style="{StaticResource InputPasswordStyle}" />
+        <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" Width="350">
             <Button x:Name="btnCancelButton" Style="{StaticResource CancelButtonStyle}" Command="{Binding SendKeyCommand}" CommandParameter="{Binding ElementName=btnCancelButton, Path=Content}"/>
             <Button x:Name="btnLeftButton" Style="{StaticResource LeftMostButtonStyle}" Command="{Binding SendKeyCommand}" CommandParameter="{Binding ElementName=btnLeftButton, Path=Content}"/>
             <Button x:Name="btnRightButton" Style="{StaticResource RightMostButtonStyle}" Command="{Binding SendKeyCommand}" CommandParameter="{Binding ElementName=btnRightButton, Path=Content}"/>
