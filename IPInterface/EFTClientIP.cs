@@ -329,6 +329,20 @@ namespace PCEFTPOS.EFTClient.IPInterface
             return DoRequest(request);
         }
 
+        /// <summary>Send a cloud pairing request to PC-EFTPOS .</summary>
+        /// <returns>FALSE if an error occured.</returns>
+        public bool DoCloudPairing(EFTCloudPairRequest request)
+        {
+            return DoRequest(request);
+        }
+
+        /// <summary>Send a cloud logon request to PC-EFTPOS using a token .</summary>
+        /// <returns>FALSE if an error occured.</returns>
+        public bool DoCloudTokenLogon(EFTCloudTokenLogonRequest request)
+        {
+            return DoRequest(request);
+        }
+
         /// <summary>Clears the request in progress flag.</summary>
         /// <returns></returns>
         public void ClearRequestInProgress()
@@ -424,6 +438,10 @@ namespace PCEFTPOS.EFTClient.IPInterface
 
                     case EFTCloudLogonResponse r:
                         FireClientResponseEvent(nameof(OnCloudLogon), OnCloudLogon, new EFTEventArgs<EFTCloudLogonResponse>(r));
+                        break;
+
+                    case EFTCloudPairResponse r:
+                        FireClientResponseEvent(nameof(OnCloudPair), OnCloudPair, new EFTEventArgs<EFTCloudPairResponse>(r));
                         break;
 
                     case EFTTransactionResponse r:
@@ -810,6 +828,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
         public event EventHandler<EFTEventArgs<EFTLogonResponse>> OnLogon;
         /// <summary>Fired when a cloud logon result is received.</summary>
         public event EventHandler<EFTEventArgs<EFTCloudLogonResponse>> OnCloudLogon;
+        /// <summary>Fired when a cloud logon result is received.</summary>
+        public event EventHandler<EFTEventArgs<EFTCloudPairResponse>> OnCloudPair;
         /// <summary>Fired when a transaction result is received.</summary>
         public event EventHandler<EFTEventArgs<EFTTransactionResponse>> OnTransaction;
         /// <summary>Fired when a get last transaction result is received.</summary>

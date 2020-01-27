@@ -88,7 +88,19 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				{
 					if (_vm.Data.Settings.UseSSL)
 					{
-						await _vm.DoCloudLogon(tPassword.Password);
+                        if (_vm.Data.Settings.CloudInfo.PairLogon)
+                        {
+						    await _vm.DoCloudLogon(tPassword.Password,true);
+                        }
+                        else if (!string.IsNullOrEmpty(_vm.Data.Settings.CloudInfo.Token) && _vm.Data.Settings.CloudInfo.TokenLogon) //Logon Using the Token Already stored
+                        {
+                            await _vm.ConnectAsync();
+                            await _vm.DoCloudTokenLogon(_vm.Data.Settings.CloudInfo.Token);
+                        }
+                        else
+                        {
+                            await _vm.DoCloudLogon(tPassword.Password);
+                        }
 					}
 					else
 					{
@@ -126,7 +138,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			{
 				if (chkUseSsl.IsChecked.Value)
 				{
-					_vm.Data.Settings.Host = "pos.cloud.pceftpos.com";
+					_vm.Data.Settings.Host = "pos.sandbox.cloud.pceftpos.com";
 					_vm.Data.Settings.Port = 443;
 				}
 				else
@@ -228,7 +240,15 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 		{
 			try
 			{
-				await _vm.DoCloudLogon(tPassword.Password);
+                if (_vm.Data.Settings.CloudInfo.TokenLogon)
+                {
+                    _vm.Data.Settings.UseSSL = true; //Cannot do a token logon without SSL being true
+                    await _vm.DoCloudTokenLogon(_vm.Data.Token);
+                }
+                else
+                {
+				    await _vm.DoCloudLogon(tPassword.Password);
+                }
 			}
 			catch
 			{

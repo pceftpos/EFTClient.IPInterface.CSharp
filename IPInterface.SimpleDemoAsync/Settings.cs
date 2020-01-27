@@ -8,6 +8,7 @@
         string Username { get; set; }
         string Password { get; set; }
         string PairingCode { get; set; }
+        string Token { get; set; }
         void Save();
         void Load();
     }
@@ -73,7 +74,17 @@
                 Properties.Settings.Default.PairingCode = value;
             }
         }
-
+        public string Token
+        {
+            get
+            {
+                return Properties.Settings.Default.Token;
+            }
+            set
+            {
+                Properties.Settings.Default.Token = value;
+            }
+        }
         public void Load()
         {
             Properties.Settings.Default.Reload();

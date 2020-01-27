@@ -138,6 +138,9 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
         
         public string ClientId { get; set; } = "";
         public string PairingCode { get; set; } = "";
+        public bool PairLogon { get; set; } = false;
+        public string Token { get; set; } = "";
+        public bool TokenLogon { get; set; } = false;
         [JsonIgnore]
         public string Password = string.Empty;
 
@@ -173,6 +176,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 
         public string Host { get; set; } = "127.0.0.1";
         public int Port { get; set; } = 2011;
+        [JsonIgnore]
         public bool UseSSL { get; set; } = false;
         public string Notes { get; set; } = string.Empty;
     }

@@ -322,9 +322,13 @@
                                 <Label Content="Pairing Code" Width="120"/>
                                 <TextBox x:Name="tPairingCode" Text="{Binding Data.Settings.CloudInfo.PairingCode}" Width="200" MaxLength="25"/>
                             </WrapPanel>
-                            <Label Content="" Width="120" HorizontalContentAlignment="Left"/>
-                            <CheckBox Content="Auto login" VerticalAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="0,0,0,0" IsChecked="{Binding Path=Data.Settings.CloudInfo.IsAutoLogin}"/>
+                            <WrapPanel Width="438" >
+                                <!--<Label Content="" Width="0" HorizontalContentAlignment="Left"/>-->
+                                <CheckBox x:Name="chkPairLogon" Content="Pairing Logon" IsChecked="{Binding Data.Settings.CloudInfo.PairLogon}" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,0" Width="125" />
+                                <CheckBox x:Name="chkTokenLogon_Settings" Content="Token Logon" IsChecked="{Binding Data.Settings.CloudInfo.TokenLogon}" HorizontalAlignment="Left" VerticalAlignment="Center" VerticalContentAlignment="Center" Margin="0,0,0,0" Width="125"/>
+                                <CheckBox Content="Auto login" VerticalAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" Margin="0,0,0,0" IsChecked="{Binding Path=Data.Settings.CloudInfo.IsAutoLogin}" Width="125"/>
+                                <!--<Label Content="" Width="120" HorizontalContentAlignment="Left"/>-->
+                            </WrapPanel>
                         </WrapPanel>
                         <Button Name="btnConnect" Style="{StaticResource ResourceKey=ConnectedStateButtonStyle}" 
                                         Margin="0,5,20,5" HorizontalAlignment="Right" Width="100" Height="30" 
@@ -391,29 +395,34 @@
                     <Button x:Name="btnLogon" Content="Logon" Command="{Binding Logon}" Margin="5,10,0,10"/>
                 </StackPanel>
                 </TabItem>
-                <TabItem Header="Cloud Logon" x:Name="tbiCloudLogon" Style="{StaticResource TabItemCloudLogonStyle}">
-                    <StackPanel HorizontalAlignment="Left">
-                        <WrapPanel>
-                            <Label x:Name="lblClientId" Content="Client ID" Height="35" Width="100" Margin="0,0,5,0" />
-                            <TextBox x:Name="txtClientId" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.ClientId}"/>
-                        </WrapPanel>
-                        <WrapPanel>
-                            <Label x:Name="lblPassword" Content="Password" Height="35" Width="100" Margin="0,0,5,0"/>
-                            <!--<TextBox x:Name="txtPassword" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.Password}"/>-->
-                            <PasswordBox x:Name="txtPassword" Height="27" Width="180" VerticalContentAlignment="Center" ContextMenu="{x:Null}"/>
-                        </WrapPanel>
-                        <WrapPanel>
-                            <Label x:Name="lblPairingCode" Content="Pairing Code" Height="35" Width="100" Margin="0,0,5,0"/>
-                            <TextBox x:Name="txtPairingCode" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.PairingCode}"/>
-                        </WrapPanel>
-                        <!--<CheckBox x:Name="chkAutoCloudLogin" Content="Auto Cloud Logon" VerticalAlignment="Center" VerticalContentAlignment="Center" 
-                                            Margin="5,5,0,0" IsChecked="{Binding Path=Data.Settings.CloudInfo.IsAutoLogin}"/>-->
+            <TabItem Header="Cloud Logon" x:Name="tbiCloudLogon" Style="{StaticResource TabItemCloudLogonStyle}">
+                <StackPanel HorizontalAlignment="Left">
+                    <WrapPanel>
+                        <Label x:Name="lblClientId" Content="Client ID" Height="35" Width="100" Margin="0,0,5,0" />
+                        <TextBox x:Name="txtClientId" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.ClientId}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label x:Name="lblPassword" Content="Password" Height="35" Width="100" Margin="0,0,5,0"/>
+                        <!--<TextBox x:Name="txtPassword" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.Password}"/>-->
+                        <PasswordBox x:Name="txtPassword" Height="27" Width="180" VerticalContentAlignment="Center" ContextMenu="{x:Null}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label x:Name="lblPairingCode" Content="Pairing Code" Height="35" Width="100" Margin="0,0,5,0"/>
+                        <TextBox x:Name="txtPairingCode" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.PairingCode}"/>
+                    </WrapPanel>
+                    <WrapPanel>
+                        <Label x:Name="lblToken" Content="Token" Height="35" Width="100" Margin="0,0,5,0"/>
+                        <TextBox x:Name="txtToken" Height="27" Width="180" Text="{Binding Data.Settings.CloudInfo.Token}"/>
+                    </WrapPanel>
 
-                        <Button x:Name="btnCloudLogon" Content="Cloud Logon" Click="btnCloudLogon_Click" />
-                        <!--Command="{Binding CloudLogon}"-->
+                    <CheckBox x:Name="chkTokenLogon" Content="Token Logon" IsChecked="{Binding Data.Settings.CloudInfo.TokenLogon}"/>
+
+                    <Button x:Name="btnCloudLogon" Content="Cloud Logon" Click="btnCloudLogon_Click" />
+                    <!--Command="{Binding CloudLogon}"-->
+
                 </StackPanel>
-                </TabItem>
-                <TabItem Header="Transaction">
+            </TabItem>
+            <TabItem Header="Transaction">
                 <StackPanel Margin="0,0,0,4">
                     <WrapPanel HorizontalAlignment="Left" Margin="5,5,0,0" >
                         <CheckBox x:Name="chkTxnType" Height="27" Content="ETS Transaction" 

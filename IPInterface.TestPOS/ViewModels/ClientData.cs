@@ -62,7 +62,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			{
 				return _logonTestEnabled;
 			}
-		}
+        }
 
 		#endregion
 
@@ -431,10 +431,24 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 
 		#region User Settings
 		public UserSettings Settings { get; set; } = new UserSettings();
-		#endregion
+        #endregion
 
-		#region Receipts
-		private string _receiptInfo = string.Empty;
+        public string Token
+        {
+            get
+            {
+                return Settings.CloudInfo.Token;
+            }
+            set
+            {
+                Settings.CloudInfo.Token = value;
+                NotifyPropertyChanged("txtToken");
+            }
+        }
+
+
+        #region Receipts
+        private string _receiptInfo = string.Empty;
 		public string Receipt
 		{
 			get

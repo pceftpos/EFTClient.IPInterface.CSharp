@@ -62,15 +62,25 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			{
 				if (!string.IsNullOrEmpty(_data.Settings.CloudInfo.ClientId)
 					&& !string.IsNullOrEmpty(_data.Settings.CloudInfo.Password)
-					&& !string.IsNullOrEmpty(_data.Settings.CloudInfo.PairingCode))
+					&& !string.IsNullOrEmpty(_data.Settings.CloudInfo.PairingCode)
+                    && !_data.Settings.CloudInfo.PairLogon)
 				{
-					await DoCloudLogon(_data.Settings.CloudInfo.Password, true);
+					await DoCloudLogon(_data.Settings.CloudInfo.Password,false, true);
 				}
 				else
 				{
 					_data_OnLog("Cloud logon details are empty.");
 				}
 			}
+            else if (_data.Settings != null && _data.Settings.CloudInfo != null && Data.Settings.CloudInfo.IsAutoLogin)
+            {
+                if (!string.IsNullOrEmpty(_data.Settings.CloudInfo.Token) && _data.Settings.CloudInfo.TokenLogon)
+                {
+                    Data.Settings.UseSSL = true;
+                    await ConnectAsync();
+                    await DoCloudTokenLogon(_data.Settings.CloudInfo.Token);
+                }
+            }
 		}
 
 		private void _data_OnLog(string message)
@@ -234,7 +244,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			}
 		}
 
-		public async Task DoCloudLogon(string password, bool autoLogin = false)
+        public async Task DoCloudLogon(string password, bool PairingReq = false, bool autoLogin = false)
 		{
 			try
 			{
@@ -246,7 +256,14 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				}
 
 				Data.Settings.CloudInfo.Password = password;
-				await _eftw.CloudLogon(Data.Settings.CloudInfo.ClientId, Data.Settings.CloudInfo.Password, Data.Settings.CloudInfo.PairingCode);
+                if (PairingReq)
+                {
+    				await _eftw.CloudPairingRequest(Data.Settings.CloudInfo.ClientId, Data.Settings.CloudInfo.Password, Data.Settings.CloudInfo.PairingCode);
+                }
+                else
+                {
+                    await _eftw.CloudLogon(Data.Settings.CloudInfo.ClientId, Data.Settings.CloudInfo.Password, Data.Settings.CloudInfo.PairingCode);
+                }
 
 				if (Data.Settings.CloudInfo.IsAutoLogin && !autoLogin)
 				{
@@ -258,6 +275,26 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 				_data_OnLog(ex.Message);
 			}
 		}
+
+        public async Task DoCloudTokenLogon(string token)
+        {
+            try
+            {
+                if (_data.ConnectedState == ConnectedStatus.Disconnected)
+                {
+                    var r = await _eftw.Connect(Data.Settings.Host, Data.Settings.Port, Data.Settings.UseSSL);
+                    if (r == false)
+                        return;
+                }
+
+               await _eftw.CloudTokenLogon(token);             
+            }
+            catch (Exception ex)
+            {
+                _data_OnLog(ex.Message);
+            }
+
+        }
 
 		public RelayCommand ToggleLogon
 		{

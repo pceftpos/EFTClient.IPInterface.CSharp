@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace PCEFTPOS.EFTClient.IPInterface.Properties {
+namespace PCEFTPOS.EFTClient.IPInterface.SimpleDemo.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]

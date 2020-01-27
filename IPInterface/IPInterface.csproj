@@ -1,22 +1,26 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netcoreapp2.1;net45;net451;net452;net46;net461;net462;net47;net471;net472</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netcoreapp2.1;netcoreapp3;net45;net451;net452;net46;net461;net462;net47;net471;net472;net48</TargetFrameworks>
     <AssemblyName>PCEFTPOS.EFTClient.IPInterface</AssemblyName>
     <Title>PCEFTPOS.EFTClient.IPInterface</Title>
     <PackageId>PCEFTPOS.EFTClient.IPInterface</PackageId>
-    <PackageVersion>1.4.6.0</PackageVersion>
-    <Version>1.4.6.0</Version>
+    <PackageVersion>1.5.0.0</PackageVersion>
+    <Version>1.5.0.0</Version>
     <Description>TCP/IP library used for connecting to PC-EFTPOS Client</Description>
     <Authors>PC-EFTPOS Pty Ltd</Authors>
     <Company>PC-EFTPOS Pty Ltd</Company>
-    <Copyright>Copyright 2018</Copyright>
+    <Copyright>Copyright 2019</Copyright>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <PackageTags>PCEFTPOS PC-EFTPOS</PackageTags>
     <PackageProjectUrl>https://github.com/pceftpos/EFTClient.IPInterface.CSharp</PackageProjectUrl>
     <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>pceftpos.pfx</AssemblyOriginatorKeyFile>
     <ReleaseNotes>
+      1.5.0.0 (2019-09-30)
+      • Support .Net Core 3.0, .Net Framework 4.8
+      • Support for Cloud pairing request and token login
+
       1.4.6.0 (2019-04-11)
       • Add support for .NET Framework 4.7.2.
 
@@ -39,7 +43,10 @@
       * Added new ReceiptAutoPrint modes for EFTRequests
       * Updated MessageParser to use non-deprecated properties
     </ReleaseNotes>
-    <PackageReleaseNotes>
+    <PackageReleaseNotes>1.5.0.0 (2019-09-30)
+* Support .Net Core 3.0, .Net Framework 4.8
+* Support for Cloud pairing request and token login
+
       1.4.6.0 (2019-04-11)
       • Add support for .NET Framework 4.7.2.
 
@@ -84,11 +91,15 @@
 * Added support for basket data API
 * Updated some property names to bring EFTClientIP more inline with the existing ActiveX interface. Old property names have been marked obsolete, but are still supported.
 </PackageReleaseNotes>
-    <AssemblyVersion>1.4.6.0</AssemblyVersion>
-    <FileVersion>1.4.6.0</FileVersion>
+    <AssemblyVersion>1.5.0.0</AssemblyVersion>
+    <FileVersion>1.5.0.0</FileVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
  
+<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3|AnyCPU'">
+    <DocumentationFile>bin\Release\netcoreapp3\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>  
+  
   <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp2.1|AnyCPU'">
     <DocumentationFile>bin\Release\netcoreapp2.1\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
   </PropertyGroup>
@@ -129,7 +140,14 @@
     <DocumentationFile>bin\Release\net471\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net48|AnyCPU'">
+    <DocumentationFile>bin\Release\net48\PCEFTPOS.EFTClient.IPInterface.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="NuGet.CommandLine" Version="4.6.2" />
+    <PackageReference Include="NuGet.CommandLine" Version="5.2.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 </Project>

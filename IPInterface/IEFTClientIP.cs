@@ -179,6 +179,14 @@ namespace PCEFTPOS.EFTClient.IPInterface
         /// <returns>FALSE if an error occured.</returns>
         bool DoCloudLogon(EFTCloudLogonRequest request);
 
+        /// <summary>Send a cloud pairing request to PC-EFTPOS .</summary>
+        /// <returns>FALSE if an error occured.</returns>
+        bool DoCloudPairing(EFTCloudPairRequest request);
+
+        /// <summary>Send a cloud logon request to PC-EFTPOS using a token .</summary>
+        /// <returns>FALSE if an error occured.</returns>
+        bool DoCloudTokenLogon(EFTCloudTokenLogonRequest request);
+
         /// <summary>Clears the request in progress flag.</summary>
         /// <returns></returns>
         void ClearRequestInProgress();

@@ -67,8 +67,11 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <returns>TRUE if the certificate is valid, FALSE otherwise</returns>
 		bool RemoteCertificateValidationCallback(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
 		{
-			// Certificate chain is valid via a commercial 3rd party chain 
-			if (sslPolicyErrors == SslPolicyErrors.None)
+#if (DEBUG)
+            return true;
+#endif
+            // Certificate chain is valid via a commercial 3rd party chain 
+            if (sslPolicyErrors == SslPolicyErrors.None)
 			{
 				Log(LogLevel.Info, tr => tr.Set("Remote certificate validated successfull by installed CA"));
 				return true;
@@ -259,7 +262,7 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		/// <summary> The log event to be called </summary>
 		public event EventHandler<LogEventArgs> OnLog;
 
-		#region IDisposable Support
+#region IDisposable Support
 		private bool disposedValue = false; // To detect redundant calls
 
 		protected virtual void Dispose(bool disposing)
@@ -280,6 +283,6 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			// Do not change this code. Put cleanup code in Dispose(bool disposing) above.
 			Dispose(true);
 		}
-		#endregion
+#endregion
 	}
 }

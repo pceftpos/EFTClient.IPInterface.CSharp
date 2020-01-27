@@ -244,6 +244,37 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 						_requestInProgress = false;
 						_eft.Dispose();
 					}
+                    else if (r is EFTCloudTokenLogonResponse)
+                    {
+                        var tmp = (EFTCloudTokenLogonResponse)r;
+                        result = tmp.Success;
+                        _requestInProgress = false;
+                    }
+                    else if (r is EFTCloudPairResponse)
+                    {
+                        var tmp = (EFTCloudPairResponse)r;
+                        _data.Settings.Host = tmp.RedirectAddress;
+                        _data.Settings.Port = tmp.RedirectPort;
+                        _data.Settings.CloudInfo.Token = tmp.Token;                        
+                        _requestInProgress = false;
+                        Disconnect();
+                        if (await Connect(_data.Settings.Host, _data.Settings.Port, true))
+                        {
+                            if (await CloudTokenLogon(tmp.Token))
+                            {
+                                result = true;
+                            }
+                            else
+                            {
+                                Disconnect();
+                            }
+                        }
+                        else
+                        {
+                            _eft.Dispose();
+                            result = false;
+                        }
+                    }
 					else
 					{
 						_data.LastTxnResult = DictionaryFromType(r);
@@ -252,7 +283,7 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 						result = (output.Equals("True"));
 						_data.DisplayDialog(false);
 						_requestInProgress = false;
-						_eft.Dispose();
+						//_eft.Dispose();
 					}
 				}
 				while (_requestInProgress);
@@ -359,7 +390,25 @@ namespace PCEFTPOS.EFTClient.IPInterface.TestPOS
 			});
 		}
 
-		public async Task StartLogonTest(LogonType type, ReceiptCutModeType cutMode, ReceiptPrintModeType printMod)
+        public async Task CloudPairingRequest(string clientId, string password, string pairingCode)
+        {
+            await SendRequest<EFTCloudPairResponse>(new EFTCloudPairRequest()
+            {
+                ClientID = clientId,
+                Password = password,
+                PairingCode = pairingCode
+            });
+        }
+
+        public async Task<bool> CloudTokenLogon(string token)
+        {
+            return await SendRequest<EFTCloudTokenLogonResponse>(new EFTCloudTokenLogonRequest()
+            {
+                Token = token
+            });
+        }
+
+        public async Task StartLogonTest(LogonType type, ReceiptCutModeType cutMode, ReceiptPrintModeType printMod)
 		{
 			_ct = new CancellationTokenSource();
 			await SpawnLogon(type, cutMode, printMod, _ct.Token);

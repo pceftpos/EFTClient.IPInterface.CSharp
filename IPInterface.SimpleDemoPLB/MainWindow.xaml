@@ -1,9 +1,9 @@
-﻿<Window x:Class="PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync.MainWindow"
+﻿<Window x:Class="PCEFTPOS.EFTClient.IPInterface.SimpleDemo.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PCEFTPOS.EFTClient.IPInterface.SimpleDemoAsync"
+        xmlns:local="clr-namespace:PCEFTPOS.EFTClient.IPInterface.SimpleDemo"
         mc:Ignorable="d"
         Title="MainWindow" Height="400" Width="640" Loaded="Window_Loaded">
 
@@ -65,7 +65,7 @@
 
     <Grid x:Name="ParentGrid" Margin="5">
 
-        <Grid x:Name="SettingsGrid" Visibility="Visible">
+        <Grid x:Name="SettingsGrid" Visibility="Collapsed">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -87,9 +87,10 @@
 
             <!--SettingsGrid-Content-->
             <Grid Grid.Row="1" VerticalAlignment="Center">
+
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
-                    <!--<RowDefinition Height="*"/>-->
+                    <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
                 <!--SettingsGrid-Content - The server address -->
@@ -101,12 +102,7 @@
                     <Grid.RowDefinitions>
                         <RowDefinition Height="40"/>
                         <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
-                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
 
@@ -121,36 +117,27 @@
                         <TextBox x:Name="txtEFTClientAddress" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="txtServerAddress_TextChanged"/>
                         <Button x:Name="BtnVerifyServerUri" Grid.Column="1" Content="&#xe117;" Margin="0,5" Style="{StaticResource SpeedButton}" Click="BtnVerifyServerUri_Click"/>
                     </Grid>
-
-                    <TextBlock Text="Use PC-EFTPOS Cloud" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
-                    <CheckBox x:Name="cboEnableCloud" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Checked="cboEnableCloud_Checked" Unchecked="cboEnableCloud_Checked"/>
-
-                    <TextBlock Text="Username" Grid.Row="3" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
-                    <TextBox x:Name="txtUsername" Grid.Row="3" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-
-                    <TextBlock Text="Password" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
-                    <TextBox x:Name="txtPassword" Grid.Row="4" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-
-                    <TextBlock Text="Pairing Code" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
-                    <TextBox x:Name="txtPairingCode" Grid.Row="5" Grid.Column="1"  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-
-                    <Grid Grid.Row="6" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="Auto"/>
-                        </Grid.ColumnDefinitions>
-                        <TextBox x:Name="txtToken" Grid.Row="0" Grid.Column="0"  HorizontalAlignment="Stretch" VerticalAlignment="Center"/>
-                        <Button x:Name="BtnVerifyToken" Grid.Column="1" Content="&#xe117;" Margin="0,5" Style="{StaticResource SpeedButton}" Click="BtnTokenLogin_Click"/>
-                    </Grid>
-                    <TextBlock Text="Token" Grid.Row="6" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
-
-                    <Button x:Name="BtnPairing" Content="Pairing" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="10,2,10,2" Click="BtnPair_Click" FontSize="14"/>
-                    <!--TEST BUTTONS DELETE LATER -->
-                    <!--<Button x:Name="BtnSettingsClear" Content="ClearSettings" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" VerticalAlignment="Center" Padding="0,2,0,2" Click="BtnTempClearSettings" FontSize="14"/>-->
-                    <!--<Button x:Name="BtnSettingsSave" Content="SaveSettings" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0,2,0,2" Click="BtnTempSaveSettings" FontSize="14"/>-->
                 </Grid>
 
                 <!--SettingsGrid-Content - The rest of the settings-->
+                <!--<Grid x:Name="SettingsGridMainContent" Grid.Row="1" VerticalAlignment="Center" Margin="0,40,0,0" Visibility="Visible">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="2*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="40"/>
+                        <RowDefinition Height="40"/>
+                    </Grid.RowDefinitions>
+
+
+                    <TextBlock Text="Pinpad" Grid.Row="0" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
+                    <ComboBox x:Name="cboEFTPOSDevices" Grid.Row="0" Grid.Column="1" ItemsSource="{Binding EFTPOSDevices}" DisplayMemberPath="Title" SelectedValuePath="Id" HorizontalAlignment="Stretch" VerticalAlignment="Center" Height="30" SelectionChanged="cboEFTPOSDevices_SelectionChanged" />
+
+                    <TextBlock Text="Merchant Code" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
+                    <TextBox x:Name="txtMerchantCode" Grid.Row="1" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Center" TextChanged="txtMerchantCode_TextChanged"/>
+                </Grid>-->
+
             </Grid>
 
             <!--SettingsGrid-Footer-->
@@ -160,7 +147,7 @@
 
         </Grid>
 
-        <Grid x:Name="MainGrid" Visibility="Collapsed">
+        <Grid x:Name="MainGrid" Visibility="Visible">
             <Grid HorizontalAlignment="Stretch">
 
                 <Grid.ColumnDefinitions>
@@ -175,7 +162,7 @@
                 <!--MainGrid-Header-->
                 <Border Background="#EEEEEE" Height="40" VerticalAlignment="Top" Margin="-5,-5,-5,0" Padding="5">
                     <Grid>
-                        <TextBlock Grid.Row="0" Grid.Column="0" Text="PC-EFTPOS SIMPLE ASYNC DEMO" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Center"/>
+                        <TextBlock Grid.Row="0" Grid.Column="0" Text="PC-EFTPOS PRODUCT LEVEL BLOCKING DEMO" FontWeight="Bold" HorizontalAlignment="Left" VerticalAlignment="Center" TextAlignment="Center"/>
                         <Button x:Name="BtnSettings" Grid.Row="0" Grid.Column="1" Content="&#57621;" FontFamily="Segoe UI Symbol" FontSize="26" FontWeight="Bold" HorizontalAlignment="Right" VerticalAlignment="Center" Background="Transparent" Padding="0" BorderThickness="0" Click="BtnSettings_Click"/>
                     </Grid>
                 </Border>
@@ -205,6 +192,14 @@
                     <!--Amount-->
                     <TextBlock Text="Amount" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
                     <TextBox x:Name="txtAmount" Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch"  VerticalAlignment="Center" Text="1.00"/>
+                    <!--PLB-->
+                    <TextBlock Text="Send PLB Data?" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Right" VerticalAlignment="Center" Padding="0,0,20,0"/>
+                    <ComboBox x:Name="PLB_ComboBox" Grid.Row="3" Grid.Column="2" HorizontalAlignment="Stretch"  VerticalAlignment="Center" SelectedIndex="0">
+                        <ComboBoxItem>Don't Send PLB In Transaction</ComboBoxItem>
+                        <ComboBoxItem>Send PLB As Enabled</ComboBoxItem>
+                        <ComboBoxItem>Send PLB As Disabled</ComboBoxItem>
+                    </ComboBox>
+
                 </Grid>
 
                 <!--MainGrid-Footer-->

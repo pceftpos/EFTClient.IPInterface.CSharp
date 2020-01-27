@@ -85,8 +85,8 @@ namespace PCEFTPOS.EFTClient.IPInterface
 					break;
 				case IPClientResponseType.CloudLogon:
 					eftResponse = ParseCloudLogonResponse(msg);
-					break;
-				case IPClientResponseType.ClientList:
+                    break;
+                case IPClientResponseType.ClientList:
 					eftResponse = ParseClientListResponse(msg);
 					break;
 
@@ -802,15 +802,36 @@ namespace PCEFTPOS.EFTClient.IPInterface
 		EFTResponse ParseCloudLogonResponse(string msg)
 		{
 			int index = 1;
+            char subcode = TryParse<char>(msg, 1, ref index);
+            if (subcode == 'P')
+            {
+                int variableLength = 0;
+                var resp = new EFTCloudPairResponse();
+                resp.Success = TryParse<bool>(msg, 1, ref index);
+                resp.ResponseCode = TryParse<string>(msg, 2, ref index);
+                resp.ResponseText = TryParse<string>(msg, 20, ref index);
+                resp.RedirectPort = TryParse<int>(msg, 6, ref index);
+                variableLength = TryParse<int>(msg, 3, ref index);
+                resp.RedirectAddress = TryParse<string>(msg, variableLength, ref index);
+                variableLength = TryParse<int>(msg, 3, ref index);
+                resp.Token = TryParse<string>(msg, variableLength, ref index);
+                return resp;
+            }
+            else if (subcode == 'T')
+            {
+                var tokenresp = new EFTCloudTokenLogonResponse();
+                tokenresp.Success = TryParse<bool>(msg, 1, ref index);
+                tokenresp.ResponseCode = TryParse<string>(msg, 2, ref index);
+                tokenresp.ResponseText = TryParse<string>(msg, 20, ref index);
+                return tokenresp;
+            }
 
-			var r = new EFTCloudLogonResponse();
-			index++; // Skip sub code.
-			r.Success = TryParse<bool>(msg, 1, ref index);
-			r.ResponseCode = TryParse<string>(msg, 2, ref index);
-			r.ResponseText = TryParse<string>(msg, 20, ref index);
-
-			return r;
-		}
+            var r = new EFTCloudLogonResponse();
+            r.Success = TryParse<bool>(msg, 1, ref index);
+            r.ResponseCode = TryParse<string>(msg, 2, ref index);
+            r.ResponseText = TryParse<string>(msg, 20, ref index);
+            return r;
+        }
 
 		EFTResponse ParseBasketDataResponse(string msg)
 		{
@@ -961,7 +982,17 @@ namespace PCEFTPOS.EFTClient.IPInterface
 				return BuildCloudLogonRequest((EFTCloudLogonRequest)eftRequest);
 			}
 
-			if (eftRequest is EFTClientListRequest)
+            if (eftRequest is EFTCloudPairRequest)
+            {
+                return BuildCloudPairRequest((EFTCloudPairRequest)eftRequest);
+            }
+
+            if (eftRequest is EFTCloudTokenLogonRequest)
+            {
+                return BuildCloudTokenLogonRequest((EFTCloudTokenLogonRequest)eftRequest);
+            }
+
+            if (eftRequest is EFTClientListRequest)
 			{
 				return BuildGetClientListRequest((EFTClientListRequest)eftRequest);
 			}
@@ -1187,7 +1218,28 @@ namespace PCEFTPOS.EFTClient.IPInterface
 			return r;
 		}
 
-		StringBuilder BuildSendKeyRequest(EFTSendKeyRequest v)
+        StringBuilder BuildCloudPairRequest(EFTCloudPairRequest v)
+        {
+            var r = new StringBuilder();
+            r.Append("A");
+            r.Append("P");
+            r.Append(v.ClientID.PadRightAndCut(16));
+            r.Append(v.Password.PadRightAndCut(16));
+            r.Append(v.PairingCode.PadRightAndCut(16));
+            return r;
+        }
+
+        StringBuilder BuildCloudTokenLogonRequest(EFTCloudTokenLogonRequest v)
+        {
+            var r = new StringBuilder();
+            r.Append("A");
+            r.Append("T");
+            r.Append(v.Token.Length.PadLeft(3));
+            r.Append(v.Token);
+            return r;
+        }
+
+        StringBuilder BuildSendKeyRequest(EFTSendKeyRequest v)
 		{
 			var r = new StringBuilder();
 			r.Append("Y0");
