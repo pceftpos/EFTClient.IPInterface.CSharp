@@ -203,6 +203,10 @@ class EFTClientIPDemoAsync
 
 ## Release notes
 
+### 1.5.0.0 (2020-01-28)
+• Added Demo POS for product level blocking transactions
+• TEST & Async POS updated to support new cloud pairing process
+
 ### 1.4.5.0 (2018-12-14)
 • Added in Void transaction type...
 • Added in a check on msg length for parsing Duplicate Receipt responses so it can handle TPP duplicate responses
